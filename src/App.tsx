@@ -120,7 +120,7 @@ function App() {
       <main className="page" id="top">
         <Reveal>
           <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
-            <div className="hero-copy">
+            <div className="hero-intro">
               <p className="eyebrow">Nothing Phone 2a / 2a Plus release hub</p>
               <h1>One home for ROMs, releases, and the wider device scene.</h1>
               <p className="lede">
@@ -151,17 +151,9 @@ function App() {
                 ) : null}
               </div>
 
-              <div className="hero-facts" aria-label="Project highlights">
-                {quickStats.map((stat) => (
-                  <article className="hero-fact" key={stat.label}>
-                    <strong>{stat.value}</strong>
-                    <span>{stat.label}</span>
-                  </article>
-                ))}
-              </div>
             </div>
 
-            <div className="hero-stage">
+            <div className="hero-showcase">
               <ReactivePanel
                 as="article"
                 className="hero-feature-card"
@@ -223,6 +215,15 @@ function App() {
                   </a>
                 ) : null}
               </ReactivePanel>
+
+              <div className="hero-facts" aria-label="Project highlights">
+                {quickStats.map((stat) => (
+                  <article className="hero-fact" key={stat.label}>
+                    <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
+                  </article>
+                ))}
+              </div>
             </div>
           </section>
         </Reveal>

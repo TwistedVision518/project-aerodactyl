@@ -391,10 +391,9 @@
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.08fr) minmax(360px, 0.92fr);
-  gap: 1.8rem;
+  gap: 1.6rem;
   align-items: start;
-  min-height: min(72vh, 48rem);
+  min-height: min(74vh, 50rem);
 }
 
 .hero > *,
@@ -445,10 +444,10 @@
 }
 
 .hero h1 {
-  max-width: 10.5ch;
+  max-width: 12ch;
   margin-top: 1.15rem;
-  font-size: clamp(2.9rem, 6vw, 4.7rem);
-  line-height: 0.9;
+  font-size: clamp(3.2rem, 7vw, 5.4rem);
+  line-height: 0.88;
   text-wrap: balance;
 }
 
@@ -467,22 +466,30 @@
 }
 
 .lede {
-  max-width: 34ch;
+  max-width: 44ch;
   margin: 1.05rem 0 0;
-  font-size: 1rem;
-  line-height: 1.58;
+  font-size: 1.02rem;
+  line-height: 1.62;
 }
 
 .hero-caption {
-  max-width: 38ch;
+  max-width: 44ch;
   margin: 0.8rem 0 0;
   color: color-mix(in srgb, var(--muted) 82%, white);
   font-size: 0.9rem;
   line-height: 1.45;
 }
 
+.hero-intro {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  padding: 1.2rem 0 0.4rem;
+}
+
 .hero-actions {
   margin-top: 1.35rem;
+  justify-content: center;
 }
 
 .action-primary,
@@ -589,16 +596,16 @@
 }
 
 .hero-facts {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
-  margin-top: 1.35rem;
+  margin-top: 0;
 }
 
 .hero-fact {
-  min-width: 9rem;
   padding: 0.85rem 0.95rem;
   border-radius: 1rem;
+  text-align: left;
 }
 
 .hero-fact strong {
@@ -618,11 +625,11 @@
   letter-spacing: 0.1em;
 }
 
-.hero-stage {
+.hero-showcase {
   display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
   gap: 1rem;
-  align-content: start;
-  padding-top: 0.4rem;
+  align-items: stretch;
 }
 
 .community-card,
@@ -643,6 +650,11 @@
     radial-gradient(circle at top left, rgba(76, 146, 255, 0.16), transparent 36%),
     radial-gradient(circle at 82% 16%, rgba(108, 255, 216, 0.1), transparent 24%),
     linear-gradient(180deg, rgba(9, 9, 11, 0.92), rgba(0, 0, 0, 0.88));
+}
+
+.community-card,
+.hero-facts {
+  align-content: start;
 }
 
 .community-card h2 {
@@ -1208,6 +1220,7 @@
 
 @media (max-width: 1080px) {
   .hero,
+  .hero-showcase,
   .home-rail,
   .section-banner,
   .insight-grid,
@@ -1290,6 +1303,16 @@
   .hero h1 {
     max-width: none;
     font-size: clamp(2.45rem, 11vw, 3.8rem);
+  }
+
+  .hero-intro {
+    justify-items: start;
+    text-align: left;
+    padding-top: 0;
+  }
+
+  .hero-actions {
+    justify-content: flex-start;
   }
 
   .section-banner h2,
