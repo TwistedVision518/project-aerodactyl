@@ -175,6 +175,7 @@
 }
 
 .topbar-button {
+  min-width: 11rem;
   min-height: 2.8rem;
   padding: 0 1rem;
   border-radius: 1rem;
