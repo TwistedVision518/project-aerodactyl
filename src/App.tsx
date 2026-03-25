@@ -61,6 +61,26 @@ function App() {
     '--accent-soft': featuredRom.accentSoft,
     '--accent-strong': featuredRom.accentStrong,
   }
+  const gcamStyle: AccentStyle = {
+    '--accent': '#6b86ff',
+    '--accent-soft': 'rgba(107, 134, 255, 0.18)',
+    '--accent-strong': '#b7c5ff',
+  }
+  const sourceStyle: AccentStyle = {
+    '--accent': '#56c7ff',
+    '--accent-soft': 'rgba(86, 199, 255, 0.16)',
+    '--accent-strong': '#aee7ff',
+  }
+  const builderStyle: AccentStyle = {
+    '--accent': '#ff8a5b',
+    '--accent-soft': 'rgba(255, 138, 91, 0.16)',
+    '--accent-strong': '#ffd0be',
+  }
+  const devicesStyle: AccentStyle = {
+    '--accent': '#52d2ad',
+    '--accent-soft': 'rgba(82, 210, 173, 0.16)',
+    '--accent-strong': '#c0ffeb',
+  }
 
   return (
     <div className="app-shell scene-root" ref={sceneRef}>
@@ -75,7 +95,7 @@ function App() {
           <span className="brand-mark">PA</span>
           <span className="brand-copy">
             <strong>Project Aerodactyl</strong>
-            <small>Nothing Phone 2a (pacman) / 2a Plus (pacmanpro) release home</small>
+            <small>Nothing Phone 2a / 2a Plus ROM hub</small>
           </span>
         </a>
 
@@ -88,10 +108,10 @@ function App() {
         </nav>
 
         <div className="topbar-actions">
-          <a className="status-badge" href="#top">
+          <a className="status-badge topbar-button topbar-button-secondary" href="#top">
             Release Hub
           </a>
-          <a className="pill-link" href="#rom-directory">
+          <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
             Open ROM Directory
           </a>
         </div>
@@ -99,20 +119,17 @@ function App() {
 
       <main className="page" id="top">
         <Reveal>
-          <section className="hero panel">
+          <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
             <div className="hero-copy">
               <div className="hero-kicker">
-                <span className="tonal-chip">Current releases</span>
-                <span className="tonal-chip">Per-ROM tracking</span>
-                <span className="tonal-chip">Telegram community</span>
+                <span className="tonal-chip">Nothing Phone 2a / 2a Plus</span>
               </div>
 
-              <p className="eyebrow">Project Aerodactyl</p>
-              <h1>A sharper home for the Nothing Phone 2a and 2a Plus ROM scene.</h1>
+              <p className="eyebrow">Project Aerodactyl Release Hub</p>
+              <h1>Nothing Phone 2a and 2a Plus ROMs, in one place.</h1>
               <p className="lede">
-                Current builds, source-side movement, and shared device updates,
-                organized into one place that is easier to scan and easier to
-                trust.
+                Builds, release notes, source updates, and the community hub,
+                organized to stay clear at a glance.
               </p>
 
               <div className="hero-actions">
@@ -132,14 +149,6 @@ function App() {
                     {communityHub.ctaLabel}
                   </a>
                 ) : null}
-              </div>
-
-              <div className="hero-story">
-                <strong>Clean structure first, depth where it matters.</strong>
-                <p>
-                  Each ROM gets its own lane, while the homepage stays focused
-                  on discovery instead of trying to show everything at once.
-                </p>
               </div>
 
               <div className="stat-grid" aria-label="Project highlights">
@@ -200,8 +209,8 @@ function App() {
                   <span className="ghost-pill">Telegram</span>
                 </div>
 
-                <h2>{communityHub.title}</h2>
-                <p>{communityHub.summary}</p>
+                <h2>Join the device community.</h2>
+                <p>One shared Telegram space for updates, support, screenshots, and feedback.</p>
 
                 {communityHubHasLink ? (
                   <a
@@ -223,7 +232,7 @@ function App() {
             <div className="latest-updates panel">
               <div className="latest-updates-head">
                 <strong>Latest updates</strong>
-                <span>Sorted from ROM releases, source notes, builder updates, and GCam entries</span>
+                <span>Auto-sorted across the whole hub</span>
               </div>
               <div className="latest-updates-list">
                 {latestUpdates.map((entry) => (
@@ -239,7 +248,7 @@ function App() {
             <div className="directory-preview panel" id="quick-directory">
               <div className="latest-updates-head">
                 <strong>ROM quick jump</strong>
-                <span>Go straight to a device lane</span>
+                <span>Jump straight to a ROM</span>
               </div>
               <div className="directory-preview-grid">
                 {roms.map((rom) => {
@@ -269,7 +278,12 @@ function App() {
         </Reveal>
 
         <Reveal delay={80}>
-          <section className="section-banner panel" id="rom-directory">
+          <section
+            className="section-banner panel"
+            data-hub-accent="true"
+            id="rom-directory"
+            style={featuredStyle}
+          >
             <div className="section-banner-copy">
               <p className="eyebrow">01 / ROM Directory</p>
               <h2>Every active ROM, easy to scan and easy to trust.</h2>
@@ -321,6 +335,7 @@ function App() {
                 <ReactivePanel
                   as="section"
                   className="rom-section panel"
+                  data-hub-accent="true"
                   id={toSectionId(rom.name)}
                   intensity={0.9}
                   style={accentStyle}
@@ -389,7 +404,12 @@ function App() {
         </section>
 
         <Reveal delay={90}>
-          <section className="panel support-panel" id="gcams">
+          <section
+            className="panel support-panel"
+            data-hub-accent="true"
+            id="gcams"
+            style={gcamStyle}
+          >
             <div className="support-copy">
               <div>
                 <p className="eyebrow">02 / GCams</p>
@@ -449,7 +469,12 @@ function App() {
 
         <section className="insight-grid">
           <Reveal>
-            <div className="panel insight-panel" id="source-pulse">
+            <div
+              className="panel insight-panel"
+              data-hub-accent="true"
+              id="source-pulse"
+              style={sourceStyle}
+            >
               <div className="insight-head">
                 <div>
                   <p className="eyebrow">03 / Source Pulse</p>
@@ -484,7 +509,12 @@ function App() {
           </Reveal>
 
           <Reveal delay={120}>
-            <div className="panel insight-panel" id="builder-notes">
+            <div
+              className="panel insight-panel"
+              data-hub-accent="true"
+              id="builder-notes"
+              style={builderStyle}
+            >
               <div className="insight-head">
                 <div>
                   <p className="eyebrow">04 / Builder Notes</p>
@@ -513,7 +543,12 @@ function App() {
         </section>
 
         <Reveal delay={110}>
-          <section className="panel support-panel" id="devices">
+          <section
+            className="panel support-panel"
+            data-hub-accent="true"
+            id="devices"
+            style={devicesStyle}
+          >
             <div className="support-copy">
               <div>
                 <p className="eyebrow">05 / Device Coverage</p>
