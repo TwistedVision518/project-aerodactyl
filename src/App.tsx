@@ -103,16 +103,16 @@ function App() {
             <div className="hero-copy">
               <div className="hero-kicker">
                 <span className="tonal-chip">Current releases</span>
-                <span className="tonal-chip">Source overview</span>
-                <span className="tonal-chip">Builder updates</span>
+                <span className="tonal-chip">Per-ROM tracking</span>
+                <span className="tonal-chip">Telegram community</span>
               </div>
 
               <p className="eyebrow">Project Aerodactyl</p>
               <h1>A sharper home for the Nothing Phone 2a and 2a Plus ROM scene.</h1>
               <p className="lede">
-                Current builds, source-side movement, builder notes, and the
-                wider device community, organized into something that feels
-                intentional instead of stitched together.
+                Current builds, source-side movement, and shared device updates,
+                organized into one place that is easier to scan and easier to
+                trust.
               </p>
 
               <div className="hero-actions">
@@ -135,27 +135,11 @@ function App() {
               </div>
 
               <div className="hero-story">
-                <strong>Made to feel like a real project home.</strong>
+                <strong>Clean structure first, depth where it matters.</strong>
                 <p>
-                  Each ROM gets its own lane, while the homepage keeps the
-                  bigger picture readable for users, testers, and builders.
+                  Each ROM gets its own lane, while the homepage stays focused
+                  on discovery instead of trying to show everything at once.
                 </p>
-              </div>
-
-              <div className="latest-updates">
-                <div className="latest-updates-head">
-                  <strong>Latest updates</strong>
-                  <span>Auto-sorted from ROM, source, builder, and GCam entries</span>
-                </div>
-                <div className="latest-updates-list">
-                  {latestUpdates.map((entry) => (
-                    <a className="latest-update-item" href={entry.href} key={`${entry.category}-${entry.title}`}>
-                      <span>{entry.category}</span>
-                      <strong>{entry.title}</strong>
-                      <small>{entry.date}</small>
-                    </a>
-                  ))}
-                </div>
               </div>
 
               <div className="stat-grid" aria-label="Project highlights">
@@ -169,33 +153,6 @@ function App() {
             </div>
 
             <div className="hero-stage">
-              <ReactivePanel as="article" className="community-card panel" intensity={0.5}>
-                <div className="feature-topline">
-                  <span className="feature-badge">Community Space</span>
-                  <span className="ghost-pill">Telegram</span>
-                </div>
-
-                <h2>{communityHub.title}</h2>
-                <p>{communityHub.summary}</p>
-
-                <ul className="community-list" aria-label="Community hub highlights">
-                  {communityHub.highlights.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-
-                {communityHubHasLink ? (
-                  <a
-                    className="feature-link"
-                    href={communityHub.telegramUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {communityHub.ctaLabel}
-                  </a>
-                ) : null}
-              </ReactivePanel>
-
               <ReactivePanel
                 as="article"
                 className="hero-feature-card"
@@ -234,10 +191,57 @@ function App() {
                   </a>
                 ) : (
                   <span className="feature-link is-disabled">Telegram Release Link</span>
-                )}
+                    )}
               </ReactivePanel>
 
-              <div className="directory-preview">
+              <ReactivePanel as="article" className="community-card panel" intensity={0.45}>
+                <div className="feature-topline">
+                  <span className="feature-badge">Community Space</span>
+                  <span className="ghost-pill">Telegram</span>
+                </div>
+
+                <h2>{communityHub.title}</h2>
+                <p>{communityHub.summary}</p>
+
+                {communityHubHasLink ? (
+                  <a
+                    className="feature-link"
+                    href={communityHub.telegramUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {communityHub.ctaLabel}
+                  </a>
+                ) : null}
+              </ReactivePanel>
+            </div>
+          </section>
+        </Reveal>
+
+        <Reveal delay={40}>
+          <section className="home-rail">
+            <div className="latest-updates panel">
+              <div className="latest-updates-head">
+                <strong>Latest updates</strong>
+                <span>Sorted from ROM releases, source notes, builder updates, and GCam entries</span>
+              </div>
+              <div className="latest-updates-list">
+                {latestUpdates.map((entry) => (
+                  <a className="latest-update-item" href={entry.href} key={`${entry.category}-${entry.title}`}>
+                    <span>{entry.category}</span>
+                    <strong>{entry.title}</strong>
+                    <small>{entry.date}</small>
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div className="directory-preview panel" id="quick-directory">
+              <div className="latest-updates-head">
+                <strong>ROM quick jump</strong>
+                <span>Go straight to a device lane</span>
+              </div>
+              <div className="directory-preview-grid">
                 {roms.map((rom) => {
                   const accentStyle: AccentStyle = {
                     '--accent': rom.accent,
@@ -250,7 +254,7 @@ function App() {
                       as="a"
                       className="directory-preview-item"
                       href={`#${toSectionId(rom.name)}`}
-                      intensity={0.55}
+                      intensity={0.42}
                       key={rom.name}
                       style={accentStyle}
                     >
