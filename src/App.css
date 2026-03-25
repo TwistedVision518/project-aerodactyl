@@ -66,11 +66,15 @@
   opacity: 0.28;
 }
 
+.app-shell {
+  --shell-width: 1320px;
+}
+
 .topbar {
   position: sticky;
   top: 1rem;
   z-index: 20;
-  width: min(1180px, calc(100% - 2rem));
+  width: min(var(--shell-width), calc(100% - 2rem));
   margin: 1rem auto 0;
   padding: 0.88rem 1rem;
   display: flex;
@@ -332,7 +336,7 @@
 .page {
   position: relative;
   z-index: 1;
-  width: min(1180px, calc(100% - 2rem));
+  width: min(var(--shell-width), calc(100% - 2rem));
   margin: 0 auto;
   padding: 1.35rem 0 4.5rem;
 }
@@ -570,8 +574,8 @@
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(340px, 0.94fr);
-  gap: 1.9rem;
+  grid-template-columns: minmax(0, 1.08fr) minmax(380px, 0.92fr);
+  gap: 2.05rem;
   align-items: start;
   min-height: min(76vh, 52rem);
 }
@@ -646,7 +650,7 @@
 }
 
 .lede {
-  max-width: 40ch;
+  max-width: 42ch;
   margin: 1.05rem 0 0;
   font-size: 1rem;
   line-height: 1.58;
@@ -776,8 +780,8 @@
 
 .home-rail {
   display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
-  gap: 1.1rem;
+  grid-template-columns: minmax(0, 1.18fr) minmax(340px, 0.82fr);
+  gap: 1.2rem;
   margin-top: 1.2rem;
 }
 
@@ -1029,8 +1033,8 @@
 
 .section-banner {
   display: grid;
-  grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.02fr);
-  gap: 1.2rem;
+  grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
+  gap: 1.35rem;
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 20%),
     radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 12%, transparent), transparent 42%),
@@ -1046,7 +1050,7 @@
 }
 
 .section-banner-copy p {
-  max-width: 54ch;
+  max-width: 58ch;
 }
 
 .rom-filter-bar {
@@ -1234,8 +1238,8 @@
 
 .rom-section-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 18rem;
-  gap: 1.2rem;
+  grid-template-columns: minmax(0, 1.08fr) 19.5rem;
+  gap: 1.35rem;
   margin-top: 1.3rem;
 }
 
@@ -1369,7 +1373,7 @@
 .insight-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.2rem;
+  gap: 1.3rem;
   margin-top: 3.3rem;
 }
 
@@ -1768,7 +1772,7 @@
     flex-wrap: wrap;
     justify-content: center;
     top: 0.6rem;
-    width: min(100% - 1rem, 1180px);
+    width: min(100% - 1rem, var(--shell-width));
     padding: 0.85rem;
   }
 
@@ -1815,7 +1819,7 @@
   }
 
   .page {
-    width: min(100% - 1rem, 1180px);
+    width: min(100% - 1rem, var(--shell-width));
     padding-top: 0.9rem;
     padding-bottom: 7rem;
   }
@@ -1874,7 +1878,7 @@
 @media (max-width: 640px) {
   .page,
   .topbar {
-    width: min(100% - 0.45rem, 1180px);
+    width: min(100% - 0.45rem, var(--shell-width));
   }
 
   .topbar {
@@ -1958,6 +1962,31 @@
   .mobile-dock-icon svg {
     width: 1.2rem;
     height: 1.2rem;
+  }
+}
+
+@media (min-width: 1480px) {
+  .app-shell {
+    --shell-width: 1400px;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1.12fr) minmax(420px, 0.88fr);
+    gap: 2.2rem;
+  }
+
+  .hero h1 {
+    max-width: 11.2ch;
+    font-size: clamp(3.2rem, 4.6vw, 5.4rem);
+  }
+
+  .latest-build-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.1rem;
+  }
+
+  .rom-section-body {
+    grid-template-columns: minmax(0, 1.14fr) 21rem;
   }
 }
 
