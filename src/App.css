@@ -1164,6 +1164,48 @@
   }
 }
 
+.scene-root[data-performance='lite'] .interactive-scene::before {
+  filter: blur(78px) saturate(1.08);
+  opacity: 0.4;
+  animation-duration: 30s;
+}
+
+.scene-root[data-performance='lite'] .interactive-scene::after {
+  filter: blur(44px);
+  opacity: 0.54;
+}
+
+.scene-root[data-performance='lite'] .scene-aurora {
+  filter: blur(58px);
+  opacity: 0.52;
+}
+
+.scene-root[data-performance='lite'] .scene-cursor-trail {
+  display: none;
+}
+
+.scene-root[data-performance='lite'] .scene-cursor-glow {
+  filter: blur(18px);
+  opacity: 0.68;
+}
+
+.scene-root[data-performance='lite'] .topbar {
+  backdrop-filter: none;
+}
+
+.scene-root[data-performance='lite'] .rom-section::after {
+  animation: none;
+  opacity: 0.42;
+}
+
+.scene-root[data-performance='lite'] .reactive-panel > * {
+  transform: none;
+}
+
+.scene-root[data-performance='lite'] .reveal.is-visible {
+  animation-duration: 560ms;
+}
+
 @media (max-width: 1080px) {
   .hero,
   .section-banner,

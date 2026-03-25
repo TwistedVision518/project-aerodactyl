@@ -1,5 +1,16 @@
 import { useEffect, useRef } from 'react'
 
+type NetworkInformationLike = {
+  saveData?: boolean
+  addEventListener?: (type: 'change', listener: () => void) => void
+  removeEventListener?: (type: 'change', listener: () => void) => void
+}
+
+type NavigatorPerformanceHints = Navigator & {
+  connection?: NetworkInformationLike
+  deviceMemory?: number
+}
+
 export function useSceneMotion() {
   const ref = useRef<HTMLDivElement | null>(null)
 
@@ -12,6 +23,8 @@ export function useSceneMotion() {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const prefersCoarsePointer = window.matchMedia('(pointer: coarse)')
+    const navigatorHints = navigator as NavigatorPerformanceHints
+    const connection = navigatorHints.connection
     const fineCenter = { x: 0.5, y: 0.28 }
     const coarseCenter = { x: 0.5, y: 0.24 }
     const isCoarsePointer = () => prefersCoarsePointer.matches
@@ -19,8 +32,17 @@ export function useSceneMotion() {
     const applyMode = () => {
       node.dataset.inputMode = isCoarsePointer() ? 'coarse' : 'fine'
     }
+    const applyPerformanceProfile = () => {
+      const saveData = connection?.saveData === true
+      const lowMemory =
+        typeof navigatorHints.deviceMemory === 'number' && navigatorHints.deviceMemory <= 4
+      const lowCpu = navigator.hardwareConcurrency <= 6
+
+      node.dataset.performance = saveData || lowMemory || lowCpu ? 'lite' : 'full'
+    }
 
     applyMode()
+    applyPerformanceProfile()
 
     if (prefersReducedMotion.matches) {
       const center = getCenter()
@@ -234,6 +256,10 @@ export function useSceneMotion() {
       resetScene()
     }
 
+    const handlePerformanceChange = () => {
+      applyPerformanceProfile()
+    }
+
     setPointer(target.x, target.y)
     setFocus(current.x, current.y)
     setTrail(trail.x, trail.y)
@@ -244,6 +270,7 @@ export function useSceneMotion() {
     window.addEventListener('touchend', handleTouchEnd, { passive: true })
     window.addEventListener('scroll', handleScroll, { passive: true })
     prefersCoarsePointer.addEventListener('change', handleModeChange)
+    connection?.addEventListener?.('change', handlePerformanceChange)
     handleScroll()
 
     return () => {
@@ -257,6 +284,7 @@ export function useSceneMotion() {
       window.removeEventListener('touchend', handleTouchEnd)
       window.removeEventListener('scroll', handleScroll)
       prefersCoarsePointer.removeEventListener('change', handleModeChange)
+      connection?.removeEventListener?.('change', handlePerformanceChange)
     }
   }, [])
 

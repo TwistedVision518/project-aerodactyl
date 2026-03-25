@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "content:check": "node scripts/validate-content.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

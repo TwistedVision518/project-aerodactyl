@@ -50,20 +50,33 @@ Each ROM has its own JSON file, which makes it easy for other builders to update
 
 Shared site sections still live in:
 
-`src/data/siteContent.ts`
+`src/content/site/site-content.json`
 
 That file controls:
 
 - Source Pulse entries
 - Builder Notes entries
+- Community hub copy and Telegram URL
 - Device coverage cards
 - Expansion / workflow cards
 
 If you want live release buttons, update the `telegramUrl` value inside the matching ROM JSON file with the correct Telegram post link.
 
+If you want the homepage Telegram community button to go live, update `communityHub.telegramUrl` inside `src/content/site/site-content.json`.
+
 Builder workflow guide:
 
 `CONTRIBUTING.md`
+
+Content editing guide:
+
+`src/content/README.md`
+
+Validate content before pushing:
+
+```bash
+pnpm content:check
+```
 
 ## Deployment
 
@@ -82,5 +95,7 @@ Netlify project:
 ## Notes
 
 - The layout is organized per ROM to avoid mixing release context across different builds.
+- Shared homepage content is JSON-based so other builders can update it without editing React files.
 - Mobile performance is prioritized by reducing heavier pointer effects on coarse/touch devices.
+- Weaker devices automatically receive a lighter rendering profile to keep the site usable for more people.
 - The visual system uses a near-AMOLED black base with animated color fields layered behind the content.

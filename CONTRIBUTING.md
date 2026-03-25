@@ -1,6 +1,6 @@
 # Contributing
 
-Project Aerodactyl is set up so each builder can update their own ROM entry without touching the layout code.
+Project Aerodactyl is set up so each builder can update content without touching the layout code.
 
 ## Fastest Way To Update A ROM
 
@@ -27,9 +27,24 @@ Project Aerodactyl is set up so each builder can update their own ROM entry with
 
 The site will pick it up automatically.
 
+## Updating Shared Homepage Content
+
+Edit:
+
+`src/content/site/site-content.json`
+
+That file controls:
+
+- community hub copy and Telegram URL
+- Source Pulse
+- Builder Notes
+- device coverage cards
+- expansion cards
+
 ## Local Checks
 
 ```bash
+pnpm content:check
 pnpm exec eslint .
 pnpm build
 ```

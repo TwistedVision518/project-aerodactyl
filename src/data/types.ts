@@ -49,3 +49,11 @@ export type CommunityHub = {
   ctaLabel: string
   telegramUrl: string
 }
+
+export type SiteContentData = {
+  communityHub: CommunityHub
+  sourceChanges: SourceChange[]
+  builderUpdates: BuilderUpdate[]
+  supportMatrix: SupportDevice[]
+  expansionCards: ExpansionCard[]
+}
