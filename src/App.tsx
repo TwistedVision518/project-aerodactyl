@@ -52,7 +52,7 @@ function App() {
           <span className="brand-mark">PA</span>
           <span className="brand-copy">
             <strong>Project Aerodactyl</strong>
-            <small>Nothing Phone 2a / 2a Plus release hub</small>
+            <small>Nothing Phone 2a / 2a Plus ROM release home</small>
           </span>
         </a>
 
@@ -76,17 +76,17 @@ function App() {
           <section className="hero panel">
             <div className="hero-copy">
               <div className="hero-kicker">
-                <span className="tonal-chip">Releases</span>
-                <span className="tonal-chip">Source changes</span>
-                <span className="tonal-chip">Builder notes</span>
+                <span className="tonal-chip">Current releases</span>
+                <span className="tonal-chip">Source overview</span>
+                <span className="tonal-chip">Builder updates</span>
               </div>
 
-              <p className="eyebrow">Nothing Phone 2a / 2a Plus</p>
-              <h1>A clean release hub for every ROM you build.</h1>
+              <p className="eyebrow">Project Aerodactyl</p>
+              <h1>A sharper home for the Nothing Phone 2a ROM scene.</h1>
               <p className="lede">
-                Track current versions, recent source work, and builder-side
-                progress in one place, with a dedicated section for each active
-                ROM.
+                Current builds, source-side movement, builder notes, and the
+                wider device community, organized into something that feels
+                intentional instead of stitched together.
               </p>
 
               <div className="hero-actions">
@@ -109,10 +109,10 @@ function App() {
               </div>
 
               <div className="hero-story">
-                <strong>Built for quick scanning and clean release tracking.</strong>
+                <strong>Made to feel like a real project home.</strong>
                 <p>
-                  Every ROM gets its own lane with version context, supported
-                  devices, source-side notes, and release handoff space.
+                  Each ROM gets its own lane, while the homepage keeps the
+                  bigger picture readable for users, testers, and builders.
                 </p>
               </div>
 
@@ -129,7 +129,7 @@ function App() {
             <div className="hero-stage">
               <ReactivePanel as="article" className="community-card panel" intensity={0.5}>
                 <div className="feature-topline">
-                  <span className="feature-badge">Community Hub</span>
+                  <span className="feature-badge">Community Space</span>
                   <span className="ghost-pill">Telegram</span>
                 </div>
 
@@ -161,7 +161,7 @@ function App() {
                 style={featuredStyle}
               >
                 <div className="feature-topline">
-                  <span className="feature-badge">Featured ROM</span>
+                  <span className="feature-badge">Spotlight Build</span>
                   <span className="feature-version">{featuredRom.version}</span>
                 </div>
 
@@ -223,11 +223,11 @@ function App() {
         <Reveal delay={80}>
           <section className="section-banner panel" id="rom-directory">
             <div className="section-banner-copy">
-              <p className="eyebrow">ROM Directory</p>
-              <h2>Current ROM lineup, organized by build lane.</h2>
+              <p className="eyebrow">01 / ROM Directory</p>
+              <h2>Every active ROM, easy to scan and easy to trust.</h2>
               <p>
-                Jump straight to the ROM you want without mixing releases,
-                supported devices, or update notes.
+                Jump straight to the build you want without mixing versions,
+                devices, release links, or builder context.
               </p>
             </div>
 
@@ -336,8 +336,8 @@ function App() {
             <div className="panel insight-panel" id="source-pulse">
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">Source Pulse</p>
-                  <h2>Recent source work, summarized for users and testers</h2>
+                  <p className="eyebrow">02 / Source Pulse</p>
+                  <h2>Recent source work, shaped into something people can read</h2>
                 </div>
                 <p>
                   Surface the important framework, device tree, kernel, and
@@ -371,8 +371,8 @@ function App() {
             <div className="panel insight-panel" id="builder-notes">
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">Builder Notes</p>
-                  <h2>Builder-side progress, testing notes, and rollout context</h2>
+                  <p className="eyebrow">03 / Builder Notes</p>
+                  <h2>Builder-side progress with room for actual release context</h2>
                 </div>
                 <p>
                   Keep community-facing notes readable while still making room
@@ -400,8 +400,8 @@ function App() {
           <section className="panel support-panel" id="devices">
             <div className="support-copy">
               <div>
-                <p className="eyebrow">Device Coverage</p>
-                <h2>Focused on Nothing Phone 2a and 2a Plus.</h2>
+                <p className="eyebrow">04 / Device Coverage</p>
+                <h2>Focused, expandable, and built around the 2a family.</h2>
               </div>
               <p>
                 The structure is ready for more ROMs, more devices, and a
