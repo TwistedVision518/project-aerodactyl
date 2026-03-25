@@ -1,0 +1,21 @@
+{
+  "order": 2,
+  "name": "Lunaris OS",
+  "version": "v3.8",
+  "status": "Current build",
+  "branch": "QPR refresh",
+  "tagline": "Smooth, polished, and tuned around a cleaner visual cadence.",
+  "buildDate": "March 21, 2026",
+  "devices": ["Nothing Phone 2a"],
+  "channelLabel": "Telegram release feed",
+  "telegramUrl": "",
+  "maintenanceNote": "Current lane: visual polish and consistency",
+  "accent": "#17b68e",
+  "accentSoft": "rgba(23, 182, 142, 0.14)",
+  "accentStrong": "#0f8c6c",
+  "highlights": [
+    "Focused on a refined day-to-day feel without overloading the UI.",
+    "Animation and surface tuning keep the build feeling quick and light.",
+    "Clear version framing makes it easy to compare against other active ROMs."
+  ]
+}

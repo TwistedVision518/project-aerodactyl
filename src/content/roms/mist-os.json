@@ -1,0 +1,21 @@
+{
+  "order": 1,
+  "name": "Mist OS",
+  "version": "v4.5",
+  "status": "Current build",
+  "branch": "Android 16",
+  "tagline": "Balanced daily-driver tuning with a clean base and stable pacing.",
+  "buildDate": "March 22, 2026",
+  "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
+  "channelLabel": "Telegram release feed",
+  "telegramUrl": "",
+  "maintenanceNote": "Current lane: stability-first release cycle",
+  "accent": "#ff7a62",
+  "accentSoft": "rgba(255, 122, 98, 0.14)",
+  "accentStrong": "#d94f37",
+  "highlights": [
+    "Android 16 base aligned for Nothing Phone 2a and 2a Plus.",
+    "Thermal, camera, and day-to-day polish grouped into the current drop.",
+    "Release notes stay short enough to scan quickly before downloading."
+  ]
+}

@@ -42,19 +42,28 @@ pnpm exec eslint .
 
 ## Content Editing
 
-Most of the site content lives in:
+Per-ROM content now lives in:
+
+`src/content/roms/`
+
+Each ROM has its own JSON file, which makes it easy for other builders to update only their own release lane without touching the layout.
+
+Shared site sections still live in:
 
 `src/data/siteContent.ts`
 
 That file controls:
 
-- ROM names, versions, statuses, and device targets
 - Source Pulse entries
 - Builder Notes entries
 - Device coverage cards
 - Expansion / workflow cards
 
-If you want live release buttons, update the `telegramUrl` values in `src/data/siteContent.ts` with the correct Telegram post links for each ROM.
+If you want live release buttons, update the `telegramUrl` value inside the matching ROM JSON file with the correct Telegram post link.
+
+Builder workflow guide:
+
+`CONTRIBUTING.md`
 
 ## Deployment
 

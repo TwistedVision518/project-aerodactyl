@@ -1,0 +1,21 @@
+{
+  "order": 4,
+  "name": "Evolution X",
+  "version": "v11.6",
+  "status": "Featured build",
+  "branch": "Performance pass",
+  "tagline": "Strong release framing with a clear emphasis on current build state.",
+  "buildDate": "March 24, 2026",
+  "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
+  "channelLabel": "Telegram release feed",
+  "telegramUrl": "",
+  "maintenanceNote": "Current lane: public-facing mainline build",
+  "accent": "#1f5eff",
+  "accentSoft": "rgba(31, 94, 255, 0.14)",
+  "accentStrong": "#1543bf",
+  "highlights": [
+    "Large version framing keeps the newest release obvious at a glance.",
+    "Good fit for major drops, upstream sync notes, and wider public visibility.",
+    "Works well as the top-pinned ROM when a fresh update lands."
+  ]
+}

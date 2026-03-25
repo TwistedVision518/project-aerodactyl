@@ -1,133 +1,20 @@
+import { roms } from './romCatalog'
+import type {
+  BuilderUpdate,
+  ExpansionCard,
+  SourceChange,
+  SupportDevice,
+} from './types'
+
+export { roms }
+
 export const quickStats = [
-  { label: 'ROMs tracked', value: '6 ROMs' },
+  { label: 'ROMs tracked', value: `${roms.length} ROMs` },
   { label: 'Supported devices', value: '2 devices' },
   { label: 'Release flow', value: 'Per-ROM tracking' },
 ]
 
-export const roms = [
-  {
-    name: 'Mist OS',
-    version: 'v4.5',
-    status: 'Current build',
-    branch: 'Android 16',
-    tagline: 'Balanced daily-driver tuning with a clean base and stable pacing.',
-    buildDate: 'March 22, 2026',
-    devices: ['Nothing Phone 2a', 'Nothing Phone 2a Plus'],
-    channelLabel: 'Telegram release feed',
-    telegramUrl: '',
-    maintenanceNote: 'Current lane: stability-first release cycle',
-    accent: '#ff7a62',
-    accentSoft: 'rgba(255, 122, 98, 0.14)',
-    accentStrong: '#d94f37',
-    highlights: [
-      'Android 16 base aligned for Nothing Phone 2a and 2a Plus.',
-      'Thermal, camera, and day-to-day polish grouped into the current drop.',
-      'Release notes stay short enough to scan quickly before downloading.',
-    ],
-  },
-  {
-    name: 'Lunaris OS',
-    version: 'v3.8',
-    status: 'Current build',
-    branch: 'QPR refresh',
-    tagline: 'Smooth, polished, and tuned around a cleaner visual cadence.',
-    buildDate: 'March 21, 2026',
-    devices: ['Nothing Phone 2a'],
-    channelLabel: 'Telegram release feed',
-    telegramUrl: '',
-    maintenanceNote: 'Current lane: visual polish and consistency',
-    accent: '#17b68e',
-    accentSoft: 'rgba(23, 182, 142, 0.14)',
-    accentStrong: '#0f8c6c',
-    highlights: [
-      'Focused on a refined day-to-day feel without overloading the UI.',
-      'Animation and surface tuning keep the build feeling quick and light.',
-      'Clear version framing makes it easy to compare against other active ROMs.',
-    ],
-  },
-  {
-    name: 'Infinity X',
-    version: 'v3.8',
-    status: 'Active lane',
-    branch: 'Feature track',
-    tagline: 'A broader feature set presented without sacrificing clarity.',
-    buildDate: 'March 20, 2026',
-    devices: ['Nothing Phone 2a Plus'],
-    channelLabel: 'Telegram release feed',
-    telegramUrl: '',
-    maintenanceNote: 'Current lane: feature validation on 2a Plus',
-    accent: '#6c7cff',
-    accentSoft: 'rgba(108, 124, 255, 0.14)',
-    accentStrong: '#4557e6',
-    highlights: [
-      'Designed for a denser set of changes while keeping release notes readable.',
-      'Per-ROM tracking helps feature-heavy builds stay separated from the rest.',
-      'Side metadata gives testers a quick view of date, target device, and lane.',
-    ],
-  },
-  {
-    name: 'Evolution X',
-    version: 'v11.6',
-    status: 'Featured build',
-    branch: 'Performance pass',
-    tagline: 'Strong release framing with a clear emphasis on current build state.',
-    buildDate: 'March 24, 2026',
-    devices: ['Nothing Phone 2a', 'Nothing Phone 2a Plus'],
-    channelLabel: 'Telegram release feed',
-    telegramUrl: '',
-    maintenanceNote: 'Current lane: public-facing mainline build',
-    accent: '#1f5eff',
-    accentSoft: 'rgba(31, 94, 255, 0.14)',
-    accentStrong: '#1543bf',
-    highlights: [
-      'Large version framing keeps the newest release obvious at a glance.',
-      'Good fit for major drops, upstream sync notes, and wider public visibility.',
-      'Works well as the top-pinned ROM when a fresh update lands.',
-    ],
-  },
-  {
-    name: 'PixelOS',
-    version: 'v16.2',
-    status: 'Stable lane',
-    branch: 'Pixel track',
-    tagline: 'Minimal presentation, quick readability, and easy release scanning.',
-    buildDate: 'March 19, 2026',
-    devices: ['Nothing Phone 2a'],
-    channelLabel: 'Telegram release feed',
-    telegramUrl: '',
-    maintenanceNote: 'Current lane: concise stable updates',
-    accent: '#3da3ff',
-    accentSoft: 'rgba(61, 163, 255, 0.14)',
-    accentStrong: '#0b71c7',
-    highlights: [
-      'Clean layout supports shorter notes without looking sparse.',
-      'Ideal for stable release communication and small incremental drops.',
-      'Device targeting stays clear even on narrower mobile screens.',
-    ],
-  },
-  {
-    name: 'AxionOS',
-    version: 'v2.5',
-    status: 'Bring-up lane',
-    branch: 'Fast-moving track',
-    tagline: 'A sharper lane for faster progress updates and iterative releases.',
-    buildDate: 'March 18, 2026',
-    devices: ['Nothing Phone 2a Plus'],
-    channelLabel: 'Telegram release feed',
-    telegramUrl: '',
-    maintenanceNote: 'Current lane: active iteration and bring-up',
-    accent: '#ffb64d',
-    accentSoft: 'rgba(255, 182, 77, 0.14)',
-    accentStrong: '#c37d12',
-    highlights: [
-      'Useful for communicating momentum while the build is still evolving.',
-      'A good fit for tester-facing notes and faster release turnover.',
-      'Keeps early-stage progress visible without blending into stable lanes.',
-    ],
-  },
-]
-
-export const sourceChanges = [
+export const sourceChanges: SourceChange[] = [
   {
     title: 'Framework and SystemUI',
     date: 'March 24, 2026',
@@ -163,7 +50,7 @@ export const sourceChanges = [
   },
 ]
 
-export const builderUpdates = [
+export const builderUpdates: BuilderUpdate[] = [
   {
     type: 'Workflow',
     date: 'March 25, 2026',
@@ -187,7 +74,7 @@ export const builderUpdates = [
   },
 ]
 
-export const supportMatrix = [
+export const supportMatrix: SupportDevice[] = [
   {
     badge: 'Primary target',
     name: 'Nothing Phone 2a',
@@ -204,7 +91,7 @@ export const supportMatrix = [
   },
 ]
 
-export const expansionCards = [
+export const expansionCards: ExpansionCard[] = [
   {
     title: 'Add More ROMs',
     summary:

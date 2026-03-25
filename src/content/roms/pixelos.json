@@ -1,0 +1,21 @@
+{
+  "order": 5,
+  "name": "PixelOS",
+  "version": "v16.2",
+  "status": "Stable lane",
+  "branch": "Pixel track",
+  "tagline": "Minimal presentation, quick readability, and easy release scanning.",
+  "buildDate": "March 19, 2026",
+  "devices": ["Nothing Phone 2a"],
+  "channelLabel": "Telegram release feed",
+  "telegramUrl": "",
+  "maintenanceNote": "Current lane: concise stable updates",
+  "accent": "#3da3ff",
+  "accentSoft": "rgba(61, 163, 255, 0.14)",
+  "accentStrong": "#0b71c7",
+  "highlights": [
+    "Clean layout supports shorter notes without looking sparse.",
+    "Ideal for stable release communication and small incremental drops.",
+    "Device targeting stays clear even on narrower mobile screens."
+  ]
+}

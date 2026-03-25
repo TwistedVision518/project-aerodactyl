@@ -1,0 +1,21 @@
+{
+  "order": 3,
+  "name": "Infinity X",
+  "version": "v3.8",
+  "status": "Active lane",
+  "branch": "Feature track",
+  "tagline": "A broader feature set presented without sacrificing clarity.",
+  "buildDate": "March 20, 2026",
+  "devices": ["Nothing Phone 2a Plus"],
+  "channelLabel": "Telegram release feed",
+  "telegramUrl": "",
+  "maintenanceNote": "Current lane: feature validation on 2a Plus",
+  "accent": "#6c7cff",
+  "accentSoft": "rgba(108, 124, 255, 0.14)",
+  "accentStrong": "#4557e6",
+  "highlights": [
+    "Designed for a denser set of changes while keeping release notes readable.",
+    "Per-ROM tracking helps feature-heavy builds stay separated from the rest.",
+    "Side metadata gives testers a quick view of date, target device, and lane."
+  ]
+}
