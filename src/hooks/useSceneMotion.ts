@@ -28,7 +28,12 @@ export function useSceneMotion() {
     const fineCenter = { x: 0.5, y: 0.28 }
     const coarseCenter = { x: 0.5, y: 0.24 }
     const applied = new Map<string, string>()
+    const sectionIds = ['top', 'rom-directory', 'gcams', 'source-pulse', 'builder-notes', 'devices']
+    const sections = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null)
     let frame: number | null = null
+    let sectionFrame: number | null = null
 
     const isCoarsePointer = () => prefersCoarsePointer.matches
     const getCenter = () => (isCoarsePointer() ? coarseCenter : fineCenter)
@@ -63,6 +68,10 @@ export function useSceneMotion() {
 
       node.dataset.performance = saveData || lowMemory || lowCpu ? 'lite' : 'full'
     }
+    const setActiveSection = (sectionId: string) => {
+      setStyleValue('--active-section', sectionId)
+      node.dataset.activeSection = sectionId
+    }
     const center = getCenter()
     const target = { x: center.x, y: center.y }
     const current = { x: center.x, y: center.y }
@@ -82,6 +91,43 @@ export function useSceneMotion() {
       setPointer(nextCenter.x, nextCenter.y)
       setFocus(nextCenter.x, nextCenter.y)
       setTrail(nextCenter.x, nextCenter.y)
+      setActiveSection('top')
+    }
+    const updateActiveSection = () => {
+      sectionFrame = null
+
+      if (sections.length === 0) {
+        return
+      }
+
+      const probeLine = window.innerHeight * 0.34
+      let active = sections[0]?.id ?? 'top'
+      let bestScore = Number.POSITIVE_INFINITY
+
+      for (const section of sections) {
+        const rect = section.getBoundingClientRect()
+        const containsProbe = rect.top <= probeLine && rect.bottom >= probeLine
+
+        if (containsProbe) {
+          active = section.id
+          break
+        }
+
+        const score = Math.min(Math.abs(rect.top - probeLine), Math.abs(rect.bottom - probeLine))
+        if (score < bestScore) {
+          bestScore = score
+          active = section.id
+        }
+      }
+
+      setActiveSection(active)
+    }
+    const scheduleSectionUpdate = () => {
+      if (sectionFrame !== null) {
+        return
+      }
+
+      sectionFrame = window.requestAnimationFrame(updateActiveSection)
     }
 
     const updateStyles = () => {
@@ -212,11 +258,14 @@ export function useSceneMotion() {
     }
 
     resetScene()
+    scheduleSectionUpdate()
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
     window.addEventListener('pointerleave', handlePointerLeave)
     window.addEventListener('touchstart', handleTouchStart, { passive: true })
     window.addEventListener('touchmove', handleTouchMove, { passive: true })
     window.addEventListener('touchend', handleTouchEnd, { passive: true })
+    window.addEventListener('scroll', scheduleSectionUpdate, { passive: true })
+    window.addEventListener('resize', scheduleSectionUpdate, { passive: true })
     prefersCoarsePointer.addEventListener('change', handleModeChange)
     connection?.addEventListener?.('change', handleModeChange)
 
@@ -225,11 +274,17 @@ export function useSceneMotion() {
         window.cancelAnimationFrame(frame)
       }
 
+      if (sectionFrame !== null) {
+        window.cancelAnimationFrame(sectionFrame)
+      }
+
       window.removeEventListener('pointermove', handlePointerMove)
       window.removeEventListener('pointerleave', handlePointerLeave)
       window.removeEventListener('touchstart', handleTouchStart)
       window.removeEventListener('touchmove', handleTouchMove)
       window.removeEventListener('touchend', handleTouchEnd)
+      window.removeEventListener('scroll', scheduleSectionUpdate)
+      window.removeEventListener('resize', scheduleSectionUpdate)
       prefersCoarsePointer.removeEventListener('change', handleModeChange)
       connection?.removeEventListener?.('change', handleModeChange)
     }

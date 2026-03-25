@@ -384,6 +384,22 @@
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
+.scene-root[data-active-section='top'] .mobile-dock-link[data-section='top'],
+.scene-root[data-active-section='rom-directory'] .mobile-dock-link[data-section='rom-directory'],
+.scene-root[data-active-section='gcams'] .mobile-dock-link[data-section='gcams'],
+.scene-root[data-active-section='source-pulse'] .mobile-dock-link[data-section='source-pulse'],
+.scene-root[data-active-section='builder-notes'] .mobile-dock-link[data-section='builder-notes'],
+.scene-root[data-active-section='devices'] .mobile-dock-link[data-section='devices'] {
+  color: var(--text);
+  border-color: color-mix(in srgb, var(--hub-accent, #5a72ff) 30%, rgba(255, 255, 255, 0.08));
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--hub-accent-soft, rgba(90, 114, 255, 0.16)) 78%, rgba(255, 255, 255, 0.05)), rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 0 0 1px color-mix(in srgb, var(--hub-accent, #5a72ff) 10%, transparent);
+}
+
 .mobile-dock-link:active {
   transform: translateY(1px) scale(0.98);
 }
@@ -1368,12 +1384,12 @@
 @media (max-width: 640px) {
   .page,
   .topbar {
-    width: min(100% - 1rem, 1180px);
+    width: min(100% - 0.45rem, 1180px);
   }
 
   .topbar {
     top: 0.5rem;
-    padding: 0.85rem;
+    padding: 0.8rem;
     border-radius: 1rem;
   }
 
@@ -1388,7 +1404,7 @@
   .support-panel,
   .insight-panel,
   .rom-section {
-    padding: 1rem;
+    padding: 0.95rem;
   }
 
   .hero h1,
@@ -1424,7 +1440,7 @@
   }
 
   .mobile-dock {
-    width: min(calc(100% - 0.85rem), 32rem);
+    width: min(calc(100% - 0.45rem), 32rem);
     gap: 0.35rem;
     padding: 0.42rem;
     border-radius: 1.2rem;

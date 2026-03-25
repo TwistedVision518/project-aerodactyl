@@ -584,22 +584,22 @@ function App() {
       </main>
 
       <nav className="mobile-dock" aria-label="Mobile section navigation">
-        <a className="mobile-dock-link" href="#top">
+        <a className="mobile-dock-link" data-section="top" href="#top">
           Home
         </a>
-        <a className="mobile-dock-link" href="#rom-directory">
+        <a className="mobile-dock-link" data-section="rom-directory" href="#rom-directory">
           ROMs
         </a>
-        <a className="mobile-dock-link" href="#gcams">
+        <a className="mobile-dock-link" data-section="gcams" href="#gcams">
           GCams
         </a>
-        <a className="mobile-dock-link" href="#source-pulse">
+        <a className="mobile-dock-link" data-section="source-pulse" href="#source-pulse">
           Pulse
         </a>
-        <a className="mobile-dock-link" href="#builder-notes">
+        <a className="mobile-dock-link" data-section="builder-notes" href="#builder-notes">
           Notes
         </a>
-        <a className="mobile-dock-link" href="#devices">
+        <a className="mobile-dock-link" data-section="devices" href="#devices">
           Devices
         </a>
       </nav>
