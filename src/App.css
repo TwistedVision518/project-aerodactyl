@@ -287,7 +287,7 @@
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
     linear-gradient(180deg, rgba(14, 14, 16, 0.9), rgba(0, 0, 0, 0.94)),
     var(--surface);
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 16px 42px rgba(0, 0, 0, 0.22);
   contain: paint;
   transition:
     box-shadow 220ms var(--spring),
@@ -317,21 +317,7 @@
 }
 
 .rom-section::after {
-  content: '';
-  position: absolute;
-  inset: auto 1.2rem -2.5rem 1.2rem;
-  height: 5rem;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--accent) 12%, transparent),
-    transparent
-  );
-  filter: blur(28px);
-  opacity: 0.9;
-  pointer-events: none;
-  animation: sectionAura 9s ease-in-out infinite;
+  display: none;
 }
 
 .hero,
@@ -477,10 +463,10 @@
 .device-card,
 .expansion-card {
   border: 1px solid var(--outline);
-  background: linear-gradient(180deg, rgba(8, 8, 10, 0.88), rgba(0, 0, 0, 0.82));
+  background: linear-gradient(180deg, rgba(10, 10, 12, 0.88), rgba(0, 0, 0, 0.82));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 10px 28px rgba(0, 0, 0, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 16px rgba(0, 0, 0, 0.14);
 }
 
 .hero-story {
@@ -672,8 +658,7 @@
   padding: 1rem;
   border-radius: 1.2rem;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 18%),
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 24%, transparent), transparent 40%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 18%),
     linear-gradient(180deg, rgba(9, 9, 11, 0.92), rgba(0, 0, 0, 0.84));
   transition:
     transform 220ms var(--spring),
@@ -742,12 +727,11 @@
   border-radius: 1.2rem;
   border: 1px solid var(--outline);
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.07), transparent 18%),
-    radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 24%, transparent), transparent 38%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 18%),
     linear-gradient(180deg, rgba(9, 9, 11, 0.92), rgba(0, 0, 0, 0.84));
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    0 10px 28px rgba(0, 0, 0, 0.22);
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 6px 16px rgba(0, 0, 0, 0.14);
   transition:
     transform 220ms var(--spring),
     border-color 220ms ease,
@@ -949,14 +933,14 @@
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(1.3rem) scale(0.975);
+  opacity: 1;
+  transform: none;
 }
 
 .reveal.is-visible {
   opacity: 1;
-  animation: revealBounce 760ms var(--spring) both;
-  animation-delay: var(--delay, 0ms);
+  transform: none;
+  animation: none;
 }
 
 .reactive-panel {
@@ -1007,15 +991,6 @@
 
 .reactive-panel > * {
   transform: translateZ(calc(var(--panel-active) * 10px));
-}
-
-@media (hover: hover) and (pointer: fine) {
-  .rom-section,
-  .insight-panel,
-  .support-panel {
-    content-visibility: auto;
-    contain-intrinsic-size: 720px;
-  }
 }
 
 .nav-links a:hover,
@@ -1070,78 +1045,6 @@
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.26);
 }
 
-@keyframes revealBounce {
-  0% {
-    opacity: 0;
-    transform: translateY(1.1rem) scale(0.98);
-  }
-
-  62% {
-    opacity: 1;
-    transform: translateY(-0.26rem) scale(1.004);
-  }
-
-  82% {
-    transform: translateY(0.06rem) scale(0.999);
-  }
-
-  100% {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@keyframes auroraDriftA {
-  0% {
-    transform: translate3d(calc(var(--scene-shift-x) * 0.14), calc(var(--scene-shift-y) * 0.12), 0)
-      scale(1);
-  }
-
-  100% {
-    transform: translate3d(calc(var(--scene-shift-x) * 0.22 + 2%), calc(var(--scene-shift-y) * 0.18 - 1%), 0)
-      scale(1.06);
-  }
-}
-
-@keyframes auroraDriftB {
-  0% {
-    transform: translate3d(calc(var(--scene-shift-x) * -0.12), calc(var(--scene-shift-y) * 0.16), 0)
-      scale(1.02);
-  }
-
-  100% {
-    transform: translate3d(calc(var(--scene-shift-x) * -0.18 - 2%), calc(var(--scene-shift-y) * 0.22 + 1%), 0)
-      scale(0.99);
-  }
-}
-
-@keyframes spectralDrift {
-  0% {
-    transform: translate3d(calc(var(--scene-shift-x) * -0.12), calc(var(--scene-shift-y) * -0.1), 0)
-      rotate(-6deg)
-      scale(1.02);
-  }
-
-  100% {
-    transform: translate3d(calc(var(--scene-shift-x) * -0.2 + 1%), calc(var(--scene-shift-y) * -0.16 - 1%), 0)
-      rotate(4deg)
-      scale(1.08);
-  }
-}
-
-@keyframes sectionAura {
-  0%,
-  100% {
-    transform: translateX(-2%);
-    opacity: 0.5;
-  }
-
-  50% {
-    transform: translateX(2%);
-    opacity: 0.9;
-  }
-}
-
 .scene-root[data-performance='lite'] .interactive-scene {
   background:
     radial-gradient(circle at 50% 6%, rgba(255, 255, 255, 0.02), transparent 30%),
@@ -1170,7 +1073,7 @@
 }
 
 .scene-root[data-performance='lite'] .reveal.is-visible {
-  animation-duration: 560ms;
+  animation: none;
 }
 
 @media (max-width: 1080px) {
