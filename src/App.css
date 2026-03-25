@@ -1011,24 +1011,41 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
+  gap: 1.15rem;
+}
+
+.rom-section-header .chip-row {
+  gap: 0.6rem;
+  margin-bottom: 0.8rem;
+}
+
+.rom-section-header h2 {
+  margin-top: 0.05rem;
 }
 
 .rom-section-header p {
   max-width: 56ch;
-  margin: 0.75rem 0 0;
+  margin: 0.9rem 0 0;
 }
 
 .rom-section-body {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 18rem;
   gap: 1.1rem;
-  margin-top: 1.35rem;
+  margin-top: 1.5rem;
 }
 
 .rom-section-main {
   display: grid;
   gap: 1.1rem;
+}
+
+.rom-section-main .bullet-list {
+  padding-right: 0.35rem;
+}
+
+.rom-section-main .bullet-list li {
+  padding-left: 1.2rem;
 }
 
 .rom-section-side {
