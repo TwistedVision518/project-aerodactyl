@@ -384,8 +384,8 @@ function App() {
 
             <div className="directory-preview panel" id="quick-directory">
               <div className="latest-updates-head">
-                <strong>ROM lanes</strong>
-                <span>Jump to the build you want</span>
+                <strong>Tracked ROMs</strong>
+                <span>Quick jump into each release section</span>
               </div>
               <div className="directory-preview-grid">
                 {roms.map((rom) => {
@@ -423,19 +423,19 @@ function App() {
           >
             <div className="section-banner-copy">
               <p className="eyebrow">01 / ROM Directory</p>
-              <h2>Pick a ROM and get to the right build fast.</h2>
+              <h2>Browse every tracked ROM with clear version and device context.</h2>
               <p>
-                Separate lanes keep versions, devices, release links, and maintainer notes from
-                bleeding into each other.
+                Each section keeps release links, supported devices, changelog notes, and builder
+                context together so users can move quickly without second-guessing what they are opening.
               </p>
             </div>
 
             <div className="rom-filter-bar" aria-label="ROM filters">
               <label className="rom-search">
-                <span>Search</span>
+                <span>Search the directory</span>
                 <input
                   onChange={(event) => setRomQuery(event.target.value)}
-                  placeholder="Search ROMs, status, branch, or version"
+                  placeholder="Search by ROM name, Android base, version, or release status"
                   type="search"
                   value={romQuery}
                 />
@@ -447,7 +447,7 @@ function App() {
                   onClick={() => setDeviceFilter('all')}
                   type="button"
                 >
-                  All devices
+                  All supported devices
                 </button>
                 <button
                   className={deviceFilter === 'pacman' ? 'is-active' : undefined}
@@ -493,8 +493,8 @@ function App() {
 
             {filteredRoms.length === 0 ? (
               <div className="rom-filter-empty">
-                <strong>No ROMs match that filter yet.</strong>
-                <span>Try clearing the search or switching the selected device.</span>
+                <strong>No ROMs matched the current search.</strong>
+                <span>Try a broader search term or switch the selected device filter.</span>
               </div>
             ) : null}
           </section>
