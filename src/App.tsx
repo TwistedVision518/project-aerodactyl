@@ -121,15 +121,15 @@ function App() {
         <Reveal>
           <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
             <div className="hero-copy">
-              <div className="hero-kicker">
-                <span className="tonal-chip">Nothing Phone 2a / 2a Plus</span>
-              </div>
-
-              <p className="eyebrow">Project Aerodactyl Release Hub</p>
-              <h1>Nothing Phone 2a and 2a Plus ROMs, in one place.</h1>
+              <p className="eyebrow">Nothing Phone 2a / 2a Plus release hub</p>
+              <h1>One home for ROMs, releases, and the wider device scene.</h1>
               <p className="lede">
-                Builds, release notes, source updates, and the community hub,
-                organized to stay clear at a glance.
+                A cleaner place to track builds, source movement, support links,
+                and community updates across pacman and pacmanpro.
+              </p>
+              <p className="hero-caption">
+                Built around the same idea: keep the landing experience simple,
+                fast, and immediately useful.
               </p>
 
               <div className="hero-actions">
@@ -151,11 +151,11 @@ function App() {
                 ) : null}
               </div>
 
-              <div className="stat-grid" aria-label="Project highlights">
+              <div className="hero-facts" aria-label="Project highlights">
                 {quickStats.map((stat) => (
-                  <article className="stat-card" key={stat.label}>
-                    <span>{stat.label}</span>
+                  <article className="hero-fact" key={stat.label}>
                     <strong>{stat.value}</strong>
+                    <span>{stat.label}</span>
                   </article>
                 ))}
               </div>
@@ -232,7 +232,7 @@ function App() {
             <div className="latest-updates panel">
               <div className="latest-updates-head">
                 <strong>Latest updates</strong>
-                <span>Auto-sorted across the whole hub</span>
+                <span>Recent movement across the whole hub</span>
               </div>
               <div className="latest-updates-list">
                 {latestUpdates.map((entry) => (
