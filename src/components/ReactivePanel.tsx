@@ -25,61 +25,81 @@ export function ReactivePanel<T extends ElementType = 'div'>({
 }: ReactivePanelProps<T>) {
   const Component = (as ?? 'div') as ElementType
   const ref = useRef<HTMLElement | null>(null)
-  const frameRef = useRef<number>(0)
+  const frameRef = useRef<number | null>(null)
   const targetRef = useRef({ x: 0.5, y: 0.5, active: 0 })
   const currentRef = useRef({ x: 0.5, y: 0.5, active: 0 })
+  const interactiveRef = useRef(true)
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const media = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const updateMode = () => {
+      interactiveRef.current = media.matches
+    }
+
+    updateMode()
+    media.addEventListener('change', updateMode)
+
+    return () => media.removeEventListener('change', updateMode)
+  }, [])
+
+  const updateStyles = () => {
     const node = ref.current
 
     if (!node) {
+      frameRef.current = null
       return
     }
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const current = currentRef.current
+    const target = targetRef.current
 
-    if (reduced.matches) {
-      node.style.setProperty('--panel-rotate-x', '0deg')
-      node.style.setProperty('--panel-rotate-y', '0deg')
-      node.style.setProperty('--panel-glow-x', '50%')
-      node.style.setProperty('--panel-glow-y', '50%')
-      node.style.setProperty('--panel-lift', '0px')
-      node.style.setProperty('--panel-active', '0')
+    current.x += (target.x - current.x) * 0.22
+    current.y += (target.y - current.y) * 0.22
+    current.active += (target.active - current.active) * 0.24
+
+    const rotateY = (current.x - 0.5) * 6 * intensity
+    const rotateX = (0.5 - current.y) * 6 * intensity
+    const lift = current.active * 6 * intensity
+
+    node.style.setProperty('--panel-rotate-x', `${rotateX.toFixed(2)}deg`)
+    node.style.setProperty('--panel-rotate-y', `${rotateY.toFixed(2)}deg`)
+    node.style.setProperty('--panel-glow-x', `${(current.x * 100).toFixed(2)}%`)
+    node.style.setProperty('--panel-glow-y', `${(current.y * 100).toFixed(2)}%`)
+    node.style.setProperty('--panel-lift', `${lift.toFixed(2)}px`)
+    node.style.setProperty('--panel-active', current.active.toFixed(3))
+
+    const settled =
+      Math.abs(target.x - current.x) < 0.002 &&
+      Math.abs(target.y - current.y) < 0.002 &&
+      Math.abs(target.active - current.active) < 0.01
+
+    if (settled) {
+      frameRef.current = null
       return
     }
 
-    const update = () => {
-      const current = currentRef.current
-      const target = targetRef.current
+    frameRef.current = window.requestAnimationFrame(updateStyles)
+  }
 
-      current.x += (target.x - current.x) * 0.12
-      current.y += (target.y - current.y) * 0.12
-      current.active += (target.active - current.active) * 0.14
-
-      const rotateY = (current.x - 0.5) * 10 * intensity
-      const rotateX = (0.5 - current.y) * 10 * intensity
-      const lift = current.active * 10 * intensity
-
-      node.style.setProperty('--panel-rotate-x', `${rotateX.toFixed(2)}deg`)
-      node.style.setProperty('--panel-rotate-y', `${rotateY.toFixed(2)}deg`)
-      node.style.setProperty('--panel-glow-x', `${(current.x * 100).toFixed(2)}%`)
-      node.style.setProperty('--panel-glow-y', `${(current.y * 100).toFixed(2)}%`)
-      node.style.setProperty('--panel-lift', `${lift.toFixed(2)}px`)
-      node.style.setProperty('--panel-active', current.active.toFixed(3))
-
-      frameRef.current = window.requestAnimationFrame(update)
+  const scheduleUpdate = () => {
+    if (frameRef.current !== null) {
+      return
     }
 
-    frameRef.current = window.requestAnimationFrame(update)
-
-    return () => {
-      window.cancelAnimationFrame(frameRef.current)
-    }
-  }, [intensity])
+    frameRef.current = window.requestAnimationFrame(updateStyles)
+  }
 
   const handlePointerMove: NonNullable<ComponentPropsWithoutRef<'div'>['onPointerMove']> = (
     event,
   ) => {
+    if (!interactiveRef.current) {
+      return
+    }
+
     const node = ref.current
 
     if (!node) {
@@ -93,12 +113,18 @@ export function ReactivePanel<T extends ElementType = 'div'>({
     targetRef.current.x = Math.max(0, Math.min(1, x))
     targetRef.current.y = Math.max(0, Math.min(1, y))
     targetRef.current.active = 1
+    scheduleUpdate()
   }
 
   const handlePointerLeave: NonNullable<ComponentPropsWithoutRef<'div'>['onPointerLeave']> = () => {
+    if (!interactiveRef.current) {
+      return
+    }
+
     targetRef.current.x = 0.5
     targetRef.current.y = 0.5
     targetRef.current.active = 0
+    scheduleUpdate()
   }
 
   return (

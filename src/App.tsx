@@ -37,19 +37,10 @@ function App() {
       <div className="interactive-scene" aria-hidden="true">
         <div className="scene-aurora scene-aurora-a" />
         <div className="scene-aurora scene-aurora-b" />
-        <div className="scene-aurora scene-aurora-c" />
-        <div className="scene-ribbon scene-ribbon-a" />
-        <div className="scene-ribbon scene-ribbon-b" />
         <div className="scene-spotlight" />
         <div className="scene-cursor-trail" />
         <div className="scene-cursor-glow" />
-        <div className="scene-grid" />
-        <div className="scene-noise" />
       </div>
-
-      <div className="ambient ambient-one" aria-hidden="true" />
-      <div className="ambient ambient-two" aria-hidden="true" />
-      <div className="ambient ambient-three" aria-hidden="true" />
 
       <header className="topbar">
         <a className="brand" href="#top">
@@ -68,17 +59,10 @@ function App() {
         </nav>
 
         <div className="topbar-actions">
-          <ReactivePanel as="span" className="status-badge micro-reactive" intensity={0.28}>
-            Per-ROM layout
-          </ReactivePanel>
-          <ReactivePanel
-            as="a"
-            className="pill-link micro-reactive"
-            href="#rom-directory"
-            intensity={0.35}
-          >
+          <span className="status-badge">Per-ROM layout</span>
+          <a className="pill-link" href="#rom-directory">
             Open ROM Directory
-          </ReactivePanel>
+          </a>
         </div>
       </header>
 
@@ -87,15 +71,9 @@ function App() {
           <section className="hero panel">
             <div className="hero-copy">
               <div className="hero-kicker">
-                <ReactivePanel as="span" className="tonal-chip micro-reactive" intensity={0.22}>
-                  Releases
-                </ReactivePanel>
-                <ReactivePanel as="span" className="tonal-chip micro-reactive" intensity={0.22}>
-                  Source changes
-                </ReactivePanel>
-                <ReactivePanel as="span" className="tonal-chip micro-reactive" intensity={0.22}>
-                  Builder notes
-                </ReactivePanel>
+                <span className="tonal-chip">Releases</span>
+                <span className="tonal-chip">Source changes</span>
+                <span className="tonal-chip">Builder notes</span>
               </div>
 
               <p className="eyebrow">Project Aerodactyl</p>
@@ -107,22 +85,12 @@ function App() {
               </p>
 
               <div className="hero-actions">
-                <ReactivePanel
-                  as="a"
-                  className="action-primary micro-reactive"
-                  href="#rom-directory"
-                  intensity={0.42}
-                >
+                <a className="action-primary" href="#rom-directory">
                   Browse ROM Sections
-                </ReactivePanel>
-                <ReactivePanel
-                  as="a"
-                  className="action-secondary micro-reactive"
-                  href="#source-pulse"
-                  intensity={0.38}
-                >
+                </a>
+                <a className="action-secondary" href="#source-pulse">
                   View Source Pulse
-                </ReactivePanel>
+                </a>
               </div>
 
               <div className="hero-story">
@@ -152,16 +120,8 @@ function App() {
                 style={featuredStyle}
               >
                 <div className="feature-topline">
-                  <ReactivePanel as="span" className="feature-badge micro-reactive" intensity={0.24}>
-                    Featured ROM
-                  </ReactivePanel>
-                  <ReactivePanel
-                    as="span"
-                    className="feature-version micro-reactive"
-                    intensity={0.24}
-                  >
-                    {featuredRom.version}
-                  </ReactivePanel>
+                  <span className="feature-badge">Featured ROM</span>
+                  <span className="feature-version">{featuredRom.version}</span>
                 </div>
 
                 <h2>{featuredRom.name}</h2>
@@ -178,16 +138,9 @@ function App() {
                   <span>{featuredRom.devices.join(' / ')}</span>
                 </div>
 
-                <ReactivePanel
-                  as="a"
-                  className="feature-link micro-reactive"
-                  href={featuredRom.telegramUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  intensity={0.42}
-                >
+                <a className="feature-link" href={featuredRom.telegramUrl} target="_blank" rel="noreferrer">
                   Open Telegram Post
-                </ReactivePanel>
+                </a>
               </ReactivePanel>
 
               <div className="directory-preview">
@@ -275,23 +228,13 @@ function App() {
                   <div className="rom-section-header">
                     <div>
                       <div className="chip-row">
-                        <ReactivePanel
-                          as="span"
-                          className="chip chip-tonal micro-reactive"
-                          intensity={0.24}
-                        >
-                          {rom.status}
-                        </ReactivePanel>
-                        <ReactivePanel as="span" className="chip micro-reactive" intensity={0.24}>
-                          {rom.branch}
-                        </ReactivePanel>
+                        <span className="chip chip-tonal">{rom.status}</span>
+                        <span className="chip">{rom.branch}</span>
                       </div>
                       <h2>{rom.name}</h2>
                       <p>{rom.tagline}</p>
                     </div>
-                    <ReactivePanel as="span" className="version-pill micro-reactive" intensity={0.24}>
-                      {rom.version}
-                    </ReactivePanel>
+                    <span className="version-pill">{rom.version}</span>
                   </div>
 
                   <div className="rom-section-body">
@@ -303,19 +246,10 @@ function App() {
                       </ul>
 
                       <div className="card-actions">
-                        <ReactivePanel
-                          as="a"
-                          className="micro-reactive"
-                          href={rom.telegramUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          intensity={0.4}
-                        >
+                        <a href={rom.telegramUrl} target="_blank" rel="noreferrer">
                           Telegram Download
-                        </ReactivePanel>
-                        <ReactivePanel as="span" className="ghost-pill micro-reactive" intensity={0.22}>
-                          {rom.maintenanceNote}
-                        </ReactivePanel>
+                        </a>
+                        <span className="ghost-pill">{rom.maintenanceNote}</span>
                       </div>
                     </div>
 
@@ -393,13 +327,7 @@ function App() {
                 {builderUpdates.map((update) => (
                   <article className="update-card" key={update.title}>
                     <div className="update-meta">
-                      <ReactivePanel
-                        as="span"
-                        className="chip chip-tonal micro-reactive"
-                        intensity={0.2}
-                      >
-                        {update.type}
-                      </ReactivePanel>
+                      <span className="chip chip-tonal">{update.type}</span>
                       <small>{update.date}</small>
                     </div>
                     <h3>{update.title}</h3>
@@ -427,13 +355,7 @@ function App() {
             <div className="support-grid">
               {supportMatrix.map((device) => (
                 <article className="device-card" key={device.name}>
-                  <ReactivePanel
-                    as="span"
-                    className="chip chip-tonal micro-reactive"
-                    intensity={0.2}
-                  >
-                    {device.badge}
-                  </ReactivePanel>
+                  <span className="chip chip-tonal">{device.badge}</span>
                   <h3>{device.name}</h3>
                   <p>{device.summary}</p>
                   <strong>{device.focus}</strong>
