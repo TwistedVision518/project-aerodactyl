@@ -2089,11 +2089,13 @@
 
   .interactive-scene {
     background:
-      radial-gradient(circle at 50% -8%, rgba(104, 124, 255, 0.34), transparent 34%),
-      radial-gradient(circle at 0% 34%, rgba(255, 120, 88, 0.24), transparent 38%),
-      radial-gradient(circle at 100% 74%, rgba(72, 205, 190, 0.2), transparent 40%),
-      radial-gradient(circle at 50% 88%, rgba(60, 122, 255, 0.14), transparent 32%),
-      #000;
+      radial-gradient(circle at 50% -8%, rgba(104, 124, 255, 0.2), transparent 30%),
+      radial-gradient(circle at 0% 34%, rgba(255, 120, 88, 0.14), transparent 34%),
+      radial-gradient(circle at 100% 74%, rgba(72, 205, 190, 0.12), transparent 36%),
+      #000 url('/scene-backdrop.svg') center top / cover no-repeat;
+    position: absolute;
+    inset: 0;
+    contain: none;
   }
 
   .topbar {
@@ -2105,22 +2107,9 @@
   }
 
   .scene-spotlight,
-  .scene-cursor-trail {
-    display: none;
-  }
-
+  .scene-cursor-trail,
   .scene-cursor-glow {
-    background:
-      radial-gradient(
-        circle at var(--focus-x, var(--pointer-x)) var(--focus-y, var(--pointer-y)),
-        rgba(255, 255, 255, 0.08),
-        rgba(133, 146, 255, 0.16) 14%,
-        rgba(255, 146, 112, 0.12) 26%,
-        transparent 42%
-      );
-    opacity: 0.92;
-    filter: none;
-    will-change: auto;
+    display: none;
   }
 
   .panel {
@@ -2150,6 +2139,14 @@
 
   .brand-mark {
     box-shadow: none;
+  }
+
+  .mobile-dock {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow:
+      0 12px 24px rgba(0, 0, 0, 0.24),
+      0 0 0 1px rgba(255, 255, 255, 0.04);
   }
 
   .rom-section::after {

@@ -61,6 +61,11 @@ export function useSceneMotion() {
       node.dataset.inputMode = isCoarsePointer() ? 'coarse' : 'fine'
     }
     const applyPerformanceProfile = () => {
+      if (isCoarsePointer()) {
+        node.dataset.performance = 'lite'
+        return
+      }
+
       const saveData = connection?.saveData === true
       const lowMemory =
         typeof navigatorHints.deviceMemory === 'number' && navigatorHints.deviceMemory <= 4
@@ -179,13 +184,6 @@ export function useSceneMotion() {
       target.y = Math.max(0, Math.min(1, clientY / window.innerHeight))
 
       if (isCoarsePointer()) {
-        current.x = target.x
-        current.y = target.y
-        trail.x = target.x
-        trail.y = target.y
-        setPointer(target.x, target.y)
-        setFocus(target.x, target.y)
-        setTrail(target.x, target.y)
         return
       }
 
@@ -211,40 +209,6 @@ export function useSceneMotion() {
       scheduleUpdate()
     }
 
-    const handleTouchStart = (event: TouchEvent) => {
-      const touch = event.touches[0]
-
-      if (!touch) {
-        return
-      }
-
-      updateTarget(touch.clientX, touch.clientY)
-    }
-
-    const handleTouchMove = (event: TouchEvent) => {
-      const touch = event.touches[0]
-
-      if (!touch) {
-        return
-      }
-
-      updateTarget(touch.clientX, touch.clientY)
-    }
-
-    const handleTouchEnd = () => {
-      const nextCenter = getCenter()
-
-      target.x = nextCenter.x
-      target.y = nextCenter.y
-      current.x = nextCenter.x
-      current.y = nextCenter.y
-      trail.x = nextCenter.x
-      trail.y = nextCenter.y
-      setPointer(nextCenter.x, nextCenter.y)
-      setFocus(nextCenter.x, nextCenter.y)
-      setTrail(nextCenter.x, nextCenter.y)
-    }
-
     const handleModeChange = () => {
       if (frame !== null) {
         window.cancelAnimationFrame(frame)
@@ -266,9 +230,6 @@ export function useSceneMotion() {
     scheduleSectionUpdate()
     window.addEventListener('pointermove', handlePointerMove, { passive: true })
     window.addEventListener('pointerleave', handlePointerLeave)
-    window.addEventListener('touchstart', handleTouchStart, { passive: true })
-    window.addEventListener('touchmove', handleTouchMove, { passive: true })
-    window.addEventListener('touchend', handleTouchEnd, { passive: true })
     window.addEventListener('scroll', scheduleSectionUpdate, { passive: true })
     window.addEventListener('resize', scheduleSectionUpdate, { passive: true })
     prefersCoarsePointer.addEventListener('change', handleModeChange)
@@ -285,9 +246,6 @@ export function useSceneMotion() {
 
       window.removeEventListener('pointermove', handlePointerMove)
       window.removeEventListener('pointerleave', handlePointerLeave)
-      window.removeEventListener('touchstart', handleTouchStart)
-      window.removeEventListener('touchmove', handleTouchMove)
-      window.removeEventListener('touchend', handleTouchEnd)
       window.removeEventListener('scroll', scheduleSectionUpdate)
       window.removeEventListener('resize', scheduleSectionUpdate)
       prefersCoarsePointer.removeEventListener('change', handleModeChange)
