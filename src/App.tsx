@@ -127,16 +127,16 @@ function App() {
             <div className="hero-intro">
               <div className="hero-kicker-row">
                 <p className="eyebrow">Nothing Phone 2a / 2a Plus release hub</p>
-                <span className="hero-kicker-chip">Telegram-linked updates</span>
+                <span className="hero-kicker-chip">Staging concept</span>
               </div>
-              <h1>A calmer release surface for the Nothing Phone 2a lineup.</h1>
+              <h1>A clearer release workspace for the Nothing Phone 2a ROM scene.</h1>
               <p className="lede">
-                Follow current releases, community links, source movement, and shared device
-                updates across pacman and pacmanpro without bouncing between chats and posts.
+                Track fresh drops, Telegram links, device coverage, and source-side movement in a
+                single surface built for pacman and pacmanpro users.
               </p>
               <div className="hero-signal-row" aria-label="Project signals">
                 <span className="hero-signal">Current public builds</span>
-                <span className="hero-signal">Source-side movement</span>
+                <span className="hero-signal">Telegram-linked release posts</span>
                 <span className="hero-signal">Shared device community</span>
               </div>
 
