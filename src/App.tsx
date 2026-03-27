@@ -15,14 +15,12 @@ import {
   latestBuilds,
   latestUpdates,
   roms,
-  siteLastUpdated,
   sourceChanges,
   supportMatrix,
 } from './data/siteContent'
 
 type DockSection = 'top' | 'rom-directory' | 'gcams' | 'source-pulse' | 'builder-notes' | 'devices'
 type ThemeMode = 'dark' | 'light'
-type PerformanceMode = 'auto' | 'lite'
 
 type AccentStyle = CSSProperties & {
   '--accent'?: string
@@ -122,6 +120,10 @@ const mobileDockItems: Array<{ href: string; label: string; section: DockSection
   { href: '#devices', label: 'Devices', section: 'devices' },
 ]
 
+function StatusDot({ active = false }: { active?: boolean }) {
+  return <span className={`status-dot ${active ? 'is-active' : ''}`.trim()} aria-hidden="true" />
+}
+
 function App() {
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') {
@@ -135,15 +137,7 @@ function App() {
 
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
   })
-  const [performanceMode, setPerformanceMode] = useState<PerformanceMode>(() => {
-    if (typeof window === 'undefined') {
-      return 'auto'
-    }
-
-    const stored = window.localStorage.getItem('project-aerodactyl-performance')
-    return stored === 'lite' ? 'lite' : 'auto'
-  })
-  const sceneRef = useSceneMotion(performanceMode)
+  const sceneRef = useSceneMotion()
   const [romQuery, setRomQuery] = useState('')
   const [deviceFilter, setDeviceFilter] = useState<'all' | 'pacman' | 'pacmanpro'>('all')
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? roms[0]
@@ -205,14 +199,11 @@ function App() {
     window.localStorage.setItem('project-aerodactyl-theme', themeMode)
   }, [themeMode])
 
-  useEffect(() => {
-    window.localStorage.setItem('project-aerodactyl-performance', performanceMode)
-  }, [performanceMode])
-
   return (
     <div className="app-shell scene-root" ref={sceneRef}>
       <div className="interactive-scene" aria-hidden="true">
         <div className="scene-spotlight" />
+        <div className="scene-overlay-dots" />
         <div className="scene-cursor-trail" />
         <div className="scene-cursor-glow" />
       </div>
@@ -224,16 +215,16 @@ function App() {
           </span>
           <span className="brand-copy">
             <strong>Project Aerodactyl</strong>
-            <small>Nothing Phone 2a / 2a Plus ROM hub</small>
+            <small>Nothing Phone 2a Series Hub</small>
           </span>
         </a>
 
         <nav className="nav-links" aria-label="Primary">
-          <a data-section="rom-directory" href="#rom-directory">ROMs</a>
-          <a data-section="gcams" href="#gcams">GCams</a>
-          <a data-section="source-pulse" href="#source-pulse">Source Pulse</a>
-          <a data-section="builder-notes" href="#builder-notes">Builder Notes</a>
-          <a data-section="devices" href="#devices">Devices</a>
+          <a data-section="rom-directory" href="#rom-directory">01 / ROMs</a>
+          <a data-section="gcams" href="#gcams">02 / GCams</a>
+          <a data-section="source-pulse" href="#source-pulse">03 / Pulse</a>
+          <a data-section="builder-notes" href="#builder-notes">04 / Notes</a>
+          <a data-section="devices" href="#devices">05 / Devices</a>
         </nav>
 
         <div className="topbar-actions">
@@ -244,15 +235,7 @@ function App() {
               onClick={() => setThemeMode(themeMode === 'light' ? 'dark' : 'light')}
               type="button"
             >
-              {themeMode === 'light' ? 'Light mode' : 'Dark mode'}
-            </button>
-            <button
-              aria-pressed={performanceMode === 'lite'}
-              className={`control-toggle ${performanceMode === 'lite' ? 'is-active' : ''}`.trim()}
-              onClick={() => setPerformanceMode(performanceMode === 'lite' ? 'auto' : 'lite')}
-              type="button"
-            >
-              {performanceMode === 'lite' ? 'Low lag on' : 'Low lag off'}
+              {themeMode === 'light' ? 'Light' : 'Dark'}
             </button>
           </div>
           <a className="status-badge topbar-button topbar-button-secondary" href="#top">
@@ -272,11 +255,10 @@ function App() {
                 <span className="tonal-chip">Nothing Phone 2a + 2a Plus</span>
               </div>
 
-              <p className="eyebrow">Project Aerodactyl</p>
+              <p className="eyebrow">AERODACTYL / HUB</p>
               <h1>A cleaner release home for the Nothing Phone 2a lineup.</h1>
               <p className="lede">
-                Track current ROM builds, jump straight to release posts, and catch source-side
-                movement without digging through chat history.
+                Track builds, jump to releases, and catch source updates without the chat history noise.
               </p>
 
               <div className="hero-actions">
@@ -298,8 +280,6 @@ function App() {
                 ) : null}
               </div>
 
-              <p className="hero-updated">Updated {siteLastUpdated}</p>
-
               <div className="stat-grid" aria-label="Project highlights">
                 {quickStats.map((stat) => (
                   <article className="stat-card" key={stat.label}>
@@ -318,7 +298,10 @@ function App() {
                 style={featuredStyle}
               >
                 <div className="feature-topline">
-                  <span className="feature-badge">Spotlight</span>
+                  <span className="feature-badge">
+                    <StatusDot active />
+                    Spotlight
+                  </span>
                   <span className="feature-version">{featuredRom.version}</span>
                 </div>
 
@@ -378,7 +361,7 @@ function App() {
           <section className="latest-build-strip panel" aria-label="Latest ROM builds">
             <div className="latest-build-strip-head">
               <div>
-                <p className="eyebrow">Pinned builds</p>
+                <p className="eyebrow">PINNED BUILDS</p>
                 <h2>Fresh drops.</h2>
               </div>
               <span>Newest public builds first</span>
@@ -402,7 +385,10 @@ function App() {
                     style={accentStyle}
                   >
                     <div className="feature-topline">
-                      <span className="feature-badge">Latest build</span>
+                      <span className="feature-badge">
+                        <StatusDot active />
+                        Latest build
+                      </span>
                       <span className="feature-version">{rom.version}</span>
                     </div>
                     <h3>{rom.name}</h3>
@@ -422,7 +408,7 @@ function App() {
           <section className="home-rail">
             <div className="latest-updates panel">
               <div className="latest-updates-head">
-                <strong>Fresh signals</strong>
+                <strong>03 / FRESH SIGNALS</strong>
                 <span>ROMs, sources, and builder notes</span>
               </div>
               <div className="latest-updates-list">
@@ -438,7 +424,7 @@ function App() {
 
             <div className="directory-preview panel" id="quick-directory">
               <div className="latest-updates-head">
-                <strong>Tracked ROMs</strong>
+                <strong>01 / TRACKED ROMS</strong>
                 <span>Quick jump into each release section</span>
               </div>
               <div className="directory-preview-grid">
@@ -458,6 +444,7 @@ function App() {
                       key={rom.name}
                       style={accentStyle}
                     >
+                      <StatusDot active={rom.status === 'Stable'} />
                       <span>{rom.name}</span>
                       <strong>{rom.version}</strong>
                     </ReactivePanel>
@@ -476,11 +463,10 @@ function App() {
             style={featuredStyle}
           >
             <div className="section-banner-copy">
-              <p className="eyebrow">01 / ROM Directory</p>
+              <p className="eyebrow">01 / ROM DIRECTORY</p>
               <h2>Browse every tracked ROM with clear version and device context.</h2>
               <p>
-                Each section keeps release links, supported devices, changelog notes, and builder
-                context together so users can move quickly without second-guessing what they are opening.
+                Tracked builds with release links, supported devices, and changelogs in one view.
               </p>
             </div>
 
@@ -537,6 +523,7 @@ function App() {
                     key={rom.name}
                     style={accentStyle}
                   >
+                    <StatusDot active={rom.status === 'Stable'} />
                     <span>{rom.name}</span>
                     <strong>{rom.version}</strong>
                     <small>{rom.devices.join(' / ')}</small>
@@ -580,7 +567,10 @@ function App() {
                         <span className="chip chip-tonal">{rom.status}</span>
                         <span className="chip">{rom.branch}</span>
                       </div>
-                      <h2>{rom.name}</h2>
+                      <h2>
+                        <StatusDot active={rom.status === 'Stable'} />
+                        {rom.name}
+                      </h2>
                       <p>{rom.tagline}</p>
                     </div>
                     <span className="version-pill">{rom.version}</span>
@@ -616,8 +606,7 @@ function App() {
 
                       <details className="rom-changelog">
                         <summary>
-                          <span>View build changelog</span>
-                          <span className="rom-changelog-hint">Latest notes</span>
+                          <span>Build Changelog</span>
                         </summary>
                         <ul className="bullet-list">
                           {rom.changelog.map((item) => (
@@ -661,12 +650,11 @@ function App() {
           >
             <div className="support-copy">
               <div>
-                <p className="eyebrow">02 / GCams</p>
+                <p className="eyebrow">02 / GCAMS</p>
                 <h2>Camera picks without the usual Telegram digging.</h2>
               </div>
               <p>
-                Keep the recommended APKs and XML configs in one clean place so users can set up
-                the right camera stack quickly.
+                Recommended APKs and XML configs in one clean place.
               </p>
             </div>
 
@@ -726,12 +714,12 @@ function App() {
             >
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">03 / Source Pulse</p>
+                  <p className="eyebrow">03 / SOURCE PULSE</p>
                   <h2>Readable source movement, not raw commit dump</h2>
                 </div>
                 <p>
-                  Surface the important framework, device tree, kernel, and
-                  vendor-side changes without dumping raw commit noise.
+                  Important framework, device tree, kernel, and
+                  vendor-side changes without the raw commit noise.
                 </p>
               </div>
 
@@ -766,12 +754,11 @@ function App() {
             >
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">04 / Builder Notes</p>
+                  <p className="eyebrow">04 / BUILDER NOTES</p>
                   <h2>Builder notes that still feel public-facing</h2>
                 </div>
                 <p>
-                  Keep community-facing notes readable while still making room
-                  for bring-up status, blockers, and release readiness.
+                  Bring-up status, blockers, and release readiness.
                 </p>
               </div>
 
@@ -800,12 +787,11 @@ function App() {
           >
             <div className="support-copy">
               <div>
-                <p className="eyebrow">05 / Device Coverage</p>
+                <p className="eyebrow">05 / DEVICES</p>
                 <h2>Two devices, one shared release map.</h2>
               </div>
               <p>
-                The structure is ready for more ROMs, more devices, and a
-                cleaner release workflow as the project expands.
+                The coverage map for the Nothing Phone 2a lineup.
               </p>
             </div>
 

@@ -103,19 +103,12 @@ export function ReactivePanel<T extends ElementType = 'div'>({
     current.y += (target.y - current.y) * 0.22
     current.active += (target.active - current.active) * 0.24
 
-    const rotateY = (current.x - 0.5) * 6 * intensity
-    const rotateX = (0.5 - current.y) * 6 * intensity
-    const lift = current.active * 6 * intensity
-
     if (current.active > 0.02) {
-      node.style.willChange = 'transform, box-shadow'
+      node.style.willChange = 'box-shadow, opacity'
     }
 
-    setStyleValue('--panel-rotate-x', `${rotateX.toFixed(2)}deg`)
-    setStyleValue('--panel-rotate-y', `${rotateY.toFixed(2)}deg`)
     setStyleValue('--panel-glow-x', `${(current.x * 100).toFixed(2)}%`)
     setStyleValue('--panel-glow-y', `${(current.y * 100).toFixed(2)}%`)
-    setStyleValue('--panel-lift', `${lift.toFixed(2)}px`)
     setStyleValue('--panel-active', current.active.toFixed(3))
 
     const settled =

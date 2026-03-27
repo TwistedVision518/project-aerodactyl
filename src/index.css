@@ -13,22 +13,27 @@
   --scroll-progress: 0;
   --font-display: 'Google Sans Flex Variable', 'Segoe UI Variable', sans-serif;
   --font-body: 'Google Sans Flex Variable', 'Segoe UI Variable', sans-serif;
-  --primary: #f4f7fb;
+  --primary: #ffffff;
   --primary-strong: #ffffff;
   --secondary: #97a8c2;
-  --outline: rgba(214, 226, 255, 0.12);
-  --outline-strong: rgba(214, 226, 255, 0.22);
+  --accent-red: #ff0037;
+  --outline: rgba(255, 255, 255, 0.08);
+  --outline-strong: rgba(255, 255, 255, 0.16);
   --text: #f7f9fc;
-  --muted: #9ba8bc;
-  --glass-white: rgba(255, 255, 255, 0.035);
-  --surface-primary: rgba(255, 255, 255, 0.035);
-  --surface: rgba(0, 0, 0, 0.84);
-  --surface-2: rgba(0, 0, 0, 0.74);
+  --muted: #8a96aa;
+  --glass-white: rgba(255, 255, 255, 0.03);
+  --surface-primary: rgba(255, 255, 255, 0.04);
+  --surface: rgba(10, 10, 12, 0.84);
+  --surface-2: rgba(18, 18, 22, 0.74);
   --surface-nav: rgba(0, 0, 0, 0.8);
-  --bg: linear-gradient(180deg, #000000 0%, #000000 100%);
-  --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.34);
-  --shadow-large: 0 28px 72px rgba(0, 0, 0, 0.42);
+  --bg: #000000;
+  --dot-pattern: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
+  --dot-size: 24px 24px;
+  --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.45);
+  --shadow-large: 0 28px 72px rgba(0, 0, 0, 0.6);
   --spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --letter-spacing-tight: -0.02em;
+  --letter-spacing-wide: 0.06em;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -37,25 +42,21 @@
 }
 
 :root[data-theme='light'] {
-  --primary: #13233f;
-  --primary-strong: #0a1730;
+  --primary: #000000;
+  --primary-strong: #000000;
   --secondary: #61718b;
-  --outline: rgba(86, 106, 142, 0.16);
-  --outline-strong: rgba(86, 106, 142, 0.3);
-  --text: #13233f;
-  --muted: #65748c;
+  --accent-red: #ff0037;
+  --outline: rgba(0, 0, 0, 0.08);
+  --outline-strong: rgba(0, 0, 0, 0.14);
+  --text: #111111;
+  --muted: #666666;
   --glass-white: rgba(255, 255, 255, 0.62);
   --surface-primary: rgba(255, 255, 255, 0.82);
   --surface: rgba(255, 255, 255, 0.88);
   --surface-2: rgba(246, 249, 255, 0.9);
   --surface-nav: rgba(255, 255, 255, 0.74);
-  --bg:
-    radial-gradient(circle at 15% 12%, rgba(133, 164, 255, 0.16), transparent 28%),
-    radial-gradient(circle at 82% 10%, rgba(255, 198, 124, 0.14), transparent 24%),
-    radial-gradient(circle at 52% 86%, rgba(124, 221, 198, 0.12), transparent 22%),
-    linear-gradient(180deg, #edf4ff 0%, #f7f7fb 46%, #fff7ef 100%);
-  --shadow-soft: 0 18px 44px rgba(90, 110, 146, 0.12);
-  --shadow-large: 0 30px 76px rgba(90, 110, 146, 0.16);
+  --bg: #ffffff;
+  --dot-pattern: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
   color-scheme: light;
 }
 
