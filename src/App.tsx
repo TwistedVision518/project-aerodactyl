@@ -346,40 +346,46 @@ function App() {
                 intensity={0.7}
                 style={featuredStyle}
               >
-                <div className="feature-topline">
-                  <span className="feature-badge">
-                    <StatusDot active />
-                    Spotlight
-                  </span>
-                  <span className="feature-version">{featuredRom.version}</span>
+                <div className="feature-column-badge">
+                  <div className="feature-topline">
+                    <span className="feature-badge">
+                      <StatusDot active />
+                      Spotlight
+                    </span>
+                    <span className="feature-version">{featuredRom.version}</span>
+                  </div>
                 </div>
 
-                <h2>{featuredRom.name}</h2>
-                <p>{featuredRom.tagline}</p>
+                <div className="feature-column-main">
+                  <h2>{featuredRom.name}</h2>
+                  <p>{featuredRom.tagline}</p>
 
-                <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
-                  {featuredRom.highlights.slice(0, 2).map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-
-                <div className="feature-meta">
-                  <span>{featuredRom.buildDate}</span>
-                  <span>{featuredRom.devices.join(' / ')}</span>
+                  <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
+                    {featuredRom.highlights.slice(0, 2).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
 
-                {featuredRomHasLink ? (
-                  <a
-                    className="feature-link"
-                    href={featuredRomLinks[0].url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {featuredRomLinks.length > 1 ? `Open ${featuredRomLinks[0].label}` : 'Open release post'}
-                  </a>
-                ) : (
-                  <span className="feature-link is-disabled">Telegram Release Link</span>
-                    )}
+                <div className="feature-column-action">
+                  <div className="feature-meta">
+                    <span>{featuredRom.buildDate}</span>
+                    <span>{featuredRom.devices.join(' / ')}</span>
+                  </div>
+
+                  {featuredRomHasLink ? (
+                    <a
+                      className="feature-link"
+                      href={featuredRomLinks[0].url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {featuredRomLinks.length > 1 ? `Open ${featuredRomLinks[0].label}` : 'Open release'}
+                    </a>
+                  ) : (
+                    <span className="feature-link is-disabled">Release Pending</span>
+                  )}
+                </div>
               </ReactivePanel>
 
               <ReactivePanel as="article" className="community-card panel" intensity={0.45}>
