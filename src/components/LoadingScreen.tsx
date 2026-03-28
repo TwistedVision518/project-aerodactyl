@@ -86,7 +86,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
             } else {
               // End animation
               setIsVisible(false)
-              setTimeout(onComplete, 450)
+              setTimeout(onComplete, 620)
               return
             }
           }
@@ -118,7 +118,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     // Auto-complete loading after some time if it's too long
     const timeout = setTimeout(() => {
       setIsVisible(false)
-      setTimeout(onComplete, 500)
+      setTimeout(onComplete, 620)
     }, 5000)
 
     return () => {
@@ -130,15 +130,24 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
   return (
     <div className={`loading-overlay ${!isVisible ? 'is-hidden' : ''}`}>
+      <div aria-hidden="true" className="loading-scene">
+        <div className="loading-scene-vignette" />
+        <div className="loading-scene-grid" />
+        <div className="loading-scene-wave loading-scene-wave-left" />
+        <div className="loading-scene-wave loading-scene-wave-right" />
+        <div className="loading-scene-aura" />
+      </div>
       <div className="loading-content">
         <span className="loading-badge">Booting release dashboard</span>
-        <canvas 
-          ref={canvasRef}
-          className="loading-canvas"
-        />
-        <div className="loading-copy">
-          <strong>Project Aerodactyl</strong>
-          <span>Preparing the release hub</span>
+        <div className="loading-panel">
+          <canvas 
+            ref={canvasRef}
+            className="loading-canvas"
+          />
+          <div className="loading-copy">
+            <strong>Project Aerodactyl</strong>
+            <span>Preparing the release hub</span>
+          </div>
         </div>
       </div>
     </div>

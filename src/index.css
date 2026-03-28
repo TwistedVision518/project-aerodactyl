@@ -7,8 +7,8 @@
   --font-body: 'Manrope Variable', sans-serif;
   --font-mono: 'Roboto Flex Variable', monospace;
   --bg: #09090b;
-  --surface: rgba(15, 16, 20, 0.72);
-  --surface-raised: rgba(255, 255, 255, 0.045);
+  --surface: rgba(11, 13, 20, 0.66);
+  --surface-raised: rgba(255, 255, 255, 0.05);
   --text: #f8f4ef;
   --text-soft: #ddd4cb;
   --muted: #9f958a;
@@ -17,6 +17,11 @@
   --accent-hot: #f48849;
   --shadow-soft: 0 22px 80px rgba(0, 0, 0, 0.28);
   --shadow-large: 0 26px 95px rgba(0, 0, 0, 0.42);
+  --scene-wave-a: rgba(167, 111, 255, 0.88);
+  --scene-wave-b: rgba(123, 213, 255, 0.84);
+  --scene-wave-c: rgba(120, 94, 255, 0.74);
+  --scene-grid-dot: rgba(114, 168, 255, 0.32);
+  --scene-grid-glow: rgba(168, 120, 255, 0.18);
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-xl: 1.75rem;
@@ -40,6 +45,11 @@
   --outline-strong: rgba(45, 33, 21, 0.16);
   --shadow-soft: 0 20px 70px rgba(104, 85, 63, 0.12);
   --shadow-large: 0 28px 90px rgba(104, 85, 63, 0.16);
+  --scene-wave-a: rgba(158, 126, 255, 0.26);
+  --scene-wave-b: rgba(122, 210, 255, 0.24);
+  --scene-wave-c: rgba(133, 118, 255, 0.2);
+  --scene-grid-dot: rgba(112, 118, 166, 0.14);
+  --scene-grid-glow: rgba(166, 124, 255, 0.08);
   color-scheme: light;
 }
 
@@ -61,8 +71,8 @@ body {
   line-height: 1.5;
   color: var(--text);
   background:
-    radial-gradient(circle at top, rgba(255, 149, 79, 0.08), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(109, 122, 255, 0.08), transparent 24%),
+    radial-gradient(circle at top, rgba(255, 149, 79, 0.05), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(109, 122, 255, 0.06), transparent 24%),
     var(--bg);
 }
 

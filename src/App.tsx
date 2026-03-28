@@ -6,7 +6,7 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type MouseEvent,
+  type MouseEvent as ReactMouseEvent,
 } from 'react'
 import {
   AnimatePresence,
@@ -14,8 +14,9 @@ import {
   LazyMotion,
   domAnimation,
   m,
+  useMotionValue,
   useReducedMotion,
-  useTime,
+  useSpring,
   useTransform,
 } from 'motion/react'
 import { flushSync } from 'react-dom'
@@ -269,7 +270,16 @@ function App() {
   const [resourceMenuOpen, setResourceMenuOpen] = useState(false)
   const resourceMenuRef = useRef<HTMLDivElement | null>(null)
   const prefersReducedMotion = useReducedMotion()
-  const time = useTime()
+  const sceneCursorX = useMotionValue(0)
+  const sceneCursorY = useMotionValue(0)
+  const scenePointerOffsetX = useMotionValue(0)
+  const scenePointerOffsetY = useMotionValue(0)
+  const scenePointerActive = useMotionValue(0)
+  const sceneCursorXSpring = useSpring(sceneCursorX, { stiffness: 170, damping: 28, mass: 0.35 })
+  const sceneCursorYSpring = useSpring(sceneCursorY, { stiffness: 170, damping: 28, mass: 0.35 })
+  const scenePointerOffsetXSpring = useSpring(scenePointerOffsetX, { stiffness: 90, damping: 24, mass: 0.45 })
+  const scenePointerOffsetYSpring = useSpring(scenePointerOffsetY, { stiffness: 90, damping: 24, mass: 0.45 })
+  const scenePointerActiveSpring = useSpring(scenePointerActive, { stiffness: 90, damping: 22, mass: 0.4 })
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
@@ -346,14 +356,15 @@ function App() {
     availabilityFilter !== 'all' ||
     deviceFilter !== 'all' ||
     sortMode !== 'latest'
-  const heroAuraY = useTransform(time, [0, 3200, 6400], [0, -16, 0])
-  const heroAuraScale = useTransform(time, [0, 2800, 5600], [1, 1.08, 1])
-  const heroAuraRotate = useTransform(time, [0, 18000], [0, 360])
-  const spotlightOrbY = useTransform(time, [0, 4200, 8400], [0, 14, 0])
-  const spotlightOrbX = useTransform(time, [0, 5000, 10000], [0, -10, 0])
-  const spotlightRingRotate = useTransform(time, [0, 20000], [0, -360])
-  const detailOrbY = useTransform(time, [0, 3600, 7200], [0, 11, 0])
-  const detailOrbRotate = useTransform(time, [0, 24000], [0, 360])
+  const sceneCursorGlowOpacity = useTransform(scenePointerActiveSpring, [0, 1], [0, 0.9])
+  const sceneLeftX = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [-150, 150])
+  const sceneLeftY = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [-42, 42])
+  const sceneLeftRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [6, 18])
+  const sceneLeftScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [0.98, 1.08])
+  const sceneRightX = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [150, -150])
+  const sceneRightY = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [-38, 38])
+  const sceneRightRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [-18, -6])
+  const sceneRightScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [1.08, 0.98])
   const motionEase = [0.22, 1, 0.36, 1] as const
 
   const heroContainerVariants = prefersReducedMotion
@@ -415,6 +426,61 @@ function App() {
     document.documentElement.style.colorScheme = themeMode
     window.localStorage.setItem('project-aerodactyl-theme', themeMode)
   }, [themeMode])
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || prefersReducedMotion) {
+      sceneCursorX.set(0)
+      sceneCursorY.set(0)
+      scenePointerOffsetX.set(0)
+      scenePointerOffsetY.set(0)
+      scenePointerActive.set(0)
+      return
+    }
+
+    sceneCursorX.set(window.innerWidth * 0.5)
+    sceneCursorY.set(window.innerHeight * 0.72)
+
+    const handlePointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'touch') {
+        return
+      }
+
+      sceneCursorX.set(event.clientX)
+      sceneCursorY.set(event.clientY)
+      scenePointerOffsetX.set(event.clientX / window.innerWidth - 0.5)
+      scenePointerOffsetY.set(event.clientY / window.innerHeight - 0.5)
+      scenePointerActive.set(1)
+    }
+
+    const resetPointer = () => {
+      scenePointerOffsetX.set(0)
+      scenePointerOffsetY.set(0)
+      scenePointerActive.set(0)
+    }
+
+    const handleWindowMouseOut = (event: MouseEvent) => {
+      if (event.relatedTarget === null) {
+        resetPointer()
+      }
+    }
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true })
+    window.addEventListener('mouseout', handleWindowMouseOut)
+    window.addEventListener('blur', resetPointer)
+
+    return () => {
+      window.removeEventListener('pointermove', handlePointerMove)
+      window.removeEventListener('mouseout', handleWindowMouseOut)
+      window.removeEventListener('blur', resetPointer)
+    }
+  }, [
+    prefersReducedMotion,
+    sceneCursorX,
+    sceneCursorY,
+    scenePointerActive,
+    scenePointerOffsetX,
+    scenePointerOffsetY,
+  ])
 
   useEffect(() => {
     const syncActiveSectionFromHash = () => {
@@ -498,7 +564,7 @@ function App() {
     return () => observer.disconnect()
   }, [])
 
-  const handleSectionAnchorClick = (event: MouseEvent<HTMLAnchorElement>) => {
+  const handleSectionAnchorClick = (event: ReactMouseEvent<HTMLAnchorElement>) => {
     const href = event.currentTarget.getAttribute('href')
 
     if (!href?.startsWith('#')) {
@@ -514,7 +580,7 @@ function App() {
     }
   }
 
-  const handleRomAnchorClick = (event: MouseEvent<HTMLAnchorElement>, romId: string) => {
+  const handleRomAnchorClick = (event: ReactMouseEvent<HTMLAnchorElement>, romId: string) => {
     event.preventDefault()
     setResourceMenuOpen(false)
     setActiveRomId(romId)
@@ -542,7 +608,7 @@ function App() {
     })
   }
 
-  const handleLatestUpdateClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+  const handleLatestUpdateClick = (event: ReactMouseEvent<HTMLAnchorElement>, href: string) => {
     if (!href.startsWith('#rom-')) {
       return
     }
@@ -550,7 +616,7 @@ function App() {
     handleRomAnchorClick(event, href.slice(1))
   }
 
-  const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
+  const toggleTheme = (event: ReactMouseEvent<HTMLButtonElement>) => {
     const isToDark = themeMode === 'light'
     const nextTheme = isToDark ? 'dark' : 'light'
     const startViewTransition = document.startViewTransition?.bind(document)
@@ -577,11 +643,11 @@ function App() {
       ]
 
       document.documentElement.animate(
-        { clipPath: isToDark ? clipPath : [...clipPath].reverse() },
+        { clipPath },
         {
           duration: 650,
           easing: 'cubic-bezier(0.45, 0, 0.55, 1)',
-          pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
+          pseudoElement: '::view-transition-new(root)',
         },
       )
     })
@@ -620,8 +686,31 @@ function App() {
       <LazyMotion features={domAnimation}>
         <div className="app-shell scene-root" data-loaded={!loading}>
         <div className="interactive-scene" aria-hidden="true">
-          <div className="scene-gradient scene-gradient-left" />
-          <div className="scene-gradient scene-gradient-right" />
+          <div className="scene-vignette" />
+          <m.div
+            className="scene-cursor-glow"
+            style={
+              prefersReducedMotion
+                ? undefined
+                : { x: sceneCursorXSpring, y: sceneCursorYSpring, opacity: sceneCursorGlowOpacity }
+            }
+          />
+          <m.div
+            className="scene-gradient scene-gradient-left"
+            style={
+              prefersReducedMotion
+                ? undefined
+                : { x: sceneLeftX, y: sceneLeftY, rotate: sceneLeftRotate, scale: sceneLeftScale }
+            }
+          />
+          <m.div
+            className="scene-gradient scene-gradient-right"
+            style={
+              prefersReducedMotion
+                ? undefined
+                : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
+            }
+          />
           <div className="scene-grid" />
           <div className="scene-noise" />
         </div>
@@ -685,14 +774,8 @@ function App() {
                 variants={heroContainerVariants}
               >
                 <div className="hero-copy-atmosphere" aria-hidden="true">
-                  <m.div
-                    className="hero-copy-orb hero-copy-orb-primary"
-                    style={prefersReducedMotion ? undefined : { y: heroAuraY, scale: heroAuraScale }}
-                  />
-                  <m.div
-                    className="hero-copy-orb hero-copy-orb-secondary"
-                    style={prefersReducedMotion ? undefined : { rotate: heroAuraRotate }}
-                  />
+                  <div className="hero-copy-orb hero-copy-orb-primary" />
+                  <div className="hero-copy-orb hero-copy-orb-secondary" />
                 </div>
 
                 <m.div className="hero-kicker-row" variants={heroItemVariants}>
@@ -748,14 +831,8 @@ function App() {
               >
                 <ReactivePanel as="article" className="hero-spotlight" intensity={0.75} style={featuredStyle}>
                   <div className="hero-spotlight-atmosphere" aria-hidden="true">
-                    <m.div
-                      className="hero-spotlight-orb"
-                      style={prefersReducedMotion ? undefined : { x: spotlightOrbX, y: spotlightOrbY }}
-                    />
-                    <m.div
-                      className="hero-spotlight-ring"
-                      style={prefersReducedMotion ? undefined : { rotate: spotlightRingRotate }}
-                    />
+                    <div className="hero-spotlight-orb" />
+                    <div className="hero-spotlight-ring" />
                   </div>
 
                   <div className="feature-topline">
@@ -1196,14 +1273,8 @@ function App() {
                       }
                     >
                       <div className="rom-section-atmosphere" aria-hidden="true">
-                        <m.div
-                          className="rom-section-orb rom-section-orb-primary"
-                          style={prefersReducedMotion ? undefined : { y: detailOrbY }}
-                        />
-                        <m.div
-                          className="rom-section-orb rom-section-orb-secondary"
-                          style={prefersReducedMotion ? undefined : { rotate: detailOrbRotate }}
-                        />
+                        <div className="rom-section-orb rom-section-orb-primary" />
+                        <div className="rom-section-orb rom-section-orb-secondary" />
                       </div>
 
                       <div className="rom-section-header">
