@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } fro
 import { flushSync } from 'react-dom'
 import './App.css'
 import { CommentsThread } from './components/CommentsThread'
+import { LoadingScreen } from './components/LoadingScreen'
 import { ReactivePanel } from './components/ReactivePanel'
 import { Reveal } from './components/Reveal'
 import type { GcamEntry, ReleaseLink, RomEntry } from './data/types'
@@ -137,6 +138,7 @@ function StatusDot({ active = false }: { active?: boolean }) {
 }
 
 function App() {
+  const [loading, setLoading] = useState(true)
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') {
       return 'dark'
@@ -249,52 +251,54 @@ function App() {
   }
 
   return (
-    <div className="app-shell scene-root">
-      <div className="interactive-scene" aria-hidden="true">
-        <div className="scene-overlay-dots" />
-      </div>
-
-      <header className="topbar">
-        <a className="brand" href="#top">
-          <span className="brand-mark" aria-hidden="true">
-            <img alt="" className="brand-mark-image" src="/favicon.svg" />
-          </span>
-          <span className="brand-copy">
-            <strong>Project Aerodactyl</strong>
-            <small>Nothing Phone 2a Series Hub</small>
-          </span>
-        </a>
-
-        <nav className="nav-links" aria-label="Primary">
-          <a data-section="rom-directory" href="#rom-directory">03 / ROMs</a>
-          <a data-section="gcams" href="#gcams">04 / GCams</a>
-          <a data-section="source-pulse" href="#source-pulse">05 / Pulse</a>
-          <a data-section="builder-notes" href="#builder-notes">06 / Notes</a>
-          <a data-section="devices" href="#devices">07 / Devices</a>
-        </nav>
-
-        <div className="topbar-actions">
-          <div className="topbar-controls" aria-label="Display controls">
-            <button
-              aria-label={themeMode === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
-              aria-pressed={themeMode === 'light'}
-              className={`control-toggle ${themeMode === 'light' ? 'is-active' : ''}`.trim()}
-              onClick={toggleTheme}
-              type="button"
-            >
-              {themeMode === 'light' ? <SunIcon /> : <MoonIcon />}
-            </button>
-          </div>
-          <a className="status-badge topbar-button topbar-button-secondary" href="#top">
-            Latest Drops
-          </a>
-          <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
-            Browse ROMs
-          </a>
+    <>
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      <div className="app-shell scene-root">
+        <div className="interactive-scene" aria-hidden="true">
+          <div className="scene-overlay-dots" />
         </div>
-      </header>
 
-      <main className="page" id="top">
+        <header className="topbar">
+          <a className="brand" href="#top">
+            <span className="brand-mark" aria-hidden="true">
+              <img alt="" className="brand-mark-image" src="/favicon.svg" />
+            </span>
+            <span className="brand-copy">
+              <strong>Project Aerodactyl</strong>
+              <small>Nothing Phone 2a Series Hub</small>
+            </span>
+          </a>
+
+          <nav className="nav-links" aria-label="Primary">
+            <a data-section="rom-directory" href="#rom-directory">03 / ROMs</a>
+            <a data-section="gcams" href="#gcams">04 / GCams</a>
+            <a data-section="source-pulse" href="#source-pulse">05 / Pulse</a>
+            <a data-section="builder-notes" href="#builder-notes">06 / Notes</a>
+            <a data-section="devices" href="#devices">07 / Devices</a>
+          </nav>
+
+          <div className="topbar-actions">
+            <div className="topbar-controls" aria-label="Display controls">
+              <button
+                aria-label={themeMode === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
+                aria-pressed={themeMode === 'light'}
+                className={`control-toggle ${themeMode === 'light' ? 'is-active' : ''}`.trim()}
+                onClick={toggleTheme}
+                type="button"
+              >
+                {themeMode === 'light' ? <SunIcon /> : <MoonIcon />}
+              </button>
+            </div>
+            <a className="status-badge topbar-button topbar-button-secondary" href="#top">
+              Latest Drops
+            </a>
+            <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
+              Browse ROMs
+            </a>
+          </div>
+        </header>
+
+        <main className="page" id="top">
         <Reveal>
           <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
             <div className="hero-copy">
@@ -888,6 +892,7 @@ function App() {
         ))}
       </nav>
     </div>
+    </>
   )
 }
 
