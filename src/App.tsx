@@ -315,6 +315,10 @@ function App() {
 
     return filteredRoms.find((rom) => toSectionId(rom.name) === resolvedActiveRomId) ?? filteredRoms[0]
   }, [filteredRoms, resolvedActiveRomId])
+  const selectedRomIndex = useMemo(
+    () => (selectedRom ? filteredRoms.findIndex((rom) => rom.name === selectedRom.name) : -1),
+    [filteredRoms, selectedRom],
+  )
   const selectedRomLinks = useMemo(
     () => (selectedRom ? getReleaseLinks(selectedRom) : []),
     [selectedRom],
@@ -466,6 +470,31 @@ function App() {
     window.requestAnimationFrame(() => {
       document.getElementById('rom-detail-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
+  }
+
+  const selectRomByIndex = (nextIndex: number) => {
+    const nextRom = filteredRoms[nextIndex]
+
+    if (!nextRom) {
+      return
+    }
+
+    const nextRomId = toSectionId(nextRom.name)
+    setResourceMenuOpen(false)
+    setActiveRomId(nextRomId)
+    setActiveSection('rom-directory')
+    window.history.pushState(null, '', `#${nextRomId}`)
+    window.requestAnimationFrame(() => {
+      document.getElementById('rom-detail-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
+  }
+
+  const handleLatestUpdateClick = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (!href.startsWith('#rom-')) {
+      return
+    }
+
+    handleRomAnchorClick(event, href.slice(1))
   }
 
   const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
@@ -767,7 +796,12 @@ function App() {
 
                     <div className="feed-list">
                       {latestUpdates.slice(0, 5).map((entry) => (
-                        <a className="feed-item" href={entry.href} key={`${entry.category}-${entry.title}`}>
+                        <a
+                          className="feed-item"
+                          href={entry.href}
+                          key={`${entry.category}-${entry.title}`}
+                          onClick={(event) => handleLatestUpdateClick(event, entry.href)}
+                        >
                           <div>
                             <span>{entry.category}</span>
                             <strong>{entry.title}</strong>
@@ -796,15 +830,27 @@ function App() {
               <div className="explorer-toolbar" aria-label="ROM filters">
                 <label className="search-field">
                   <span>Search releases</span>
-                  <input
-                    onChange={(event) => {
-                      const nextValue = event.target.value
-                      startTransition(() => setRomQuery(nextValue))
-                    }}
-                    placeholder="Search by ROM name, version, or device"
-                    type="search"
-                    value={romQuery}
-                  />
+                  <div className="search-field-shell">
+                    <input
+                      onChange={(event) => {
+                        const nextValue = event.target.value
+                        startTransition(() => setRomQuery(nextValue))
+                      }}
+                      placeholder="Search by ROM name, version, or device"
+                      type="search"
+                      value={romQuery}
+                    />
+                    {romQuery.length > 0 ? (
+                      <button
+                        aria-label="Clear search"
+                        className="search-clear-button"
+                        onClick={() => setRomQuery('')}
+                        type="button"
+                      >
+                        x
+                      </button>
+                    ) : null}
+                  </div>
                 </label>
 
                 <div className="toolbar-block">
@@ -1051,6 +1097,34 @@ function App() {
                           <small>{formatFreshness(selectedRom.buildDate)}</small>
                         </div>
                       </div>
+
+                      {filteredRoms.length > 1 ? (
+                        <div className="selected-rom-nav" aria-label="Selected ROM navigation">
+                          <div className="selected-rom-index">
+                            <span className="section-label">Release browser</span>
+                            <strong>
+                              {selectedRomIndex + 1} / {filteredRoms.length}
+                            </strong>
+                          </div>
+
+                          <div className="selected-rom-nav-actions">
+                            <button
+                              disabled={selectedRomIndex <= 0}
+                              onClick={() => selectRomByIndex(selectedRomIndex - 1)}
+                              type="button"
+                            >
+                              Previous
+                            </button>
+                            <button
+                              disabled={selectedRomIndex >= filteredRoms.length - 1}
+                              onClick={() => selectRomByIndex(selectedRomIndex + 1)}
+                              type="button"
+                            >
+                              Next
+                            </button>
+                          </div>
+                        </div>
+                      ) : null}
 
                       <div className="rom-section-body">
                         <div className="rom-section-main">

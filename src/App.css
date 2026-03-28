@@ -704,6 +704,10 @@ strong {
   gap: 0.55rem;
 }
 
+.search-field-shell {
+  position: relative;
+}
+
 .search-field span,
 .sort-field span,
 .toolbar-block > span {
@@ -724,10 +728,36 @@ strong {
   outline: none;
 }
 
+.search-field input {
+  padding-right: 3.4rem;
+}
+
 .search-field input:focus,
 .sort-field select:focus {
   border-color: color-mix(in srgb, var(--accent-hot) 65%, white 10%);
   box-shadow: 0 0 0 4px rgba(244, 136, 73, 0.12);
+}
+
+.search-clear-button {
+  position: absolute;
+  top: 50%;
+  right: 0.6rem;
+  transform: translateY(-50%);
+  width: 2.2rem;
+  height: 2.2rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--muted);
+  cursor: pointer;
+  font-weight: 700;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+}
+
+.search-clear-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  transform: translateY(-50%) scale(1.04);
 }
 
 .segmented-control {
@@ -953,6 +983,51 @@ strong {
   align-items: flex-start;
   padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--outline);
+}
+
+.selected-rom-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.85rem 0 0.25rem;
+}
+
+.selected-rom-index {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.selected-rom-index strong {
+  font-size: 1rem;
+}
+
+.selected-rom-nav-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.selected-rom-nav-actions button {
+  min-height: 2.5rem;
+  padding: 0.58rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--outline);
+  background: var(--surface-raised);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 700;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.selected-rom-nav-actions button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  border-color: var(--outline-strong);
+}
+
+.selected-rom-nav-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .rom-heading {
@@ -1702,6 +1777,11 @@ strong {
 
   .explorer-summary-pills {
     justify-content: start;
+  }
+
+  .selected-rom-nav {
+    align-items: start;
+    flex-direction: column;
   }
 
   .resource-panel-head {
