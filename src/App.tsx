@@ -861,6 +861,7 @@ function App() {
           <section className="rom-sections">
             {filteredRoms.map((rom, index) => {
               const links = getReleaseLinks(rom)
+              const releaseNoteCount = rom.highlights.length + rom.changelog.length
               const accentStyle: AccentStyle = {
                 '--accent': rom.accent,
                 '--accent-soft': rom.accentSoft,
@@ -897,28 +898,44 @@ function App() {
 
                     <div className="rom-section-body">
                       <div className="rom-section-main">
-                        <div className="content-cluster">
-                          <h3>Why this release stands out</h3>
-                          <ul className="bullet-list">
-                            {rom.highlights.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </div>
+                        <details className="release-disclosure">
+                          <summary className="release-disclosure-summary">
+                            <div className="release-disclosure-copy">
+                              <span className="section-label">Release notes</span>
+                              <strong>Open the full changelog and highlights</strong>
+                              <small>
+                                {releaseNoteCount} notes covering standout changes, fixes, and build context.
+                              </small>
+                            </div>
+                            <span className="release-disclosure-pill">
+                              {rom.changelog.length} changelog / {rom.highlights.length} highlights
+                            </span>
+                          </summary>
 
-                        <div className="content-cluster">
-                          <div className="cluster-head">
-                            <h3>Build changelog</h3>
-                            <span>{rom.changelog.length} notes</span>
+                          <div className="release-disclosure-content">
+                            <div className="content-cluster">
+                              <h3>Why this release stands out</h3>
+                              <ul className="bullet-list">
+                                {rom.highlights.map((item) => (
+                                  <li key={item}>{item}</li>
+                                ))}
+                              </ul>
+                            </div>
+
+                            <div className="content-cluster">
+                              <div className="cluster-head">
+                                <h3>Build changelog</h3>
+                                <span>{rom.changelog.length} notes</span>
+                              </div>
+
+                              <ul className="timeline-list">
+                                {rom.changelog.map((item) => (
+                                  <li key={item}>{item}</li>
+                                ))}
+                              </ul>
+                            </div>
                           </div>
-
-                          <ul className="timeline-list">
-                            {rom.changelog.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </div>
-
+                        </details>
                       </div>
 
                       <aside className="rom-section-side">
