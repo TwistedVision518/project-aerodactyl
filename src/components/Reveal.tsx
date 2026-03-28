@@ -9,7 +9,13 @@ type RevealProps = {
 
 export function Reveal({ children, className = '', delay = 0 }: RevealProps) {
   const prefersReducedMotion = useReducedMotion()
-  const [useViewportReveal, setUseViewportReveal] = useState(true)
+  const [useViewportReveal, setUseViewportReveal] = useState(() => {
+    if (typeof window === 'undefined') {
+      return true
+    }
+
+    return window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  })
 
   useEffect(() => {
     if (typeof window === 'undefined') {

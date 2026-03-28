@@ -2341,6 +2341,14 @@ strong {
 }
 
 @media (hover: none), (pointer: coarse) {
+  .experience-shell {
+    opacity: 1;
+    filter: none;
+    transform: none;
+    transition: none;
+    will-change: auto;
+  }
+
   .scene-cursor-glow {
     display: none;
   }
@@ -2372,6 +2380,13 @@ strong {
   .scene-gradient-middle {
     animation-duration: 16s;
     animation-name: scene-mobile-middle;
+  }
+
+  .loading-overlay,
+  .loading-content,
+  .loading-scene-wave,
+  .loading-panel {
+    transition-duration: 420ms;
   }
 }
 

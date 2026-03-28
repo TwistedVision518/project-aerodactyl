@@ -151,8 +151,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       animationId = requestAnimationFrame(animate)
     }
 
-    // Add a 0.3s delay before starting the animation
-    const delayTimeout = setTimeout(startAnimation, 300)
+    startAnimation()
 
     // Auto-complete loading after some time if it's too long
     const timeout = setTimeout(() => {
@@ -162,7 +161,6 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
     return () => {
       cancelAnimationFrame(animationId)
-      clearTimeout(delayTimeout)
       clearTimeout(timeout)
     }
   }, [isPreloaded, onComplete])
