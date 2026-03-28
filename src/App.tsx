@@ -867,7 +867,6 @@ function App() {
               const links = getReleaseLinks(rom)
               const isReleaseNotesOpen = expandedReleaseNotes[rom.name] ?? false
               const releaseDisclosureId = `${toSectionId(rom.name)}-release-notes`
-              const releaseNoteCount = rom.highlights.length + rom.changelog.length
               const accentStyle: AccentStyle = {
                 '--accent': rom.accent,
                 '--accent-soft': rom.accentSoft,
@@ -920,13 +919,13 @@ function App() {
                           >
                             <div className="release-disclosure-copy">
                               <span className="section-label">Release notes</span>
-                              <strong>Highlights and changelog</strong>
+                              <strong>{isReleaseNotesOpen ? 'Hide detailed notes' : 'Open detailed notes'}</strong>
                               <small>
-                                {releaseNoteCount} notes covering the key fixes, changes, and build context.
+                                {rom.highlights.length} highlights and {rom.changelog.length} changelog entries.
                               </small>
                             </div>
                             <span className="release-disclosure-pill">
-                              {rom.changelog.length} changelog / {rom.highlights.length} highlights
+                              {isReleaseNotesOpen ? 'Close' : 'Open'}
                               <m.span
                                 animate={{ rotate: isReleaseNotesOpen ? 45 : 0 }}
                                 className="release-disclosure-icon"
@@ -982,21 +981,23 @@ function App() {
                       </div>
 
                       <aside className="rom-section-side">
-                        <div className="rom-detail-card">
-                          <span>Build date</span>
-                          <strong>{rom.buildDate}</strong>
-                        </div>
-                        <div className="rom-detail-card">
-                          <span>Supported devices</span>
-                          <strong>{rom.devices.join(' / ')}</strong>
-                        </div>
-                        <div className="rom-detail-card">
-                          <span>Current focus</span>
-                          <strong>{formatMaintenanceNote(rom.maintenanceNote)}</strong>
-                        </div>
-                        <div className="rom-detail-card">
-                          <span>Channel label</span>
-                          <strong>{rom.channelLabel}</strong>
+                        <div className="rom-facts-card">
+                          <div className="rom-fact-row">
+                            <span>Build date</span>
+                            <strong>{rom.buildDate}</strong>
+                          </div>
+                          <div className="rom-fact-row">
+                            <span>Supported devices</span>
+                            <strong>{rom.devices.join(' / ')}</strong>
+                          </div>
+                          <div className="rom-fact-row">
+                            <span>Current focus</span>
+                            <strong>{formatMaintenanceNote(rom.maintenanceNote)}</strong>
+                          </div>
+                          <div className="rom-fact-row">
+                            <span>Channel label</span>
+                            <strong>{rom.channelLabel}</strong>
+                          </div>
                         </div>
 
                         <div className="card-actions card-actions-stack">

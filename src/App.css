@@ -94,7 +94,7 @@
 }
 
 .panel {
-  padding: clamp(1.4rem, 2.2vw, 2.6rem);
+  padding: clamp(1.1rem, 1.85vw, 1.9rem);
 }
 
 .panel::before,
@@ -218,7 +218,7 @@ strong {
 }
 
 .section-heading {
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.25rem;
 }
 
 .section-heading > div,
@@ -480,7 +480,7 @@ strong {
 }
 
 .metric-card {
-  padding: 1.2rem;
+  padding: 1.05rem;
   display: grid;
   gap: 0.45rem;
 }
@@ -515,7 +515,7 @@ strong {
 .gcam-card,
 .gcam-empty-state,
 .update-card {
-  padding: 1.35rem;
+  padding: 1.05rem;
 }
 
 .hero-spotlight {
@@ -675,7 +675,7 @@ strong {
 
 .explorer {
   display: grid;
-  gap: 1.5rem;
+  gap: 1.15rem;
 }
 
 .explorer-toolbar {
@@ -783,6 +783,13 @@ strong {
   min-height: 100%;
 }
 
+.rom-directory-item p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 .directory-heading {
   display: flex;
   justify-content: space-between;
@@ -808,7 +815,7 @@ strong {
 
 .rom-sections {
   display: grid;
-  gap: 1.25rem;
+  gap: 0.95rem;
 }
 
 .rom-section-header {
@@ -816,13 +823,13 @@ strong {
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-start;
-  padding-bottom: 1.1rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--outline);
 }
 
 .rom-heading {
   display: grid;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
 .chip-row {
@@ -838,8 +845,8 @@ strong {
 }
 
 .rom-section-body {
-  grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
-  padding-top: 1.25rem;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
+  padding-top: 1rem;
   align-items: start;
 }
 
@@ -874,7 +881,7 @@ strong {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 0.95rem 1.05rem;
+  padding: 0.82rem 0.9rem;
   cursor: pointer;
   transition:
     background-color 220ms var(--spring),
@@ -892,7 +899,7 @@ strong {
 
 .release-disclosure-copy {
   display: grid;
-  gap: 0.3rem;
+  gap: 0.15rem;
   min-width: 0;
 }
 
@@ -901,11 +908,12 @@ strong {
 }
 
 .release-disclosure-copy strong {
-  font-size: 1rem;
+  font-size: 0.95rem;
 }
 
 .release-disclosure-copy small {
   color: var(--muted);
+  font-size: 0.84rem;
 }
 
 .release-disclosure-pill {
@@ -913,13 +921,13 @@ strong {
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.55rem 0.85rem;
+  gap: 0.55rem;
+  padding: 0.46rem 0.72rem;
   border-radius: 999px;
   border: 1px solid var(--outline);
   background: var(--surface-raised);
   color: var(--text);
-  font-size: 0.74rem;
+  font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -944,20 +952,21 @@ strong {
 .release-disclosure-content {
   display: grid;
   gap: 1rem;
-  padding: 0 1.1rem 1.1rem;
+  grid-template-columns: minmax(0, 0.88fr) minmax(0, 1.12fr);
+  padding: 0 0.9rem 0.9rem;
 }
 
 .content-cluster {
   display: grid;
-  gap: 0.9rem;
-  padding: 1.1rem;
+  gap: 0.75rem;
+  padding: 0.9rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--outline);
   background: rgba(255, 255, 255, 0.025);
 }
 
 .timeline-list {
-  gap: 0.95rem;
+  gap: 0.8rem;
 }
 
 .rom-detail-card span {
@@ -965,6 +974,37 @@ strong {
   margin-bottom: 0.4rem;
   color: var(--muted);
   font-size: 0.78rem;
+}
+
+.rom-facts-card {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.025);
+  overflow: hidden;
+}
+
+.rom-fact-row {
+  display: grid;
+  gap: 0.28rem;
+  padding: 0.78rem 0.9rem;
+  border-top: 1px solid var(--outline);
+}
+
+.rom-fact-row:first-child {
+  border-top: 0;
+}
+
+.rom-fact-row span {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.rom-fact-row strong {
+  font-size: 0.96rem;
 }
 
 .card-actions {
@@ -1300,6 +1340,10 @@ strong {
   .command-layout,
   .insight-grid,
   .rom-section-body {
+    grid-template-columns: 1fr;
+  }
+
+  .release-disclosure-content {
     grid-template-columns: 1fr;
   }
 
