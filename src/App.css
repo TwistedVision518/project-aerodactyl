@@ -660,6 +660,10 @@ strong {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 100%),
     color-mix(in srgb, var(--surface-raised) 84%, black 7%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
+  background-clip: padding-box;
 }
 
 .metric-card strong {
@@ -2134,6 +2138,28 @@ strong {
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+}
+
+:root[data-theme='light'] .metric-card {
+  border-color: rgba(129, 116, 103, 0.1);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.56)),
+    color-mix(in srgb, var(--surface-raised) 92%, white 8%);
+  box-shadow:
+    0 16px 34px rgba(133, 113, 90, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(159, 141, 122, 0.08);
+}
+
+:root[data-theme='light'] .metric-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.44), transparent 28%),
+    radial-gradient(circle at 82% 100%, rgba(146, 116, 255, 0.08), transparent 34%);
+  pointer-events: none;
 }
 
 @media (max-width: 1180px) {

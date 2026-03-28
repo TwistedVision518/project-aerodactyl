@@ -648,24 +648,19 @@ function App() {
     handleRomAnchorClick(event, href.slice(1))
   }
 
-  const toggleTheme = (event: ReactMouseEvent<HTMLButtonElement>) => {
+  const toggleTheme = () => {
     if (prefersReducedMotion) {
       setThemeMode(themeMode === 'light' ? 'dark' : 'light')
       return
     }
 
-    const isToDark = themeMode === 'light'
-    const nextTheme = isToDark ? 'dark' : 'light'
+    const nextTheme = themeMode === 'light' ? 'dark' : 'light'
     const startViewTransition = document.startViewTransition?.bind(document)
 
     if (!startViewTransition) {
       setThemeMode(nextTheme)
       return
     }
-
-    const x = event.clientX
-    const y = event.clientY
-    const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
 
     const transition = startViewTransition(() => {
       flushSync(() => {
@@ -674,33 +669,27 @@ function App() {
     })
 
     transition.ready.then(() => {
-      const clipPath = [
-        `circle(96px at ${x}px ${y}px)`,
-        `circle(${endRadius}px at ${x}px ${y}px)`,
-      ]
-
       document.documentElement.animate(
         {
           opacity: [1, 0],
-          transform: ['scale(1)', 'scale(1.018)'],
-          filter: ['blur(0px)', 'blur(10px)'],
+          transform: ['scale(1)', 'scale(1.008)'],
+          filter: ['blur(0px)', 'blur(8px)'],
         },
         {
-          duration: 420,
-          easing: 'cubic-bezier(0.3, 0, 0.2, 1)',
+          duration: 280,
+          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
           pseudoElement: '::view-transition-old(root)',
         },
       )
 
       document.documentElement.animate(
         {
-          clipPath,
-          opacity: [0.68, 1],
-          transform: ['scale(0.985)', 'scale(1)'],
-          filter: ['blur(14px)', 'blur(0px)'],
+          opacity: [0, 1],
+          transform: ['scale(0.992)', 'scale(1)'],
+          filter: ['blur(10px)', 'blur(0px)'],
         },
         {
-          duration: 560,
+          duration: 340,
           easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
           pseudoElement: '::view-transition-new(root)',
         },
