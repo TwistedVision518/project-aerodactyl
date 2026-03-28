@@ -2,9 +2,9 @@
   "order": 8,
   "name": "EuclidOS",
   "version": "v3.1",
-  "status": "Initial build",
+  "status": "Discontinued",
   "branch": "A16 QPR1",
-  "tagline": "Unofficial EuclidOS 3.1 Helios for pacman with included GApps, flashbang fixes, and a clean first public drop.",
+  "tagline": "Unofficial EuclidOS 3.1 Helios for pacman, now discontinued because the source went dead after the initial release.",
   "buildDate": "January 14, 2026",
   "devices": ["Nothing Phone 2a"],
   "channelLabel": "Drive release + Telegram screenshots",
@@ -19,17 +19,19 @@
       "url": "https://t.me/NothingPhone2a/306212"
     }
   ],
-  "maintenanceNote": "Current focus: initial public release stability, integrity behavior, and banking app edge cases",
+  "maintenanceNote": "Current focus: archived release reference only; development stopped because the source is dead",
   "accent": "#7fd6ff",
   "accentSoft": "rgba(127, 214, 255, 0.16)",
   "accentStrong": "#3a92d8",
   "highlights": [
     "Marks the initial EuclidOS 3.1 Helios release for the Nothing Phone 2a.",
+    "This ROM has been discontinued because the source went dead.",
     "Ships with GApps included while leaving Fenrir out of the package by default.",
     "Includes the fingerprint flashbang fix and passes basic integrity out of the box."
   ],
   "changelog": [
     "Initial 3.1 Helios build for pacman.",
+    "Project is now discontinued because the source is dead.",
     "Includes the fingerprint flashbang fix, with thanks noted to FanDeMaraiste92.",
     "Provides basic integrity out of the box.",
     "Some banking apps may still need extra work and may not function immediately.",
