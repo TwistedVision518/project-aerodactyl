@@ -1,42 +1,27 @@
-@import '@fontsource-variable/arimo';
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/manrope';
+@import '@fontsource-variable/roboto-flex';
 
 :root {
-  --pointer-x: 50%;
-  --pointer-y: 28%;
-  --focus-x: 50%;
-  --focus-y: 28%;
-  --trail-x: 50%;
-  --trail-y: 30%;
-  --scene-shift-x: 0px;
-  --scene-shift-y: 0px;
-  --scene-tilt: 0deg;
-  --scroll-progress: 0;
-  --font-display: 'Arimo Variable', sans-serif;
-  --font-body: 'Arimo Variable', sans-serif;
-  --primary: #ffffff;
-  --primary-strong: #ffffff;
-  --secondary: #97a8c2;
-  --accent-red: #ff0037;
+  --font-display: 'Bricolage Grotesque Variable', sans-serif;
+  --font-body: 'Manrope Variable', sans-serif;
+  --font-mono: 'Roboto Flex Variable', monospace;
+  --bg: #09090b;
+  --surface: rgba(15, 16, 20, 0.72);
+  --surface-raised: rgba(255, 255, 255, 0.045);
+  --text: #f8f4ef;
+  --text-soft: #ddd4cb;
+  --muted: #9f958a;
   --outline: rgba(255, 255, 255, 0.08);
   --outline-strong: rgba(255, 255, 255, 0.16);
-  --text: #f7f9fc;
-  --muted: #8a96aa;
-  --glass-white: rgba(255, 255, 255, 0.03);
-  --surface-primary: rgba(255, 255, 255, 0.04);
-  --surface: rgba(10, 10, 12, 0.84);
-  --surface-2: rgba(18, 18, 22, 0.74);
-  --surface-nav: rgba(0, 0, 0, 0.8);
-  --bg: #000000;
-  --dot-pattern: radial-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px);
-  --dot-size: 24px 24px;
-  --shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.45);
-  --shadow-large: 0 28px 72px rgba(0, 0, 0, 0.6);
+  --accent-hot: #f48849;
+  --shadow-soft: 0 22px 80px rgba(0, 0, 0, 0.28);
+  --shadow-large: 0 26px 95px rgba(0, 0, 0, 0.42);
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --radius-xl: 1.75rem;
+  --section-gap: clamp(1.6rem, 4vw, 2.8rem);
   --spring: cubic-bezier(0.22, 1, 0.36, 1);
-  --letter-spacing-tight: -0.02em;
-  --letter-spacing-wide: 0.06em;
-  --section-gap: 8rem;
-  --container-padding: 3.5rem;
-  --card-padding: 2.25rem;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -45,21 +30,16 @@
 }
 
 :root[data-theme='light'] {
-  --primary: #000000;
-  --primary-strong: #000000;
-  --secondary: #61718b;
-  --accent-red: #ff0037;
-  --outline: rgba(0, 0, 0, 0.08);
-  --outline-strong: rgba(0, 0, 0, 0.14);
-  --text: #111111;
-  --muted: #666666;
-  --glass-white: rgba(255, 255, 255, 0.62);
-  --surface-primary: rgba(255, 255, 255, 0.82);
-  --surface: rgba(255, 255, 255, 0.88);
-  --surface-2: rgba(246, 249, 255, 0.9);
-  --surface-nav: rgba(255, 255, 255, 0.74);
-  --bg: #ffffff;
-  --dot-pattern: radial-gradient(rgba(0, 0, 0, 0.15) 1px, transparent 1px);
+  --bg: #f6f1e8;
+  --surface: rgba(255, 255, 255, 0.78);
+  --surface-raised: rgba(255, 255, 255, 0.88);
+  --text: #191411;
+  --text-soft: #332924;
+  --muted: #6d6259;
+  --outline: rgba(45, 33, 21, 0.09);
+  --outline-strong: rgba(45, 33, 21, 0.16);
+  --shadow-soft: 0 20px 70px rgba(104, 85, 63, 0.12);
+  --shadow-large: 0 28px 90px rgba(104, 85, 63, 0.16);
   color-scheme: light;
 }
 
@@ -74,19 +54,16 @@ html {
 }
 
 body {
-  position: relative;
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
   font-family: var(--font-body);
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--text);
-  background-color: #000;
-  background: var(--bg);
-}
-
-:root[data-theme='light'] body {
-  background-color: #f4f7fb;
+  background:
+    radial-gradient(circle at top, rgba(255, 149, 79, 0.08), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(109, 122, 255, 0.08), transparent 24%),
+    var(--bg);
 }
 
 a {
@@ -96,8 +73,8 @@ a {
 
 button,
 input,
-textarea,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -107,15 +84,22 @@ img {
 }
 
 #root {
-  position: relative;
-  z-index: 1;
   min-height: 100vh;
 }
 
 ::selection {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(244, 136, 73, 0.25);
 }
 
-:root[data-theme='light'] ::selection {
-  background: rgba(58, 96, 255, 0.18);
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 999px;
 }

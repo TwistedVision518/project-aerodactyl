@@ -1,5 +1,13 @@
 import { useEffect, useState, useRef } from 'react'
 
+const LOADING_PARTS = [
+  { name: 'part0', frames: 98, startNum: 1001 },
+  { name: 'part1', frames: 39, startNum: 2001 },
+  { name: 'part2', frames: 80, startNum: 3001, loop: false },
+]
+
+const FRAME_INTERVAL = 1000 / 60
+
 export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isVisible, setIsVisible] = useState(true)
@@ -9,22 +17,13 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const partRef = useRef(0)
   const imagesRef = useRef<HTMLImageElement[][]>([[], [], []])
   const lastTimeRef = useRef(0)
-  
-  const fps = 60
-  const interval = 1000 / fps
-
-  const parts = [
-    { name: 'part0', frames: 98, startNum: 1001 },
-    { name: 'part1', frames: 39, startNum: 2001 },
-    { name: 'part2', frames: 80, startNum: 3001, loop: false }, // Only play part2 once during loading
-  ]
 
   useEffect(() => {
     // 1. Preload all images
     let loadedCount = 0
-    const totalFrames = parts.reduce((acc, p) => acc + p.frames, 0)
+    const totalFrames = LOADING_PARTS.reduce((acc, p) => acc + p.frames, 0)
 
-    parts.forEach((p, pIdx) => {
+    LOADING_PARTS.forEach((p, pIdx) => {
       for (let i = 1; i <= p.frames; i++) {
         const img = new Image()
         const num = (p.startNum + i - 1).toString().padStart(5, '0')
@@ -51,9 +50,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
 
     // Safety timeout for preloading
     const preloadTimeout = setTimeout(() => {
-      if (!isPreloaded) {
-        setIsPreloaded(true)
-      }
+      setIsPreloaded(true)
     }, 5000)
 
     return () => clearTimeout(preloadTimeout)
@@ -73,17 +70,16 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         }
 
         const delta = time - lastTimeRef.current
-        // Use a slightly longer interval for part0 (e.g. 50 FPS instead of 60 FPS)
-        const currentInterval = partRef.current === 0 ? (1000 / 50) : interval
+        const currentInterval = partRef.current === 0 ? (1000 / 50) : FRAME_INTERVAL
 
         if (delta > currentInterval) {
           lastTimeRef.current = time - (delta % currentInterval)
-          
+
           let nextFrame = frameRef.current + 1
           let nextPart = partRef.current
 
-          if (nextFrame > parts[nextPart].frames) {
-            if (nextPart < parts.length - 1) {
+          if (nextFrame > LOADING_PARTS[nextPart].frames) {
+            if (nextPart < LOADING_PARTS.length - 1) {
               nextPart += 1
               nextFrame = 1
               partRef.current = nextPart
@@ -135,10 +131,15 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   return (
     <div className={`loading-overlay ${!isVisible ? 'is-hidden' : ''}`}>
       <div className="loading-content">
+        <span className="loading-badge">Booting release dashboard</span>
         <canvas 
           ref={canvasRef}
           className="loading-canvas"
         />
+        <div className="loading-copy">
+          <strong>Project Aerodactyl</strong>
+          <span>Preparing the release hub</span>
+        </div>
       </div>
     </div>
   )

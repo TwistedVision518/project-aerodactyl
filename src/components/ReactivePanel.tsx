@@ -190,6 +190,12 @@ export function ReactivePanel<T extends ElementType = 'div'>({
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
       ref={ref}
+      style={
+        {
+          '--panel-intensity': intensity.toString(),
+          ...(rest.style as Record<string, string> | undefined),
+        } as ComponentPropsWithoutRef<T>['style']
+      }
     >
       {children}
     </Component>
