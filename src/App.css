@@ -775,12 +775,12 @@ strong {
 
 .rom-directory-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
 }
 
 .rom-directory-motion,
-.rom-section-motion {
+.rom-detail-stage {
   min-width: 0;
 }
 
@@ -880,16 +880,15 @@ strong {
   background: rgba(255, 255, 255, 0.03);
 }
 
-.rom-sections {
-  display: grid;
-  gap: 0.95rem;
-}
-
 .rom-section[data-active='true'] {
   border-color: color-mix(in srgb, var(--accent, var(--accent-hot)) 45%, var(--outline-strong));
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--accent, var(--accent-hot)) 18%, transparent),
     var(--shadow-large);
+}
+
+.rom-detail-stage {
+  margin-top: 1.1rem;
 }
 
 .rom-section-header {
@@ -1412,6 +1411,10 @@ strong {
 
   .build-grid {
     grid-template-columns: 1fr;
+  }
+
+  .rom-directory-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .rom-header-meta {

@@ -295,6 +295,22 @@ function App() {
       return toTimestamp(right.buildDate) - toTimestamp(left.buildDate)
     })
   }, [availabilityFilter, deferredQuery, deviceFilter, sortMode])
+  const resolvedActiveRomId = useMemo(() => {
+    if (filteredRoms.length === 0) {
+      return null
+    }
+
+    return activeRomId && filteredRoms.some((rom) => toSectionId(rom.name) === activeRomId)
+      ? activeRomId
+      : toSectionId(filteredRoms[0].name)
+  }, [activeRomId, filteredRoms])
+  const selectedRom = useMemo(() => {
+    if (filteredRoms.length === 0) {
+      return null
+    }
+
+    return filteredRoms.find((rom) => toSectionId(rom.name) === resolvedActiveRomId) ?? filteredRoms[0]
+  }, [filteredRoms, resolvedActiveRomId])
 
   const featuredStyle: AccentStyle = {
     '--accent': featuredRom.accent,
@@ -391,6 +407,16 @@ function App() {
     if (nextSection) {
       setActiveSection(nextSection)
     }
+  }
+
+  const handleRomAnchorClick = (event: MouseEvent<HTMLAnchorElement>, romId: string) => {
+    event.preventDefault()
+    setActiveRomId(romId)
+    setActiveSection('rom-directory')
+    window.history.pushState(null, '', `#${romId}`)
+    window.requestAnimationFrame(() => {
+      document.getElementById('rom-detail-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
@@ -586,7 +612,11 @@ function App() {
                     </div>
 
                     <div className="spotlight-actions">
-                      <a className="ghost-action" href={`#${toSectionId(featuredRom.name)}`} onClick={handleSectionAnchorClick}>
+                      <a
+                        className="ghost-action"
+                        href={`#${toSectionId(featuredRom.name)}`}
+                        onClick={(event) => handleRomAnchorClick(event, toSectionId(featuredRom.name))}
+                      >
                         Read release details
                       </a>
                     </div>
@@ -670,7 +700,9 @@ function App() {
                           </div>
 
                           <div className="card-actions">
-                            <a href={`#${toSectionId(rom.name)}`}>Inspect release</a>
+                            <a href={`#${toSectionId(rom.name)}`} onClick={(event) => handleRomAnchorClick(event, toSectionId(rom.name))}>
+                              Inspect release
+                            </a>
                           </div>
                         </ReactivePanel>
                       )
@@ -825,7 +857,7 @@ function App() {
                 {filteredRoms.map((rom, index) => {
                   const links = getReleaseLinks(rom)
                   const romId = toSectionId(rom.name)
-                  const isActiveRom = activeRomId === romId
+                  const isActiveRom = resolvedActiveRomId === romId
                   const accentStyle: AccentStyle = {
                     '--accent': rom.accent,
                     '--accent-soft': rom.accentSoft,
@@ -854,7 +886,7 @@ function App() {
                         data-active={isActiveRom ? 'true' : 'false'}
                         href={`#${romId}`}
                         intensity={0.6}
-                        onClick={handleSectionAnchorClick}
+                        onClick={(event) => handleRomAnchorClick(event, romId)}
                         style={accentStyle}
                       >
                         {isActiveRom ? <m.span className="directory-active-frame" layoutId="active-rom-card" /> : null}
@@ -887,103 +919,82 @@ function App() {
                 </AnimatePresence>
               </m.div>
 
-              {filteredRoms.length === 0 ? (
-                <div className="empty-state">
-                  <strong>No releases matched the current filters.</strong>
-                  <span>Broaden the search or reset the filters to bring the full lineup back.</span>
-                  <button onClick={resetFilters} type="button">
-                    Clear filters
-                  </button>
-                </div>
-              ) : null}
-            </section>
-          </Reveal>
-          </LayoutGroup>
-
-          <section className="rom-sections">
-            <AnimatePresence initial={false} mode="popLayout">
-            {filteredRoms.map((rom, index) => {
-              const links = getReleaseLinks(rom)
-              const isReleaseNotesOpen = expandedReleaseNotes[rom.name] ?? false
-              const romId = toSectionId(rom.name)
-              const releaseDisclosureId = `${romId}-release-notes`
-              const isActiveRom = activeRomId === romId
-              const accentStyle: AccentStyle = {
-                '--accent': rom.accent,
-                '--accent-soft': rom.accentSoft,
-                '--accent-strong': rom.accentStrong,
-              }
-
-              return (
-                <m.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="rom-section-motion"
-                  exit={{ opacity: 0, y: 20 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  key={rom.name}
-                  layout
-                  transition={{
-                    delay: index * 0.03,
-                    duration: 0.38,
-                    ease: [0.22, 1, 0.36, 1],
-                    layout: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
-                  }}
-                >
-                  <Reveal delay={index * 35}>
+              {selectedRom ? (
+                <AnimatePresence initial={false} mode="wait">
+                  <m.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="rom-detail-stage"
+                    exit={{ opacity: 0, y: 16 }}
+                    id="rom-detail-panel"
+                    initial={{ opacity: 0, y: 16 }}
+                    key={selectedRom.name}
+                    layout
+                    transition={{ duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+                  >
                     <ReactivePanel
                       as="section"
-                      className={`rom-section panel ${isActiveRom ? 'is-active' : ''}`.trim()}
-                      data-active={isActiveRom ? 'true' : 'false'}
+                      className="rom-section panel is-active"
+                      data-active="true"
                       data-hub-accent="true"
-                      id={romId}
+                      id={toSectionId(selectedRom.name)}
                       intensity={0.75}
-                      style={accentStyle}
+                      style={
+                        {
+                          '--accent': selectedRom.accent,
+                          '--accent-soft': selectedRom.accentSoft,
+                          '--accent-strong': selectedRom.accentStrong,
+                        } as AccentStyle
+                      }
                     >
                       <div className="rom-section-header">
                         <div className="rom-heading">
                           <div className="chip-row">
-                            <span className="chip chip-tonal">{rom.status}</span>
-                            <span className="chip">{rom.branch}</span>
-                            <span className="chip">{links.length > 0 ? 'Release linked' : 'Release tracking'}</span>
+                            <span className="chip chip-tonal">{selectedRom.status}</span>
+                            <span className="chip">{selectedRom.branch}</span>
+                            <span className="chip">
+                              {getReleaseLinks(selectedRom).length > 0 ? 'Release linked' : 'Release tracking'}
+                            </span>
                           </div>
 
-                          <h2>{rom.name}</h2>
-                          <p>{rom.tagline}</p>
+                          <h2>{selectedRom.name}</h2>
+                          <p>{selectedRom.tagline}</p>
                         </div>
 
                         <div className="rom-header-meta">
-                          <span className="version-pill">{rom.version}</span>
-                          <small>{formatFreshness(rom.buildDate)}</small>
+                          <span className="version-pill">{selectedRom.version}</span>
+                          <small>{formatFreshness(selectedRom.buildDate)}</small>
                         </div>
                       </div>
 
                       <div className="rom-section-body">
                         <div className="rom-section-main">
                           <m.div
-                            animate={isReleaseNotesOpen ? 'open' : 'closed'}
+                            animate={expandedReleaseNotes[selectedRom.name] ? 'open' : 'closed'}
                             className="release-disclosure"
-                            data-open={isReleaseNotesOpen ? 'true' : 'false'}
+                            data-open={expandedReleaseNotes[selectedRom.name] ? 'true' : 'false'}
                             layout
                             transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                           >
                             <button
-                              aria-controls={releaseDisclosureId}
-                              aria-expanded={isReleaseNotesOpen}
+                              aria-controls={`${toSectionId(selectedRom.name)}-release-notes`}
+                              aria-expanded={expandedReleaseNotes[selectedRom.name] ?? false}
                               className="release-disclosure-trigger"
-                              onClick={() => toggleReleaseNotes(rom.name)}
+                              onClick={() => toggleReleaseNotes(selectedRom.name)}
                               type="button"
                             >
                               <div className="release-disclosure-copy">
                                 <span className="section-label">Release notes</span>
-                                <strong>{isReleaseNotesOpen ? 'Hide detailed notes' : 'Open detailed notes'}</strong>
+                                <strong>
+                                  {expandedReleaseNotes[selectedRom.name] ? 'Hide detailed notes' : 'Open detailed notes'}
+                                </strong>
                                 <small>
-                                  {rom.highlights.length} highlights and {rom.changelog.length} changelog entries.
+                                  {selectedRom.highlights.length} highlights and {selectedRom.changelog.length} changelog entries.
                                 </small>
                               </div>
                               <span className="release-disclosure-pill">
-                                {isReleaseNotesOpen ? 'Close' : 'Open'}
+                                {expandedReleaseNotes[selectedRom.name] ? 'Close' : 'Open'}
                                 <m.span
-                                  animate={{ rotate: isReleaseNotesOpen ? 45 : 0 }}
+                                  animate={{ rotate: expandedReleaseNotes[selectedRom.name] ? 45 : 0 }}
                                   className="release-disclosure-icon"
                                   transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
                                 >
@@ -993,12 +1004,12 @@ function App() {
                             </button>
 
                             <AnimatePresence initial={false}>
-                              {isReleaseNotesOpen ? (
+                              {expandedReleaseNotes[selectedRom.name] ? (
                                 <m.div
                                   animate={{ height: 'auto', opacity: 1 }}
                                   className="release-disclosure-motion"
                                   exit={{ height: 0, opacity: 0 }}
-                                  id={releaseDisclosureId}
+                                  id={`${toSectionId(selectedRom.name)}-release-notes`}
                                   initial={{ height: 0, opacity: 0 }}
                                   transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                                 >
@@ -1011,7 +1022,7 @@ function App() {
                                     <div className="content-cluster">
                                       <h3>Why this release stands out</h3>
                                       <ul className="bullet-list">
-                                        {rom.highlights.map((item) => (
+                                        {selectedRom.highlights.map((item) => (
                                           <li key={item}>{item}</li>
                                         ))}
                                       </ul>
@@ -1020,11 +1031,11 @@ function App() {
                                     <div className="content-cluster">
                                       <div className="cluster-head">
                                         <h3>Build changelog</h3>
-                                        <span>{rom.changelog.length} notes</span>
+                                        <span>{selectedRom.changelog.length} notes</span>
                                       </div>
 
                                       <ul className="timeline-list">
-                                        {rom.changelog.map((item) => (
+                                        {selectedRom.changelog.map((item) => (
                                           <li key={item}>{item}</li>
                                         ))}
                                       </ul>
@@ -1040,27 +1051,27 @@ function App() {
                           <div className="rom-facts-card">
                             <div className="rom-fact-row">
                               <span>Build date</span>
-                              <strong>{rom.buildDate}</strong>
+                              <strong>{selectedRom.buildDate}</strong>
                             </div>
                             <div className="rom-fact-row">
                               <span>Supported devices</span>
-                              <strong>{rom.devices.join(' / ')}</strong>
+                              <strong>{selectedRom.devices.join(' / ')}</strong>
                             </div>
                             <div className="rom-fact-row">
                               <span>Current focus</span>
-                              <strong>{formatMaintenanceNote(rom.maintenanceNote)}</strong>
+                              <strong>{formatMaintenanceNote(selectedRom.maintenanceNote)}</strong>
                             </div>
                             <div className="rom-fact-row">
                               <span>Channel label</span>
-                              <strong>{rom.channelLabel}</strong>
+                              <strong>{selectedRom.channelLabel}</strong>
                             </div>
                           </div>
 
                           <div className="card-actions card-actions-stack">
-                            {links.length > 0 ? (
-                              links.map((link) => (
+                            {getReleaseLinks(selectedRom).length > 0 ? (
+                              getReleaseLinks(selectedRom).map((link) => (
                                 <a href={link.url} key={link.url} rel="noreferrer" target="_blank">
-                                  {links.length > 1 ? link.label : 'Open Telegram release'}
+                                  {getReleaseLinks(selectedRom).length > 1 ? link.label : 'Open Telegram release'}
                                 </a>
                               ))
                             ) : (
@@ -1070,12 +1081,22 @@ function App() {
                         </aside>
                       </div>
                     </ReactivePanel>
-                  </Reveal>
-                </m.div>
-              )
-            })}
-            </AnimatePresence>
-          </section>
+                  </m.div>
+                </AnimatePresence>
+              ) : null}
+
+              {filteredRoms.length === 0 ? (
+                <div className="empty-state">
+                  <strong>No releases matched the current filters.</strong>
+                  <span>Broaden the search or reset the filters to bring the full lineup back.</span>
+                  <button onClick={resetFilters} type="button">
+                    Clear filters
+                  </button>
+                </div>
+              ) : null}
+            </section>
+          </Reveal>
+          </LayoutGroup>
 
           <Reveal delay={110}>
             <section className="panel support-panel support-panel-gcam" data-hub-accent="true" id="gcams" style={gcamStyle}>
