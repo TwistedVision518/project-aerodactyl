@@ -571,6 +571,36 @@ function App() {
       return
     }
 
+    const coarsePointerQuery = window.matchMedia('(hover: none), (pointer: coarse)')
+
+    if (coarsePointerQuery.matches) {
+      const syncActiveSectionFromScroll = () => {
+        const activationLine = window.innerHeight * 0.38
+        let nextSection: SectionId = 'top'
+
+        for (const section of sections) {
+          if (section.getBoundingClientRect().top <= activationLine) {
+            const resolvedSection = resolveSectionTarget(`#${section.id}`)
+
+            if (resolvedSection) {
+              nextSection = resolvedSection
+            }
+          }
+        }
+
+        setActiveSection((current) => (current === nextSection ? current : nextSection))
+      }
+
+      syncActiveSectionFromScroll()
+      window.addEventListener('scroll', syncActiveSectionFromScroll, { passive: true })
+      window.addEventListener('resize', syncActiveSectionFromScroll)
+
+      return () => {
+        window.removeEventListener('scroll', syncActiveSectionFromScroll)
+        window.removeEventListener('resize', syncActiveSectionFromScroll)
+      }
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         const activeEntry = entries
