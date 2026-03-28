@@ -79,6 +79,7 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: var(--bg);
 }
 
 body {
@@ -88,6 +89,7 @@ body {
   font-family: var(--font-body);
   line-height: 1.5;
   color: var(--text);
+  background-color: var(--bg);
   background:
     radial-gradient(circle at top, rgba(255, 149, 79, 0.05), transparent 24%),
     radial-gradient(circle at 20% 20%, rgba(155, 112, 255, 0.08), transparent 28%),

@@ -662,39 +662,45 @@ function App() {
       return
     }
 
+    document.documentElement.dataset.themeSwitching = 'true'
+
     const transition = startViewTransition(() => {
       flushSync(() => {
         setThemeMode(nextTheme)
       })
     })
 
-    transition.ready.then(() => {
-      document.documentElement.animate(
-        {
-          opacity: [1, 0],
-          transform: ['scale(1)', 'scale(1.008)'],
-          filter: ['blur(0px)', 'blur(8px)'],
-        },
-        {
-          duration: 280,
-          easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-          pseudoElement: '::view-transition-old(root)',
-        },
-      )
+    transition.ready
+      .then(async () => {
+        const oldLayer = document.documentElement.animate(
+          {
+            opacity: [1, 0],
+          },
+          {
+            duration: 180,
+            easing: 'cubic-bezier(0.4, 0, 1, 1)',
+            fill: 'both',
+            pseudoElement: '::view-transition-old(root)',
+          },
+        )
 
-      document.documentElement.animate(
-        {
-          opacity: [0, 1],
-          transform: ['scale(0.992)', 'scale(1)'],
-          filter: ['blur(10px)', 'blur(0px)'],
-        },
-        {
-          duration: 340,
-          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-          pseudoElement: '::view-transition-new(root)',
-        },
-      )
-    })
+        const newLayer = document.documentElement.animate(
+          {
+            opacity: [0, 1],
+          },
+          {
+            duration: 260,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'both',
+            pseudoElement: '::view-transition-new(root)',
+          },
+        )
+
+        await Promise.allSettled([oldLayer.finished, newLayer.finished])
+      })
+      .finally(() => {
+        delete document.documentElement.dataset.themeSwitching
+      })
   }
 
   const handleCommunityCopy = async () => {

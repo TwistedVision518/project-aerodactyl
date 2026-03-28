@@ -2138,6 +2138,26 @@ strong {
 ::view-transition-new(root) {
   animation: none;
   mix-blend-mode: normal;
+  backface-visibility: hidden;
+}
+
+::view-transition-group(root) {
+  animation-duration: 1ms;
+}
+
+::view-transition-image-pair(root) {
+  isolation: isolate;
+}
+
+:root[data-theme-switching='true'] .interactive-scene {
+  opacity: 0.96;
+}
+
+:root[data-theme-switching='true'] .scene-cursor-glow,
+:root[data-theme-switching='true'] .scene-gradient,
+:root[data-theme-switching='true'] .scene-grid,
+:root[data-theme-switching='true'] .scene-noise {
+  transition: none !important;
 }
 
 :root[data-theme='light'] .metric-card {
