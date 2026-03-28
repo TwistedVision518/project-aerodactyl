@@ -2,25 +2,44 @@
   "order": 5,
   "name": "PixelOS",
   "version": "v16.2",
-  "status": "Stable release",
-  "branch": "Pixel track",
-  "tagline": "Clean, minimal release notes for users who just want the essentials fast.",
-  "buildDate": "March 19, 2026",
+  "status": "Current build",
+  "branch": "A16 QPR2",
+  "tagline": "Unofficial Android 16 QPR2 build with sharper haptics, faster motion, and a simpler pacmanpro flashing experience.",
+  "buildDate": "March 23, 2026",
   "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
-  "channelLabel": "Telegram release feed",
-  "telegramUrl": "https://t.me/NothingPhone2aUpdates/185",
-  "maintenanceNote": "Current focus: concise stable updates",
+  "channelLabel": "Drive downloads + Telegram screenshot",
+  "telegramUrl": "https://drive.google.com/drive/folders/1QRrnXC2X8CQV17Qc3yXIJTPqyZqDD9f6?usp=drive_link",
+  "telegramLinks": [
+    {
+      "label": "Download for pacman",
+      "url": "https://drive.google.com/drive/folders/1QRrnXC2X8CQV17Qc3yXIJTPqyZqDD9f6?usp=drive_link"
+    },
+    {
+      "label": "Download for pacmanpro",
+      "url": "https://drive.google.com/drive/folders/1QJYJu8Gmo8O6v9gwOwiTs6DyIIOpQAnh?usp=drive_link"
+    },
+    {
+      "label": "View screenshot",
+      "url": "https://t.me/NothingPhone2a/321654?single"
+    }
+  ],
+  "maintenanceNote": "Current focus: haptics, speed, and smoother setup on pacmanpro",
   "accent": "#3da3ff",
   "accentSoft": "rgba(61, 163, 255, 0.14)",
   "accentStrong": "#0b71c7",
   "highlights": [
-    "Shorter notes stay readable without looking empty or unfinished.",
-    "Fits stable release communication and smaller incremental drops well.",
-    "Device targeting stays clear even on narrower mobile screens."
+    "Improved haptics give the build a crisper and more tactile feel.",
+    "App opening and closing animations are smoother and faster overall.",
+    "The pacmanpro flashing process is less complicated than before."
   ],
   "changelog": [
-    "Kept the stable PixelOS release concise and easy to scan.",
-    "Rolled smaller incremental updates into one cleaner public-facing drop.",
-    "Preserved quick readability for both Nothing Phone 2a variants."
+    "Improved haptics for a crisper feel.",
+    "Improved app opening and closing animations along with overall speed.",
+    "Marginally improved gaming performance.",
+    "Resolved the complicated flashing process for pacmanpro.",
+    "GApps are included by default.",
+    "Fenrir is not included by default.",
+    "Play Integrity is strong with Fenrir and basic without it as of March 23, 2026.",
+    "Sideloading and the first boot take longer than usual, so do not panic."
   ]
 }

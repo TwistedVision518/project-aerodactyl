@@ -1,26 +1,44 @@
 {
   "order": 3,
   "name": "Infinity X",
-  "version": "v3.8",
-  "status": "Active release",
-  "branch": "Feature track",
-  "tagline": "Feature-heavy updates presented without turning release notes into a mess.",
-  "buildDate": "March 20, 2026",
+  "version": "v3.8 Hotfix",
+  "status": "Hotfix build",
+  "branch": "A16 QPR2",
+  "tagline": "Unofficial Aerodactyl hotfix build with current source sync, lockscreen extras, and a cleaner feature set after dropping Prism.",
+  "buildDate": "March 25, 2026",
   "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
-  "channelLabel": "Telegram release feed",
-  "telegramUrl": "https://t.me/NothingPhone2aUpdates/186",
-  "maintenanceNote": "Current focus: feature validation",
+  "channelLabel": "SourceForge downloads + official screenshots",
+  "telegramUrl": "https://sourceforge.net/projects/loki-project-files/files/ROMS/InfinityX/3.8-HotFix/Pacman",
+  "telegramLinks": [
+    {
+      "label": "Download for pacman",
+      "url": "https://sourceforge.net/projects/loki-project-files/files/ROMS/InfinityX/3.8-HotFix/Pacman"
+    },
+    {
+      "label": "Download for pacmanpro",
+      "url": "https://sourceforge.net/projects/loki-project-files/files/ROMS/InfinityX/3.8-HotFix/PacmanPro"
+    },
+    {
+      "label": "Official screenshots",
+      "url": "https://t.me/ProjectInfinityX/1828?single"
+    }
+  ],
+  "maintenanceNote": "Current focus: source sync, lockscreen features, and hotfix stability",
   "accent": "#6c7cff",
   "accentSoft": "rgba(108, 124, 255, 0.14)",
   "accentStrong": "#4557e6",
   "highlights": [
-    "Designed for denser change sets while keeping release notes readable.",
-    "Per-ROM tracking keeps feature-heavy builds separate from the rest of the list.",
-    "Side metadata gives testers a quick read on date, devices, and release source."
+    "Synced to the latest source for the 3.8 hotfix release.",
+    "Adds depth wallpaper and a custom clock option for the lockscreen.",
+    "Drops Prism while keeping GApps included by default."
   ],
   "changelog": [
-    "Grouped the current feature-track work into one clearer release track.",
-    "Kept tester-facing changes readable despite the broader change set.",
-    "Aligned release metadata and targeting across pacman and pacmanpro."
+    "Synced to the latest source.",
+    "Added support for depth wallpaper and a custom lockscreen clock.",
+    "Added the cutout progress bar.",
+    "GApps are included by default.",
+    "Fenrir is not included by default.",
+    "Prism has been dropped for this build.",
+    "Uses the March 1, 2026 Android security patch level."
   ]
 }
