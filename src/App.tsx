@@ -1148,9 +1148,9 @@ function App() {
                                       <m.div
                                         animate={{ opacity: 1, y: 0, scale: 1 }}
                                         className="resource-menu"
-                                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                                        exit={{ opacity: 0, y: 8, scale: 0.98 }}
                                         id="resource-picker-menu"
-                                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                                        initial={{ opacity: 0, y: 8, scale: 0.98 }}
                                         role="listbox"
                                         transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
                                       >

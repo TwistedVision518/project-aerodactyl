@@ -887,10 +887,12 @@ strong {
   box-shadow:
     0 0 0 1px color-mix(in srgb, var(--accent, var(--accent-hot)) 18%, transparent),
     var(--shadow-large);
+  overflow: visible;
 }
 
 .rom-detail-stage {
   margin-top: 1.1rem;
+  overflow: visible;
 }
 
 .rom-section-header {
@@ -923,6 +925,7 @@ strong {
   grid-template-columns: minmax(0, 1fr) minmax(220px, 280px);
   padding-top: 1rem;
   align-items: start;
+  overflow: visible;
 }
 
 .release-disclosure {
@@ -1090,6 +1093,7 @@ strong {
 
 .card-actions-stack {
   display: grid;
+  overflow: visible;
 }
 
 .resource-panel {
@@ -1099,6 +1103,7 @@ strong {
   border: 1px solid var(--outline);
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.025);
+  overflow: visible;
 }
 
 .resource-panel-head {
@@ -1117,6 +1122,7 @@ strong {
   position: relative;
   display: grid;
   gap: 0.45rem;
+  overflow: visible;
 }
 
 .resource-picker-label {
@@ -1197,9 +1203,9 @@ strong {
 
 .resource-menu {
   position: absolute;
-  top: calc(100% + 0.6rem);
-  left: 0;
   right: 0;
+  bottom: calc(100% + 0.6rem);
+  left: 0;
   z-index: 20;
   display: grid;
   gap: 0.35rem;
@@ -1214,6 +1220,7 @@ strong {
     0 22px 44px rgba(7, 8, 14, 0.34);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  transform-origin: bottom center;
 }
 
 .resource-option {
