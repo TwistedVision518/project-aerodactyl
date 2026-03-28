@@ -9,13 +9,11 @@ import {
 } from 'react'
 import { flushSync } from 'react-dom'
 import './App.css'
-import { CommentsThread } from './components/CommentsThread'
 import { LoadingScreen } from './components/LoadingScreen'
 import { ReactivePanel } from './components/ReactivePanel'
 import { Reveal } from './components/Reveal'
 import type { GcamEntry, ReleaseLink, RomEntry } from './data/types'
 import {
-  comments,
   communityHub,
   expansionCards,
   gcamEntries,
@@ -251,8 +249,6 @@ function App() {
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
-  const featuredRomLinks = getReleaseLinks(featuredRom)
-  const featuredRomHasLink = featuredRomLinks.length > 0
   const communityHubHasLink = hasReleaseLink(communityHub.telegramUrl)
   const releaseReadyRoms = useMemo(
     () =>
@@ -261,8 +257,6 @@ function App() {
         .sort((left, right) => toTimestamp(right.buildDate) - toTimestamp(left.buildDate)),
     [],
   )
-  const latestLinkedRom = releaseReadyRoms[0] ?? latestBuilds[0] ?? roms[0]
-  const trackingOnlyCount = roms.length - releaseReadyRoms.length
   const dualTargetCount = roms.filter((rom) => rom.devices.length > 1).length
   const filteredRoms = useMemo(() => {
     const query = deferredQuery.trim().toLowerCase()
@@ -516,11 +510,8 @@ function App() {
                 </p>
 
                 <div className="hero-actions">
-                  <a className="action-primary" href="#pinned-builds" onClick={handleSectionAnchorClick}>
-                    Open Command Center
-                  </a>
-                  <a className="action-secondary" href="#rom-directory" onClick={handleSectionAnchorClick}>
-                    Browse Release Lanes
+                  <a className="action-primary" href="#rom-directory" onClick={handleSectionAnchorClick}>
+                    Browse ROMs
                   </a>
                   {communityHubHasLink ? (
                     <a
@@ -573,13 +564,6 @@ function App() {
                     </div>
 
                     <div className="spotlight-actions">
-                      {featuredRomHasLink ? (
-                        <a href={featuredRomLinks[0].url} rel="noreferrer" target="_blank">
-                          Open release
-                        </a>
-                      ) : (
-                        <span className="button-disabled">Release link pending</span>
-                      )}
                       <a className="ghost-action" href={`#${toSectionId(featuredRom.name)}`} onClick={handleSectionAnchorClick}>
                         Read release details
                       </a>
@@ -588,37 +572,6 @@ function App() {
                 </ReactivePanel>
 
                 <div className="hero-stack">
-                  <ReactivePanel as="article" className="utility-card" intensity={0.55}>
-                    <div className="feature-topline">
-                      <span className="feature-badge">Release readiness</span>
-                      <span className="ghost-pill">
-                        {Math.round((releaseReadyRoms.length / roms.length) * 100)}%
-                      </span>
-                    </div>
-
-                    <h3>What is launch-ready right now</h3>
-
-                    <div className="mini-metrics">
-                      <div>
-                        <span>Linked releases</span>
-                        <strong>{releaseReadyRoms.length}</strong>
-                      </div>
-                      <div>
-                        <span>Tracking only</span>
-                        <strong>{trackingOnlyCount}</strong>
-                      </div>
-                    </div>
-
-                    <p className="utility-copy">
-                      {latestLinkedRom.name} is the freshest release with a public release link, and the
-                      rest of the grid stays visible even when links are still being prepared.
-                    </p>
-
-                    <a className="ghost-action" href="#pinned-builds">
-                      Review command center
-                    </a>
-                  </ReactivePanel>
-
                   <ReactivePanel as="article" className="utility-card utility-card-community" intensity={0.55}>
                     <div className="feature-topline">
                       <span className="feature-badge">Community hub</span>
@@ -675,7 +628,6 @@ function App() {
                         '--accent-soft': rom.accentSoft,
                         '--accent-strong': rom.accentStrong,
                       }
-                      const links = getReleaseLinks(rom)
 
                       return (
                         <ReactivePanel
@@ -700,13 +652,6 @@ function App() {
 
                           <div className="card-actions">
                             <a href={`#${toSectionId(rom.name)}`}>Inspect release</a>
-                            {links[0] ? (
-                              <a href={links[0].url} rel="noreferrer" target="_blank">
-                                Open release
-                              </a>
-                            ) : (
-                              <span className="button-disabled">Pending link</span>
-                            )}
                           </div>
                         </ReactivePanel>
                       )
@@ -734,35 +679,6 @@ function App() {
                         </a>
                       ))}
                     </div>
-                  </article>
-
-                  <article className="side-card">
-                    <div className="command-card-head">
-                      <div>
-                        <span className="section-label">Signal board</span>
-                        <h3>Where the project stands</h3>
-                      </div>
-                    </div>
-
-                    <div className="status-list">
-                      <div className="status-row">
-                        <span>Release links live</span>
-                        <strong>{releaseReadyRoms.length}</strong>
-                      </div>
-                      <div className="status-row">
-                        <span>Lanes still tracking</span>
-                        <strong>{trackingOnlyCount}</strong>
-                      </div>
-                      <div className="status-row">
-                        <span>Devices consistently covered</span>
-                        <strong>{dualTargetCount}</strong>
-                      </div>
-                    </div>
-
-                    <p className="utility-copy">
-                      The page now separates tracked from openable so people do not waste time tapping
-                      dead release entries.
-                    </p>
                   </article>
                 </div>
               </div>
@@ -1003,11 +919,6 @@ function App() {
                           </ul>
                         </div>
 
-                        <CommentsThread
-                          config={comments}
-                          term={`rom:${rom.name.toLowerCase()}`}
-                          title={`Open GitHub feedback for ${rom.name}`}
-                        />
                       </div>
 
                       <aside className="rom-section-side">
@@ -1038,12 +949,6 @@ function App() {
                           ) : (
                             <span className="button-disabled">Release link pending</span>
                           )}
-
-                          {communityHubHasLink ? (
-                            <a href={communityHub.telegramUrl} rel="noreferrer" target="_blank">
-                              Open community hub
-                            </a>
-                          ) : null}
                         </div>
                       </aside>
                     </div>
@@ -1115,11 +1020,6 @@ function App() {
                 </article>
               )}
 
-              <CommentsThread
-                config={comments}
-                term="section:gcams"
-                title="Open GitHub feedback for the camera section"
-              />
             </section>
           </Reveal>
 
