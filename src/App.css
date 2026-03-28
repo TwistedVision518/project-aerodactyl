@@ -35,10 +35,10 @@
   overflow: clip;
   transform: translateZ(0);
   background:
-    radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.03), transparent 26%),
-    radial-gradient(circle at 50% 20%, rgba(138, 111, 255, 0.12), transparent 36%),
-    radial-gradient(circle at 50% 58%, rgba(123, 213, 255, 0.05), transparent 34%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%),
+    radial-gradient(circle at 50% -8%, var(--scene-shell-top), transparent 26%),
+    radial-gradient(circle at 50% 20%, var(--scene-shell-mid), transparent 36%),
+    radial-gradient(circle at 50% 58%, var(--scene-shell-bottom), transparent 34%),
+    linear-gradient(180deg, var(--scene-sheen), transparent 22%),
     var(--bg);
 }
 
@@ -53,8 +53,8 @@
 
 .scene-vignette {
   background:
-    radial-gradient(circle at 50% 28%, rgba(0, 0, 0, 0.54) 0%, rgba(0, 0, 0, 0.42) 24%, transparent 62%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.14), transparent 26%);
+    radial-gradient(circle at 50% 28%, var(--scene-vignette-core) 0%, var(--scene-vignette-edge) 24%, transparent 62%),
+    linear-gradient(180deg, color-mix(in srgb, var(--scene-vignette-core) 26%, transparent), transparent 26%);
   z-index: 1;
 }
 
@@ -67,9 +67,9 @@
   margin-top: -12rem;
   border-radius: 999px;
   background:
-    radial-gradient(circle at 40% 40%, rgba(124, 213, 255, 0.2), transparent 26%),
-    radial-gradient(circle at 62% 58%, rgba(168, 120, 255, 0.24), transparent 34%),
-    radial-gradient(circle at center, rgba(255, 255, 255, 0.035), transparent 62%);
+    radial-gradient(circle at 40% 40%, var(--scene-cursor-a), transparent 26%),
+    radial-gradient(circle at 62% 58%, var(--scene-cursor-b), transparent 34%),
+    radial-gradient(circle at center, var(--scene-cursor-c), transparent 62%);
   filter: blur(28px);
   will-change: transform, opacity;
   z-index: 2;

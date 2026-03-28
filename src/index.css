@@ -22,6 +22,15 @@
   --scene-wave-c: rgba(120, 94, 255, 0.74);
   --scene-grid-dot: rgba(114, 168, 255, 0.32);
   --scene-grid-glow: rgba(168, 120, 255, 0.18);
+  --scene-shell-top: rgba(255, 255, 255, 0.03);
+  --scene-shell-mid: rgba(138, 111, 255, 0.12);
+  --scene-shell-bottom: rgba(123, 213, 255, 0.05);
+  --scene-vignette-core: rgba(0, 0, 0, 0.54);
+  --scene-vignette-edge: rgba(0, 0, 0, 0.42);
+  --scene-sheen: rgba(255, 255, 255, 0.018);
+  --scene-cursor-a: rgba(124, 213, 255, 0.2);
+  --scene-cursor-b: rgba(168, 120, 255, 0.24);
+  --scene-cursor-c: rgba(255, 255, 255, 0.035);
   --radius-md: 1rem;
   --radius-lg: 1.5rem;
   --radius-xl: 1.75rem;
@@ -35,21 +44,30 @@
 }
 
 :root[data-theme='light'] {
-  --bg: #f6f1e8;
-  --surface: rgba(255, 255, 255, 0.78);
-  --surface-raised: rgba(255, 255, 255, 0.88);
+  --bg: #f2eadf;
+  --surface: rgba(255, 255, 255, 0.62);
+  --surface-raised: rgba(255, 255, 255, 0.74);
   --text: #191411;
   --text-soft: #332924;
   --muted: #6d6259;
   --outline: rgba(45, 33, 21, 0.09);
   --outline-strong: rgba(45, 33, 21, 0.16);
-  --shadow-soft: 0 20px 70px rgba(104, 85, 63, 0.12);
-  --shadow-large: 0 28px 90px rgba(104, 85, 63, 0.16);
-  --scene-wave-a: rgba(158, 126, 255, 0.26);
-  --scene-wave-b: rgba(122, 210, 255, 0.24);
-  --scene-wave-c: rgba(133, 118, 255, 0.2);
-  --scene-grid-dot: rgba(112, 118, 166, 0.14);
-  --scene-grid-glow: rgba(166, 124, 255, 0.08);
+  --shadow-soft: 0 22px 76px rgba(104, 85, 63, 0.14);
+  --shadow-large: 0 28px 92px rgba(104, 85, 63, 0.18);
+  --scene-wave-a: rgba(144, 104, 255, 0.42);
+  --scene-wave-b: rgba(102, 193, 255, 0.34);
+  --scene-wave-c: rgba(132, 106, 255, 0.32);
+  --scene-grid-dot: rgba(106, 122, 182, 0.18);
+  --scene-grid-glow: rgba(144, 104, 255, 0.14);
+  --scene-shell-top: rgba(255, 255, 255, 0.12);
+  --scene-shell-mid: rgba(144, 104, 255, 0.22);
+  --scene-shell-bottom: rgba(102, 193, 255, 0.12);
+  --scene-vignette-core: rgba(255, 255, 255, 0.18);
+  --scene-vignette-edge: rgba(242, 234, 223, 0.02);
+  --scene-sheen: rgba(255, 255, 255, 0.14);
+  --scene-cursor-a: rgba(102, 193, 255, 0.18);
+  --scene-cursor-b: rgba(144, 104, 255, 0.22);
+  --scene-cursor-c: rgba(255, 255, 255, 0.1);
   color-scheme: light;
 }
 
@@ -72,7 +90,8 @@ body {
   color: var(--text);
   background:
     radial-gradient(circle at top, rgba(255, 149, 79, 0.05), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(109, 122, 255, 0.06), transparent 24%),
+    radial-gradient(circle at 20% 20%, rgba(155, 112, 255, 0.08), transparent 28%),
+    radial-gradient(circle at bottom right, rgba(109, 122, 255, 0.08), transparent 26%),
     var(--bg);
 }
 

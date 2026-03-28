@@ -649,6 +649,11 @@ function App() {
   }
 
   const toggleTheme = (event: ReactMouseEvent<HTMLButtonElement>) => {
+    if (prefersReducedMotion) {
+      setThemeMode(themeMode === 'light' ? 'dark' : 'light')
+      return
+    }
+
     const isToDark = themeMode === 'light'
     const nextTheme = isToDark ? 'dark' : 'light'
     const startViewTransition = document.startViewTransition?.bind(document)
@@ -670,15 +675,33 @@ function App() {
 
     transition.ready.then(() => {
       const clipPath = [
-        `circle(0px at ${x}px ${y}px)`,
+        `circle(96px at ${x}px ${y}px)`,
         `circle(${endRadius}px at ${x}px ${y}px)`,
       ]
 
       document.documentElement.animate(
-        { clipPath },
         {
-          duration: 650,
-          easing: 'cubic-bezier(0.45, 0, 0.55, 1)',
+          opacity: [1, 0],
+          transform: ['scale(1)', 'scale(1.018)'],
+          filter: ['blur(0px)', 'blur(10px)'],
+        },
+        {
+          duration: 420,
+          easing: 'cubic-bezier(0.3, 0, 0.2, 1)',
+          pseudoElement: '::view-transition-old(root)',
+        },
+      )
+
+      document.documentElement.animate(
+        {
+          clipPath,
+          opacity: [0.68, 1],
+          transform: ['scale(0.985)', 'scale(1)'],
+          filter: ['blur(14px)', 'blur(0px)'],
+        },
+        {
+          duration: 560,
+          easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
           pseudoElement: '::view-transition-new(root)',
         },
       )
