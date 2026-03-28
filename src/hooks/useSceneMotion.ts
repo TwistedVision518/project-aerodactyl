@@ -1,17 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-type NetworkInformationLike = {
-  saveData?: boolean
-  addEventListener?: (type: 'change', listener: () => void) => void
-  removeEventListener?: (type: 'change', listener: () => void) => void
-}
-
-type NavigatorPerformanceHints = Navigator & {
-  connection?: NetworkInformationLike
-  deviceMemory?: number
-}
-
-export function useSceneMotion(performanceMode: 'auto' | 'lite' = 'auto') {
+export function useSceneMotion() {
   const ref = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
@@ -23,8 +12,6 @@ export function useSceneMotion(performanceMode: 'auto' | 'lite' = 'auto') {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
     const prefersCoarsePointer = window.matchMedia('(pointer: coarse)')
-    const navigatorHints = navigator as NavigatorPerformanceHints
-    const connection = navigatorHints.connection
     const fineCenter = { x: 0.5, y: 0.28 }
     const coarseCenter = { x: 0.5, y: 0.24 }
     const applied = new Map<string, string>()
@@ -63,22 +50,7 @@ export function useSceneMotion(performanceMode: 'auto' | 'lite' = 'auto') {
       node.dataset.inputMode = isCoarsePointer() ? 'coarse' : 'fine'
     }
     const applyPerformanceProfile = () => {
-      if (performanceMode === 'lite') {
-        node.dataset.performance = 'lite'
-        return
-      }
-
-      if (isCoarsePointer()) {
-        node.dataset.performance = 'lite'
-        return
-      }
-
-      const saveData = connection?.saveData === true
-      const lowMemory =
-        typeof navigatorHints.deviceMemory === 'number' && navigatorHints.deviceMemory <= 4
-      const lowCpu = navigator.hardwareConcurrency <= 6
-
-      node.dataset.performance = saveData || lowMemory || lowCpu ? 'lite' : 'full'
+      node.dataset.performance = 'full'
     }
     const setActiveSection = (sectionId: string) => {
       setStyleValue('--active-section', sectionId)
@@ -158,10 +130,10 @@ export function useSceneMotion(performanceMode: 'auto' | 'lite' = 'auto') {
         return
       }
 
-      current.x += (target.x - current.x) * 0.18
-      current.y += (target.y - current.y) * 0.18
-      trail.x += (target.x - trail.x) * 0.1
-      trail.y += (target.y - trail.y) * 0.1
+      current.x += (target.x - current.x) * 0.22
+      current.y += (target.y - current.y) * 0.22
+      trail.x += (target.x - trail.x) * 0.12
+      trail.y += (target.y - trail.y) * 0.12
 
       setPointer(current.x, current.y)
       setFocus(current.x, current.y)
@@ -269,7 +241,6 @@ export function useSceneMotion(performanceMode: 'auto' | 'lite' = 'auto') {
     window.addEventListener('scroll', scheduleSectionUpdate, { passive: true })
     window.addEventListener('resize', scheduleSectionUpdate, { passive: true })
     prefersCoarsePointer.addEventListener('change', handleModeChange)
-    connection?.addEventListener?.('change', handleModeChange)
 
     return () => {
       if (frame !== null) {
@@ -287,9 +258,8 @@ export function useSceneMotion(performanceMode: 'auto' | 'lite' = 'auto') {
       window.removeEventListener('scroll', scheduleSectionUpdate)
       window.removeEventListener('resize', scheduleSectionUpdate)
       prefersCoarsePointer.removeEventListener('change', handleModeChange)
-      connection?.removeEventListener?.('change', handleModeChange)
     }
-  }, [performanceMode])
+  }, [])
 
   return ref
 }

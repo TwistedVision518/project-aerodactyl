@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties, type MouseEvent } from 'react'
+import { flushSync } from 'react-dom'
 import './App.css'
 import { CommentsThread } from './components/CommentsThread'
+import { LoadingScreen } from './components/LoadingScreen'
 import { ReactivePanel } from './components/ReactivePanel'
 import { Reveal } from './components/Reveal'
-import { useSceneMotion } from './hooks/useSceneMotion'
 import type { GcamEntry, ReleaseLink, RomEntry } from './data/types'
 import {
   builderUpdates,
@@ -13,21 +14,30 @@ import {
   gcamEntries,
   quickStats,
   latestBuilds,
-  latestUpdates,
   roms,
-  siteLastUpdated,
   sourceChanges,
   supportMatrix,
 } from './data/siteContent'
 
 type DockSection = 'top' | 'rom-directory' | 'gcams' | 'source-pulse' | 'builder-notes' | 'devices'
 type ThemeMode = 'dark' | 'light'
-type PerformanceMode = 'auto' | 'lite'
 
 type AccentStyle = CSSProperties & {
   '--accent'?: string
   '--accent-soft'?: string
   '--accent-strong'?: string
+}
+
+function SunIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  )
 }
 
 function toSectionId(name: string) {
@@ -122,7 +132,12 @@ const mobileDockItems: Array<{ href: string; label: string; section: DockSection
   { href: '#devices', label: 'Devices', section: 'devices' },
 ]
 
+function StatusDot({ active = false }: { active?: boolean }) {
+  return <span className={`status-dot ${active ? 'is-active' : ''}`.trim()} aria-hidden="true" />
+}
+
 function App() {
+  const [loading, setLoading] = useState(true)
   const [themeMode, setThemeMode] = useState<ThemeMode>(() => {
     if (typeof window === 'undefined') {
       return 'dark'
@@ -135,15 +150,6 @@ function App() {
 
     return window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
   })
-  const [performanceMode, setPerformanceMode] = useState<PerformanceMode>(() => {
-    if (typeof window === 'undefined') {
-      return 'auto'
-    }
-
-    const stored = window.localStorage.getItem('project-aerodactyl-performance')
-    return stored === 'lite' ? 'lite' : 'auto'
-  })
-  const sceneRef = useSceneMotion(performanceMode)
   const [romQuery, setRomQuery] = useState('')
   const [deviceFilter, setDeviceFilter] = useState<'all' | 'pacman' | 'pacmanpro'>('all')
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? roms[0]
@@ -205,66 +211,96 @@ function App() {
     window.localStorage.setItem('project-aerodactyl-theme', themeMode)
   }, [themeMode])
 
-  useEffect(() => {
-    window.localStorage.setItem('project-aerodactyl-performance', performanceMode)
-  }, [performanceMode])
+  const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
+    const isToDark = themeMode === 'light'
+    const newTheme = isToDark ? 'dark' : 'light'
+
+    if (!document.startViewTransition) {
+      setThemeMode(newTheme)
+      return
+    }
+
+    const x = event.clientX
+    const y = event.clientY
+    const endRadius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y))
+
+    const transition = document.startViewTransition(() => {
+      flushSync(() => {
+        setThemeMode(newTheme)
+      })
+    })
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+
+      document.documentElement.animate(
+        {
+          clipPath: isToDark ? clipPath : [...clipPath].reverse(),
+        },
+        {
+          duration: 650,
+          easing: 'cubic-bezier(0.45, 0, 0.55, 1)',
+          pseudoElement: isToDark ? '::view-transition-new(root)' : '::view-transition-old(root)',
+        },
+      )
+    })
+  }
 
   return (
-    <div className="app-shell scene-root" ref={sceneRef}>
-      <div className="interactive-scene" aria-hidden="true">
-        <div className="scene-spotlight" />
-        <div className="scene-cursor-trail" />
-        <div className="scene-cursor-glow" />
-      </div>
-
-      <header className="topbar">
-        <a className="brand" href="#top">
-          <span className="brand-mark" aria-hidden="true">
-            <img alt="" className="brand-mark-image" src="/favicon.svg" />
-          </span>
-          <span className="brand-copy">
-            <strong>Project Aerodactyl</strong>
-            <small>Nothing Phone 2a / 2a Plus ROM hub</small>
-          </span>
-        </a>
-
-        <nav className="nav-links" aria-label="Primary">
-          <a data-section="rom-directory" href="#rom-directory">ROMs</a>
-          <a data-section="gcams" href="#gcams">GCams</a>
-          <a data-section="source-pulse" href="#source-pulse">Source Pulse</a>
-          <a data-section="builder-notes" href="#builder-notes">Builder Notes</a>
-          <a data-section="devices" href="#devices">Devices</a>
-        </nav>
-
-        <div className="topbar-actions">
-          <div className="topbar-controls" aria-label="Display controls">
-            <button
-              aria-pressed={themeMode === 'light'}
-              className={`control-toggle ${themeMode === 'light' ? 'is-active' : ''}`.trim()}
-              onClick={() => setThemeMode(themeMode === 'light' ? 'dark' : 'light')}
-              type="button"
-            >
-              {themeMode === 'light' ? 'Light mode' : 'Dark mode'}
-            </button>
-            <button
-              aria-pressed={performanceMode === 'lite'}
-              className={`control-toggle ${performanceMode === 'lite' ? 'is-active' : ''}`.trim()}
-              onClick={() => setPerformanceMode(performanceMode === 'lite' ? 'auto' : 'lite')}
-              type="button"
-            >
-              {performanceMode === 'lite' ? 'Low lag on' : 'Low lag off'}
-            </button>
-          </div>
-          <a className="status-badge topbar-button topbar-button-secondary" href="#top">
-            Latest Drops
-          </a>
-          <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
-            Browse ROMs
-          </a>
+    <>
+      {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+      <div className="app-shell scene-root" data-loaded={!loading}>
+        <div className="interactive-scene" aria-hidden="true">
+          <div className="scene-overlay-dots" />
         </div>
-      </header>
 
-      <main className="page" id="top">
+        <header className="topbar">
+          <div className="topbar-content">
+            <a className="brand" href="#top">
+              <span className="brand-mark" aria-hidden="true">
+                <img alt="" className="brand-mark-image" src="/favicon.svg" />
+              </span>
+              <span className="brand-copy">
+                <strong>Project Aerodactyl</strong>
+                <small>Nothing Phone 2a Series Hub</small>
+              </span>
+            </a>
+
+            <nav className="nav-links" aria-label="Primary">
+              <a data-section="pinned-builds" href="#pinned-builds">01 / Pinned</a>
+              <a data-section="rom-directory" href="#rom-directory">02 / ROMs</a>
+              <a data-section="gcams" href="#gcams">03 / GCams</a>
+              <a data-section="source-pulse" href="#source-pulse">04 / Pulse</a>
+              <a data-section="builder-notes" href="#builder-notes">05 / Notes</a>
+              <a data-section="devices" href="#devices">06 / Devices</a>
+            </nav>
+
+            <div className="topbar-actions">
+              <div className="topbar-controls" aria-label="Display controls">
+                <button
+                  aria-label={themeMode === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
+                  aria-pressed={themeMode === 'light'}
+                  className={`control-toggle ${themeMode === 'light' ? 'is-active' : ''}`.trim()}
+                  onClick={toggleTheme}
+                  type="button"
+                >
+                  {themeMode === 'light' ? <SunIcon /> : <MoonIcon />}
+                </button>
+              </div>
+              <a className="status-badge topbar-button topbar-button-secondary" href="#top">
+                Latest Drops
+              </a>
+              <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
+                Browse ROMs
+              </a>
+            </div>
+          </div>
+        </header>
+
+        <main className="page" id="top">
         <Reveal>
           <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
             <div className="hero-copy">
@@ -272,11 +308,10 @@ function App() {
                 <span className="tonal-chip">Nothing Phone 2a + 2a Plus</span>
               </div>
 
-              <p className="eyebrow">Project Aerodactyl</p>
+              <p className="eyebrow">AERODACTYL / HUB</p>
               <h1>A cleaner release home for the Nothing Phone 2a lineup.</h1>
               <p className="lede">
-                Track current ROM builds, jump straight to release posts, and catch source-side
-                movement without digging through chat history.
+                Track builds, jump to releases, and catch source updates without the chat history noise.
               </p>
 
               <div className="hero-actions">
@@ -298,8 +333,6 @@ function App() {
                 ) : null}
               </div>
 
-              <p className="hero-updated">Updated {siteLastUpdated}</p>
-
               <div className="stat-grid" aria-label="Project highlights">
                 {quickStats.map((stat) => (
                   <article className="stat-card" key={stat.label}>
@@ -317,37 +350,46 @@ function App() {
                 intensity={0.7}
                 style={featuredStyle}
               >
-                <div className="feature-topline">
-                  <span className="feature-badge">Spotlight</span>
-                  <span className="feature-version">{featuredRom.version}</span>
+                <div className="feature-column-badge">
+                  <div className="feature-topline">
+                    <span className="feature-badge">
+                      <StatusDot active />
+                      Spotlight
+                    </span>
+                    <span className="feature-version">{featuredRom.version}</span>
+                  </div>
                 </div>
 
-                <h2>{featuredRom.name}</h2>
-                <p>{featuredRom.tagline}</p>
+                <div className="feature-column-main">
+                  <h2>{featuredRom.name}</h2>
+                  <p>{featuredRom.tagline}</p>
 
-                <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
-                  {featuredRom.highlights.slice(0, 2).map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-
-                <div className="feature-meta">
-                  <span>{featuredRom.buildDate}</span>
-                  <span>{featuredRom.devices.join(' / ')}</span>
+                  <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
+                    {featuredRom.highlights.slice(0, 2).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
                 </div>
 
-                {featuredRomHasLink ? (
-                  <a
-                    className="feature-link"
-                    href={featuredRomLinks[0].url}
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    {featuredRomLinks.length > 1 ? `Open ${featuredRomLinks[0].label}` : 'Open release post'}
-                  </a>
-                ) : (
-                  <span className="feature-link is-disabled">Telegram Release Link</span>
-                    )}
+                <div className="feature-column-action">
+                  <div className="feature-meta">
+                    <span>{featuredRom.buildDate}</span>
+                    <span>{featuredRom.devices.join(' / ')}</span>
+                  </div>
+
+                  {featuredRomHasLink ? (
+                    <a
+                      className="feature-link"
+                      href={featuredRomLinks[0].url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {featuredRomLinks.length > 1 ? `Open ${featuredRomLinks[0].label}` : 'Open release'}
+                    </a>
+                  ) : (
+                    <span className="feature-link is-disabled">Release Pending</span>
+                  )}
+                </div>
               </ReactivePanel>
 
               <ReactivePanel as="article" className="community-card panel" intensity={0.45}>
@@ -375,10 +417,10 @@ function App() {
         </Reveal>
 
         <Reveal delay={40}>
-          <section className="latest-build-strip panel" aria-label="Latest ROM builds">
+          <section className="latest-build-strip panel" aria-label="Latest ROM builds" id="pinned-builds">
             <div className="latest-build-strip-head">
               <div>
-                <p className="eyebrow">Pinned builds</p>
+                <p className="eyebrow">01 / PINNED BUILDS</p>
                 <h2>Fresh drops.</h2>
               </div>
               <span>Newest public builds first</span>
@@ -402,7 +444,10 @@ function App() {
                     style={accentStyle}
                   >
                     <div className="feature-topline">
-                      <span className="feature-badge">Latest build</span>
+                      <span className="feature-badge">
+                        <StatusDot active />
+                        Latest build
+                      </span>
                       <span className="feature-version">{rom.version}</span>
                     </div>
                     <h3>{rom.name}</h3>
@@ -418,56 +463,6 @@ function App() {
           </section>
         </Reveal>
 
-        <Reveal delay={55}>
-          <section className="home-rail">
-            <div className="latest-updates panel">
-              <div className="latest-updates-head">
-                <strong>Fresh signals</strong>
-                <span>ROMs, sources, and builder notes</span>
-              </div>
-              <div className="latest-updates-list">
-                {latestUpdates.map((entry) => (
-                  <a className="latest-update-item" href={entry.href} key={`${entry.category}-${entry.title}`}>
-                    <span>{entry.category}</span>
-                    <strong>{entry.title}</strong>
-                    <small>{entry.date}</small>
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <div className="directory-preview panel" id="quick-directory">
-              <div className="latest-updates-head">
-                <strong>Tracked ROMs</strong>
-                <span>Quick jump into each release section</span>
-              </div>
-              <div className="directory-preview-grid">
-                {roms.map((rom) => {
-                  const accentStyle: AccentStyle = {
-                    '--accent': rom.accent,
-                    '--accent-soft': rom.accentSoft,
-                    '--accent-strong': rom.accentStrong,
-                  }
-
-                  return (
-                    <ReactivePanel
-                      as="a"
-                      className="directory-preview-item"
-                      href={`#${toSectionId(rom.name)}`}
-                      intensity={0.42}
-                      key={rom.name}
-                      style={accentStyle}
-                    >
-                      <span>{rom.name}</span>
-                      <strong>{rom.version}</strong>
-                    </ReactivePanel>
-                  )
-                })}
-              </div>
-            </div>
-          </section>
-        </Reveal>
-
         <Reveal delay={80}>
           <section
             className="section-banner panel"
@@ -476,11 +471,10 @@ function App() {
             style={featuredStyle}
           >
             <div className="section-banner-copy">
-              <p className="eyebrow">01 / ROM Directory</p>
+              <p className="eyebrow">02 / ROM DIRECTORY</p>
               <h2>Browse every tracked ROM with clear version and device context.</h2>
               <p>
-                Each section keeps release links, supported devices, changelog notes, and builder
-                context together so users can move quickly without second-guessing what they are opening.
+                Tracked builds with release links, supported devices, and changelogs in one view.
               </p>
             </div>
 
@@ -537,6 +531,7 @@ function App() {
                     key={rom.name}
                     style={accentStyle}
                   >
+                    <StatusDot active={rom.status === 'Stable'} />
                     <span>{rom.name}</span>
                     <strong>{rom.version}</strong>
                     <small>{rom.devices.join(' / ')}</small>
@@ -580,7 +575,10 @@ function App() {
                         <span className="chip chip-tonal">{rom.status}</span>
                         <span className="chip">{rom.branch}</span>
                       </div>
-                      <h2>{rom.name}</h2>
+                      <h2>
+                        <StatusDot active={rom.status === 'Stable'} />
+                        {rom.name}
+                      </h2>
                       <p>{rom.tagline}</p>
                     </div>
                     <span className="version-pill">{rom.version}</span>
@@ -616,8 +614,7 @@ function App() {
 
                       <details className="rom-changelog">
                         <summary>
-                          <span>View build changelog</span>
-                          <span className="rom-changelog-hint">Latest notes</span>
+                          <span>Build Changelog</span>
                         </summary>
                         <ul className="bullet-list">
                           {rom.changelog.map((item) => (
@@ -661,12 +658,11 @@ function App() {
           >
             <div className="support-copy">
               <div>
-                <p className="eyebrow">02 / GCams</p>
+                <p className="eyebrow">03 / GCAMS</p>
                 <h2>Camera picks without the usual Telegram digging.</h2>
               </div>
               <p>
-                Keep the recommended APKs and XML configs in one clean place so users can set up
-                the right camera stack quickly.
+                Recommended APKs and XML configs in one clean place.
               </p>
             </div>
 
@@ -726,12 +722,12 @@ function App() {
             >
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">03 / Source Pulse</p>
+                  <p className="eyebrow">04 / SOURCE PULSE</p>
                   <h2>Readable source movement, not raw commit dump</h2>
                 </div>
                 <p>
-                  Surface the important framework, device tree, kernel, and
-                  vendor-side changes without dumping raw commit noise.
+                  Important framework, device tree, kernel, and
+                  vendor-side changes without the raw commit noise.
                 </p>
               </div>
 
@@ -766,12 +762,11 @@ function App() {
             >
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">04 / Builder Notes</p>
+                  <p className="eyebrow">05 / BUILDER NOTES</p>
                   <h2>Builder notes that still feel public-facing</h2>
                 </div>
                 <p>
-                  Keep community-facing notes readable while still making room
-                  for bring-up status, blockers, and release readiness.
+                  Bring-up status, blockers, and release readiness.
                 </p>
               </div>
 
@@ -800,12 +795,11 @@ function App() {
           >
             <div className="support-copy">
               <div>
-                <p className="eyebrow">05 / Device Coverage</p>
+                <p className="eyebrow">06 / DEVICES</p>
                 <h2>Two devices, one shared release map.</h2>
               </div>
               <p>
-                The structure is ready for more ROMs, more devices, and a
-                cleaner release workflow as the project expands.
+                The coverage map for the Nothing Phone 2a lineup.
               </p>
             </div>
 
@@ -849,6 +843,7 @@ function App() {
         ))}
       </nav>
     </div>
+    </>
   )
 }
 
