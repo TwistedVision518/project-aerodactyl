@@ -255,6 +255,7 @@ function App() {
   const [communityLinkCopied, setCommunityLinkCopied] = useState(false)
   const [expandedReleaseNotes, setExpandedReleaseNotes] = useState<Record<string, boolean>>({})
   const [activeRomId, setActiveRomId] = useState<string | null>(null)
+  const [selectedResourceByRom, setSelectedResourceByRom] = useState<Record<string, string>>({})
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
@@ -311,6 +312,14 @@ function App() {
 
     return filteredRoms.find((rom) => toSectionId(rom.name) === resolvedActiveRomId) ?? filteredRoms[0]
   }, [filteredRoms, resolvedActiveRomId])
+  const selectedRomLinks = useMemo(
+    () => (selectedRom ? getReleaseLinks(selectedRom) : []),
+    [selectedRom],
+  )
+  const selectedResourceUrl =
+    selectedRom && selectedRomLinks.length > 0
+      ? selectedResourceByRom[selectedRom.name] ?? selectedRomLinks[0].url
+      : ''
 
   const featuredStyle: AccentStyle = {
     '--accent': featuredRom.accent,
@@ -1068,12 +1077,41 @@ function App() {
                           </div>
 
                           <div className="card-actions card-actions-stack">
-                            {getReleaseLinks(selectedRom).length > 0 ? (
-                              getReleaseLinks(selectedRom).map((link) => (
-                                <a href={link.url} key={link.url} rel="noreferrer" target="_blank">
-                                  {getReleaseLinks(selectedRom).length > 1 ? link.label : 'Open Telegram release'}
+                            {selectedRomLinks.length > 0 ? (
+                              <div className="resource-panel">
+                                <div className="resource-panel-head">
+                                  <span className="section-label">Resources</span>
+                                  <small>{selectedRomLinks.length} links available</small>
+                                </div>
+
+                                <label className="resource-select">
+                                  <span>Choose a link</span>
+                                  <select
+                                    onChange={(event) =>
+                                      setSelectedResourceByRom((current) => ({
+                                        ...current,
+                                        [selectedRom.name]: event.target.value,
+                                      }))
+                                    }
+                                    value={selectedResourceUrl}
+                                  >
+                                    {selectedRomLinks.map((link) => (
+                                      <option key={link.url} value={link.url}>
+                                        {link.label}
+                                      </option>
+                                    ))}
+                                  </select>
+                                </label>
+
+                                <a
+                                  className="resource-open-action"
+                                  href={selectedResourceUrl}
+                                  rel="noreferrer"
+                                  target="_blank"
+                                >
+                                  Open selected link
                                 </a>
-                              ))
+                              </div>
                             ) : (
                               <span className="button-disabled">Release link pending</span>
                             )}

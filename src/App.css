@@ -1090,6 +1090,66 @@ strong {
   display: grid;
 }
 
+.resource-panel {
+  display: grid;
+  gap: 0.8rem;
+  padding: 0.9rem;
+  border: 1px solid var(--outline);
+  border-radius: var(--radius-md);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.resource-panel-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  align-items: center;
+}
+
+.resource-panel-head small,
+.resource-select span {
+  color: var(--muted);
+}
+
+.resource-select {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.resource-select select {
+  min-height: 2.9rem;
+  width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 0.95rem;
+  border: 1px solid var(--outline);
+  background: var(--surface-raised);
+  color: var(--text);
+  outline: none;
+}
+
+.resource-select select:focus {
+  border-color: color-mix(in srgb, var(--accent-hot) 65%, white 10%);
+  box-shadow: 0 0 0 4px rgba(244, 136, 73, 0.12);
+}
+
+.resource-open-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9rem;
+  padding: 0.8rem 1rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--accent, var(--accent-hot)), color-mix(in srgb, var(--accent, var(--accent-hot)) 62%, white 18%));
+  color: #140f0c;
+  font-weight: 700;
+  transition: transform 180ms ease, border-color 180ms ease, background-color 180ms ease;
+}
+
+.resource-open-action:hover {
+  transform: translateY(-1px);
+}
+
 .support-panel,
 .devices-panel {
   display: grid;
