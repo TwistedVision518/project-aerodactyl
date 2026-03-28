@@ -12,11 +12,42 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isVisible, setIsVisible] = useState(true)
   const [isPreloaded, setIsPreloaded] = useState(false)
+  const tintRef = useRef({
+    start: '#a76fff',
+    middle: '#785eff',
+    end: '#7bd5ff',
+  })
   
   const frameRef = useRef(0)
   const partRef = useRef(0)
   const imagesRef = useRef<HTMLImageElement[][]>([[], [], []])
   const lastTimeRef = useRef(0)
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const syncTint = () => {
+      const styles = getComputedStyle(document.documentElement)
+
+      tintRef.current = {
+        start: styles.getPropertyValue('--scene-wave-a').trim() || '#a76fff',
+        middle: styles.getPropertyValue('--scene-wave-c').trim() || '#785eff',
+        end: styles.getPropertyValue('--scene-wave-b').trim() || '#7bd5ff',
+      }
+    }
+
+    syncTint()
+
+    const observer = new MutationObserver(syncTint)
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme', 'style'],
+    })
+
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => {
     // 1. Preload all images
@@ -102,6 +133,14 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
               }
               ctx.clearRect(0, 0, canvas.width, canvas.height)
               ctx.drawImage(img, 0, 0)
+              const gradient = ctx.createLinearGradient(0, 0, canvas.width, 0)
+              gradient.addColorStop(0, tintRef.current.start)
+              gradient.addColorStop(0.52, tintRef.current.middle)
+              gradient.addColorStop(1, tintRef.current.end)
+              ctx.globalCompositeOperation = 'source-atop'
+              ctx.fillStyle = gradient
+              ctx.fillRect(0, 0, canvas.width, canvas.height)
+              ctx.globalCompositeOperation = 'source-over'
             }
           }
         }
