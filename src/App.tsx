@@ -505,7 +505,10 @@ function App() {
                       key={rom.name}
                       style={accentStyle}
                     >
-                      <span>{rom.name}</span>
+                      <div className="directory-item-info">
+                        <span>{rom.name}</span>
+                        <small>{rom.branch}</small>
+                      </div>
                       <strong>{rom.version}</strong>
                     </ReactivePanel>
                   )

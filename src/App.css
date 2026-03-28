@@ -178,9 +178,27 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   color: inherit;
 }
 
+.directory-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
 .directory-preview-item span {
-  min-width: 120px;
-  flex-shrink: 0;
+  font-weight: 800;
+  font-size: 0.9rem;
+}
+
+.directory-preview-item small {
+  font-size: 0.6rem;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-wide);
+  opacity: 0.8;
+}
+
+.directory-preview-item strong {
+  margin-left: auto;
 }
 
 /* Override background hover from ReactivePanel if applicable */
@@ -552,6 +570,32 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 
 .rom-directory-item {
   padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+}
+
+.rom-directory-item span {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 0.25rem;
+}
+
+.rom-directory-item strong {
+  font-size: 0.8rem;
+  color: var(--accent-red);
+  font-family: var(--font-mono);
+}
+
+.rom-directory-item small {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.rom-changelog {
+  margin-top: 2rem;
 }
 
 .rom-sections {
