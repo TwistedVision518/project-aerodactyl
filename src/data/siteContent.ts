@@ -14,10 +14,6 @@ const siteContent = siteContentData as SiteContentData
 
 export const communityHub = siteContent.communityHub
 
-export const sourceChanges = siteContent.sourceChanges
-
-export const builderUpdates = siteContent.builderUpdates
-
 export const supportMatrix = siteContent.supportMatrix
 
 export const expansionCards = siteContent.expansionCards
@@ -52,18 +48,6 @@ export const latestUpdates: LatestUpdate[] = [
     date: rom.buildDate,
     category: 'ROM',
     href: `#${toSectionId(rom.name)}`,
-  })),
-  ...sourceChanges.map((entry) => ({
-    title: entry.title,
-    date: entry.date,
-    category: 'Source',
-    href: '#source-pulse',
-  })),
-  ...builderUpdates.map((entry) => ({
-    title: entry.title,
-    date: entry.date,
-    category: 'Builder',
-    href: '#builder-notes',
   })),
   ...gcamEntries.map((entry) => ({
     title: `${entry.name} ${entry.build}`,

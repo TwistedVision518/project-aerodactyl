@@ -15,7 +15,6 @@ import { ReactivePanel } from './components/ReactivePanel'
 import { Reveal } from './components/Reveal'
 import type { GcamEntry, ReleaseLink, RomEntry } from './data/types'
 import {
-  builderUpdates,
   comments,
   communityHub,
   expansionCards,
@@ -24,11 +23,10 @@ import {
   latestUpdates,
   roms,
   siteLastUpdated,
-  sourceChanges,
   supportMatrix,
 } from './data/siteContent'
 
-type SectionId = 'top' | 'pinned-builds' | 'rom-directory' | 'gcams' | 'source-pulse' | 'devices'
+type SectionId = 'top' | 'pinned-builds' | 'rom-directory' | 'gcams' | 'devices'
 type ThemeMode = 'dark' | 'light'
 type AvailabilityFilter = 'all' | 'available' | 'tracking'
 type DeviceFilter = 'all' | 'pacman' | 'pacmanpro'
@@ -51,7 +49,6 @@ const sectionLinks: SectionLink[] = [
   { id: 'pinned-builds', label: 'Command', shortLabel: 'Command' },
   { id: 'rom-directory', label: 'ROMs', shortLabel: 'ROMs' },
   { id: 'gcams', label: 'Camera', shortLabel: 'Camera' },
-  { id: 'source-pulse', label: 'Source', shortLabel: 'Source' },
   { id: 'devices', label: 'Devices', shortLabel: 'Devices' },
 ]
 
@@ -70,10 +67,6 @@ function resolveSectionTarget(hash: string) {
 
   if (normalizedHash.startsWith('rom-')) {
     return 'rom-directory'
-  }
-
-  if (normalizedHash === 'builder-notes') {
-    return 'source-pulse'
   }
 
   return null
@@ -131,12 +124,6 @@ function DockGlyph({ section }: { section: SectionId }) {
         <svg aria-hidden="true" viewBox="0 0 24 24">
           <path {...commonProps} d="M8.2 7.5 9.7 5h4.6l1.5 2.5H18a2 2 0 0 1 2 2v6.8A2.7 2.7 0 0 1 17.3 19H6.7A2.7 2.7 0 0 1 4 16.3V9.5a2 2 0 0 1 2-2Z" />
           <circle {...commonProps} cx="12" cy="13" r="3.3" />
-        </svg>
-      )
-    case 'source-pulse':
-      return (
-        <svg aria-hidden="true" viewBox="0 0 24 24">
-          <path {...commonProps} d="M4 13.5h3l2.1-4.4 3.4 8 2.1-5.2H20" />
         </svg>
       )
     case 'devices':
@@ -315,11 +302,6 @@ function App() {
     '--accent': '#8db7ff',
     '--accent-soft': 'rgba(141, 183, 255, 0.18)',
     '--accent-strong': '#bed5ff',
-  }
-  const sourceStyle: AccentStyle = {
-    '--accent': '#f78c55',
-    '--accent-soft': 'rgba(247, 140, 85, 0.18)',
-    '--accent-strong': '#ffd2bd',
   }
   const deviceStyle: AccentStyle = {
     '--accent': '#7fd7bc',
@@ -529,8 +511,8 @@ function App() {
                 <p className="eyebrow">Editorial Release Dashboard</p>
                 <h1>Release tracking that feels curated, not scraped from chat.</h1>
                 <p className="lede">
-                  A focused home for the current ROM lineup, release links, source movement, and
-                  device support across the Nothing Phone 2a series.
+                  A focused home for the current ROM lineup, release links, and device support
+                  across the Nothing Phone 2a series.
                 </p>
 
                 <div className="hero-actions">
@@ -671,8 +653,8 @@ function App() {
                   <h2>The part of the homepage that actually helps you decide what to open next.</h2>
                 </div>
                 <p>
-                  Fresh builds, release availability, source movement, and maintainer notes in one
-                  tighter command view.
+                  Fresh builds, release availability, and direct jump points in one tighter
+                  command view.
                 </p>
               </div>
 
@@ -1140,68 +1122,6 @@ function App() {
               />
             </section>
           </Reveal>
-
-          <div className="insight-grid">
-            <Reveal>
-              <section className="panel insight-panel" data-hub-accent="true" id="source-pulse" style={sourceStyle}>
-                <div className="section-heading">
-                  <div>
-                    <p className="eyebrow">Source Pulse</p>
-                    <h2>Readable project momentum instead of dumping raw commits on people.</h2>
-                  </div>
-                  <p>
-                    Framework, device tree, vendor, and kernel updates stay useful to testers without
-                    becoming maintainer-only noise.
-                  </p>
-                </div>
-
-                <div className="timeline">
-                  {sourceChanges.map((entry) => (
-                    <article className="timeline-entry" key={entry.title}>
-                      <div className="timeline-marker" aria-hidden="true" />
-                      <div className="timeline-body">
-                        <div className="timeline-topline">
-                          <span>{entry.title}</span>
-                          <small>{entry.date}</small>
-                        </div>
-                        <p>{entry.summary}</p>
-                        <ul className="bullet-list">
-                          {entry.items.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            </Reveal>
-
-            <Reveal delay={80}>
-              <section className="panel insight-panel insight-panel-builder" data-hub-accent="true" id="builder-notes" style={sourceStyle}>
-                <div className="section-heading">
-                  <div>
-                    <p className="eyebrow">Builder Notes</p>
-                    <h2>Maintainer context with a public-facing tone.</h2>
-                  </div>
-                  <p>Progress updates, scaling notes, and rollout decisions that still read cleanly.</p>
-                </div>
-
-                <div className="update-stack">
-                  {builderUpdates.map((update) => (
-                    <article className="update-card" key={update.title}>
-                      <div className="update-meta">
-                        <span className="chip chip-tonal">{update.type}</span>
-                        <small>{update.date}</small>
-                      </div>
-                      <h3>{update.title}</h3>
-                      <p>{update.summary}</p>
-                    </article>
-                  ))}
-                </div>
-              </section>
-            </Reveal>
-          </div>
 
           <Reveal delay={120}>
             <section className="panel devices-panel" data-hub-accent="true" id="devices" style={deviceStyle}>

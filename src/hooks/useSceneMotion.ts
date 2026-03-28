@@ -15,7 +15,7 @@ export function useSceneMotion() {
     const fineCenter = { x: 0.5, y: 0.28 }
     const coarseCenter = { x: 0.5, y: 0.24 }
     const applied = new Map<string, string>()
-    const sectionIds = ['rom-directory', 'gcams', 'source-pulse', 'builder-notes', 'devices']
+    const sectionIds = ['rom-directory', 'gcams', 'devices']
     const sections = sectionIds
       .map((id) => document.getElementById(id))
       .filter((section): section is HTMLElement => section !== null)
