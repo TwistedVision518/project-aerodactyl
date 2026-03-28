@@ -31,7 +31,8 @@
   transform: translateZ(0);
   background:
     radial-gradient(circle at 50% -8%, rgba(255, 255, 255, 0.03), transparent 26%),
-    radial-gradient(circle at 50% 18%, rgba(138, 111, 255, 0.08), transparent 30%),
+    radial-gradient(circle at 50% 20%, rgba(138, 111, 255, 0.12), transparent 36%),
+    radial-gradient(circle at 50% 58%, rgba(123, 213, 255, 0.05), transparent 34%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 22%),
     var(--bg);
 }
@@ -47,8 +48,8 @@
 
 .scene-vignette {
   background:
-    radial-gradient(circle at 50% 30%, rgba(0, 0, 0, 0.72) 0%, rgba(0, 0, 0, 0.6) 22%, transparent 54%),
-    linear-gradient(180deg, rgba(0, 0, 0, 0.2), transparent 22%);
+    radial-gradient(circle at 50% 28%, rgba(0, 0, 0, 0.54) 0%, rgba(0, 0, 0, 0.42) 24%, transparent 62%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.14), transparent 26%);
   z-index: 1;
 }
 
@@ -70,27 +71,27 @@
 }
 
 .scene-gradient-left {
-  inset: auto auto -9vw -14vw;
-  width: 54vw;
-  height: 24vw;
+  inset: auto auto -2vw -14vw;
+  width: 62vw;
+  height: 34vw;
   border-radius: 999px;
   background:
     linear-gradient(92deg, var(--scene-wave-c) 0%, var(--scene-wave-a) 34%, var(--scene-wave-b) 62%, var(--scene-wave-a) 100%);
-  opacity: 0.96;
-  filter: blur(40px) saturate(130%);
+  opacity: 0.88;
+  filter: blur(54px) saturate(128%);
   will-change: transform, opacity;
   z-index: 3;
 }
 
 .scene-gradient-right {
-  inset: auto -15vw -9vw auto;
-  width: 54vw;
-  height: 24vw;
+  inset: auto -15vw -2vw auto;
+  width: 62vw;
+  height: 34vw;
   border-radius: 999px;
   background:
     linear-gradient(268deg, var(--scene-wave-c) 0%, var(--scene-wave-a) 36%, var(--scene-wave-b) 64%, var(--scene-wave-a) 100%);
-  opacity: 0.94;
-  filter: blur(40px) saturate(130%);
+  opacity: 0.86;
+  filter: blur(54px) saturate(128%);
   will-change: transform, opacity;
   z-index: 3;
 }
@@ -105,10 +106,10 @@
 
 .scene-noise {
   background:
-    radial-gradient(circle at 50% 48%, var(--scene-grid-glow), transparent 30%),
+    radial-gradient(circle at 50% 38%, var(--scene-grid-glow), transparent 36%),
     radial-gradient(rgba(255, 255, 255, 0.045) 0.7px, transparent 0.7px);
   background-size: auto, 22px 22px;
-  opacity: 0.1;
+  opacity: 0.13;
   z-index: 5;
 }
 
