@@ -1,4 +1,4 @@
-@import '@fontsource-variable/google-sans-flex';
+@import '@fontsource-variable/arimo';
 
 :root {
   --pointer-x: 50%;
@@ -11,8 +11,8 @@
   --scene-shift-y: 0px;
   --scene-tilt: 0deg;
   --scroll-progress: 0;
-  --font-display: 'Google Sans Flex Variable', 'Segoe UI Variable', sans-serif;
-  --font-body: 'Google Sans Flex Variable', 'Segoe UI Variable', sans-serif;
+  --font-display: 'Arimo Variable', sans-serif;
+  --font-body: 'Arimo Variable', sans-serif;
   --primary: #ffffff;
   --primary-strong: #ffffff;
   --secondary: #97a8c2;
@@ -79,7 +79,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   font-family: var(--font-body);
-  font-variation-settings: 'opsz' 20, 'GRAD' 0, 'slnt' 0;
   line-height: 1.55;
   color: var(--text);
   background-color: #000;

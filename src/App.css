@@ -63,9 +63,9 @@ h1, h2, h3, h4,
   font-family: var(--font-display);
 }
 
-h1 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 900; line-height: 0.85; margin: 1rem 0; }
-h2 { font-size: clamp(1.6rem, 3.5vw, 2.8rem); font-weight: 800; line-height: 1; margin: 0; }
-h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
+h1 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 700; line-height: 0.85; margin: 1rem 0; }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.8rem); font-weight: 700; line-height: 1; margin: 0; }
+h3 { font-size: 1.4rem; font-weight: 700; margin: 0; }
 
 .eyebrow {
   display: inline-flex;
@@ -73,7 +73,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   border: 1px solid var(--outline);
   background: var(--surface-2);
   font-size: 0.7rem;
-  font-weight: 900;
+  font-weight: 700;
   color: var(--muted);
   border-radius: 0.5rem;
 }
@@ -191,7 +191,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 }
 
 .directory-preview-item span {
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.9rem;
 }
 
@@ -266,6 +266,10 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   gap: 0.6rem;
 }
 
+.brand-copy strong {
+  font-weight: 700;
+}
+
 .brand-mark {
   width: 2.4rem;
   height: 2.4rem;
@@ -326,7 +330,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 .topbar-button {
   padding: 0.55rem 1.1rem;
   border-radius: 0.75rem;
-  font-weight: 800;
+  font-weight: 700;
   font-size: 0.75rem;
 }
 
@@ -383,7 +387,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 .action-secondary {
   padding: 0.85rem 1.75rem;
   border-radius: 0.85rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .action-primary {
@@ -474,7 +478,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   border-radius: 0.75rem; 
   background: var(--text); 
   color: var(--bg); 
-  font-weight: 800; 
+  font-weight: 700; 
   font-size: 0.75rem; 
   text-align: center;
   transition: opacity 0.2s ease;
@@ -494,14 +498,14 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   align-items: center;
   gap: 0.4rem;
   font-size: 0.65rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--muted);
   text-transform: uppercase;
 }
 
 .feature-version {
   font-size: 0.65rem;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--accent-red);
 }
 
@@ -607,7 +611,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 
 .rom-directory-item span {
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-top: 0.25rem;
 }
 
@@ -653,7 +657,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 }
 
 .rom-changelog summary span {
-  font-weight: 800;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-wide);
   font-family: var(--font-display);
@@ -798,7 +802,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 }
 
 .mobile-dock-icon { margin-bottom: 0.2rem; }
-.mobile-dock-text { font-size: 0.55rem; font-weight: 800; }
+.mobile-dock-text { font-size: 0.55rem; font-weight: 700; }
 
 /* 9. REACTIVE PANEL & INTERACTIVE */
 .reactive-panel {
@@ -887,7 +891,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   align-items: center;
   padding: 0.3rem 0.7rem;
   font-size: 0.7rem;
-  font-weight: 800;
+  font-weight: 700;
   border-radius: 0.4rem;
   border: 1px solid var(--outline);
   background: var(--surface-2);
