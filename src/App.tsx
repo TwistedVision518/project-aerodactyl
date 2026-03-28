@@ -3,6 +3,7 @@ import {
   useDeferredValue,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
   type MouseEvent,
@@ -256,6 +257,8 @@ function App() {
   const [expandedReleaseNotes, setExpandedReleaseNotes] = useState<Record<string, boolean>>({})
   const [activeRomId, setActiveRomId] = useState<string | null>(null)
   const [selectedResourceByRom, setSelectedResourceByRom] = useState<Record<string, string>>({})
+  const [resourceMenuOpen, setResourceMenuOpen] = useState(false)
+  const resourceMenuRef = useRef<HTMLDivElement | null>(null)
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
@@ -320,6 +323,8 @@ function App() {
     selectedRom && selectedRomLinks.length > 0
       ? selectedResourceByRom[selectedRom.name] ?? selectedRomLinks[0].url
       : ''
+  const selectedResourceLink =
+    selectedRomLinks.find((link) => link.url === selectedResourceUrl) ?? selectedRomLinks[0] ?? null
 
   const featuredStyle: AccentStyle = {
     '--accent': featuredRom.accent,
@@ -338,10 +343,9 @@ function App() {
   }
 
   const heroStats = [
-    { label: 'Tracked ROMs', value: `${roms.length}`, detail: 'active releases across the hub' },
-    { label: 'Release links live', value: `${releaseReadyRoms.length}`, detail: 'ready to open now' },
-    { label: 'Dual-device coverage', value: `${dualTargetCount}`, detail: 'support both 2a targets' },
-    { label: 'Last major update', value: siteLastUpdated, detail: formatFreshness(siteLastUpdated) },
+    { label: 'Tracked ROMs', value: `${roms.length}`, detail: 'active now' },
+    { label: 'Links Live', value: `${releaseReadyRoms.length}`, detail: 'ready to open' },
+    { label: 'Dual-Device', value: `${dualTargetCount}`, detail: '2a + 2a Plus' },
   ]
 
   useEffect(() => {
@@ -367,6 +371,36 @@ function App() {
 
     return () => window.removeEventListener('hashchange', syncActiveSectionFromHash)
   }, [])
+
+  useEffect(() => {
+    if (!resourceMenuOpen) {
+      return
+    }
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (
+        resourceMenuRef.current &&
+        event.target instanceof Node &&
+        !resourceMenuRef.current.contains(event.target)
+      ) {
+        setResourceMenuOpen(false)
+      }
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setResourceMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('pointerdown', handlePointerDown)
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      window.removeEventListener('pointerdown', handlePointerDown)
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [resourceMenuOpen])
 
   useEffect(() => {
     const sections = sectionLinks
@@ -420,6 +454,7 @@ function App() {
 
   const handleRomAnchorClick = (event: MouseEvent<HTMLAnchorElement>, romId: string) => {
     event.preventDefault()
+    setResourceMenuOpen(false)
     setActiveRomId(romId)
     setActiveSection('rom-directory')
     window.history.pushState(null, '', `#${romId}`)
@@ -559,12 +594,9 @@ function App() {
                   <span className="ghost-pill">Updated {siteLastUpdated}</span>
                 </div>
 
-                <p className="eyebrow">Editorial Release Dashboard</p>
-                <h1>Release tracking that feels curated, not scraped from chat.</h1>
-                <p className="lede">
-                  A focused home for the current ROM lineup, release links, and device support
-                  across the Nothing Phone 2a series.
-                </p>
+                <p className="eyebrow">Release Dashboard</p>
+                <h1>Current ROM releases, clearly surfaced.</h1>
+                <p className="lede">Everything important for the Nothing Phone 2a lineup, without the chat noise.</p>
 
                 <div className="hero-actions">
                   <a className="action-primary" href="#rom-directory" onClick={handleSectionAnchorClick}>
@@ -603,13 +635,13 @@ function App() {
                   <div className="spotlight-header">
                     <div>
                       <h2>{featuredRom.name}</h2>
-                      <p>{featuredRom.tagline}</p>
+                      <p>Current spotlight release for quick scanning and fast handoff.</p>
                     </div>
                     <span className="version-pill">{featuredRom.status}</span>
                   </div>
 
                   <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
-                    {featuredRom.highlights.slice(0, 3).map((item) => (
+                    {featuredRom.highlights.slice(0, 2).map((item) => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>
@@ -639,8 +671,8 @@ function App() {
                       <span className="ghost-pill">Telegram</span>
                     </div>
 
-                    <h3>Keep support and release chatter in one public place.</h3>
-                    <p className="utility-copy">{communityHub.summary}</p>
+                    <h3>Support and release posts in one place.</h3>
+                    <p className="utility-copy">Open the main community space for support, release chatter, and quick checks.</p>
 
                     <div className="hero-inline-actions">
                       {communityHubHasLink ? (
@@ -1084,24 +1116,77 @@ function App() {
                                   <small>{selectedRomLinks.length} links available</small>
                                 </div>
 
-                                <label className="resource-select">
-                                  <span>Choose a link</span>
-                                  <select
-                                    onChange={(event) =>
-                                      setSelectedResourceByRom((current) => ({
-                                        ...current,
-                                        [selectedRom.name]: event.target.value,
-                                      }))
-                                    }
-                                    value={selectedResourceUrl}
+                                <div className="resource-picker" ref={resourceMenuRef}>
+                                  <span className="resource-picker-label">Choose a link</span>
+                                  <button
+                                    aria-controls="resource-picker-menu"
+                                    aria-expanded={resourceMenuOpen}
+                                    aria-haspopup="listbox"
+                                    className="resource-trigger"
+                                    onClick={() => setResourceMenuOpen((current) => !current)}
+                                    type="button"
                                   >
-                                    {selectedRomLinks.map((link) => (
-                                      <option key={link.url} value={link.url}>
-                                        {link.label}
-                                      </option>
-                                    ))}
-                                  </select>
-                                </label>
+                                    <div className="resource-trigger-copy">
+                                      <strong>{selectedResourceLink?.label ?? 'Select a resource'}</strong>
+                                      <small>
+                                        {selectedResourceLink ? 'Direct release resource' : 'No resource selected'}
+                                      </small>
+                                    </div>
+                                    <m.span
+                                      animate={{ rotate: resourceMenuOpen ? 180 : 0 }}
+                                      className="resource-trigger-chevron"
+                                      transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                                    >
+                                      <svg aria-hidden="true" viewBox="0 0 16 16">
+                                        <path d="M3.5 6 8 10.5 12.5 6" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.7" />
+                                      </svg>
+                                    </m.span>
+                                  </button>
+
+                                  <AnimatePresence initial={false}>
+                                    {resourceMenuOpen ? (
+                                      <m.div
+                                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                                        className="resource-menu"
+                                        exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                                        id="resource-picker-menu"
+                                        initial={{ opacity: 0, y: -8, scale: 0.98 }}
+                                        role="listbox"
+                                        transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+                                      >
+                                        {selectedRomLinks.map((link, index) => {
+                                          const isActiveLink = selectedResourceUrl === link.url
+
+                                          return (
+                                            <m.button
+                                              animate={{ opacity: 1, x: 0 }}
+                                              className={`resource-option ${isActiveLink ? 'is-active' : ''}`.trim()}
+                                              initial={{ opacity: 0, x: -8 }}
+                                              key={link.url}
+                                              onClick={() => {
+                                                setSelectedResourceByRom((current) => ({
+                                                  ...current,
+                                                  [selectedRom.name]: link.url,
+                                                }))
+                                                setResourceMenuOpen(false)
+                                              }}
+                                              role="option"
+                                              transition={{
+                                                delay: index * 0.02,
+                                                duration: 0.18,
+                                                ease: [0.22, 1, 0.36, 1],
+                                              }}
+                                              type="button"
+                                            >
+                                              <span>{link.label}</span>
+                                              {isActiveLink ? <small>Selected</small> : null}
+                                            </m.button>
+                                          )
+                                        })}
+                                      </m.div>
+                                    ) : null}
+                                  </AnimatePresence>
+                                </div>
 
                                 <a
                                   className="resource-open-action"
