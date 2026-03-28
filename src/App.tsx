@@ -325,6 +325,11 @@ function App() {
       : ''
   const selectedResourceLink =
     selectedRomLinks.find((link) => link.url === selectedResourceUrl) ?? selectedRomLinks[0] ?? null
+  const hasActiveExplorerFilters =
+    romQuery.length > 0 ||
+    availabilityFilter !== 'all' ||
+    deviceFilter !== 'all' ||
+    sortMode !== 'latest'
 
   const featuredStyle: AccentStyle = {
     '--accent': featuredRom.accent,
@@ -783,9 +788,9 @@ function App() {
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">ROM Explorer</p>
-                  <h2>Filter the lineup by device or release state without losing context.</h2>
+                  <h2>Find the right release quickly.</h2>
                 </div>
-                <p>The explorer stays quick for first-time visitors and useful for regular testers.</p>
+                <p>Search, filter, and open one selected ROM without digging through long release lists.</p>
               </div>
 
               <div className="explorer-toolbar" aria-label="ROM filters">
@@ -796,7 +801,7 @@ function App() {
                       const nextValue = event.target.value
                       startTransition(() => setRomQuery(nextValue))
                     }}
-                    placeholder="Search by name, version, device, branch, or note"
+                    placeholder="Search by ROM name, version, or device"
                     type="search"
                     value={romQuery}
                   />
@@ -844,14 +849,14 @@ function App() {
                       onClick={() => setAvailabilityFilter('available')}
                       type="button"
                     >
-                      Ready now
+                      Links ready
                     </button>
                     <button
                       className={availabilityFilter === 'tracking' ? 'is-active' : undefined}
                       onClick={() => setAvailabilityFilter('tracking')}
                       type="button"
                     >
-                      Tracking
+                      No links yet
                     </button>
                   </div>
                 </div>
@@ -882,15 +887,53 @@ function App() {
                 </button>
               </div>
 
+              {hasActiveExplorerFilters ? (
+                <div className="active-filter-row" aria-label="Active explorer filters">
+                  {romQuery.length > 0 ? (
+                    <button className="active-filter-chip" onClick={() => setRomQuery('')} type="button">
+                      Search: {romQuery}
+                      <span aria-hidden="true">x</span>
+                    </button>
+                  ) : null}
+                  {deviceFilter !== 'all' ? (
+                    <button className="active-filter-chip" onClick={() => setDeviceFilter('all')} type="button">
+                      {getDeviceLabel(deviceFilter)}
+                      <span aria-hidden="true">x</span>
+                    </button>
+                  ) : null}
+                  {availabilityFilter !== 'all' ? (
+                    <button className="active-filter-chip" onClick={() => setAvailabilityFilter('all')} type="button">
+                      {getAvailabilityLabel(availabilityFilter)}
+                      <span aria-hidden="true">x</span>
+                    </button>
+                  ) : null}
+                  {sortMode !== 'latest' ? (
+                    <button className="active-filter-chip" onClick={() => setSortMode('latest')} type="button">
+                      Alphabetical
+                      <span aria-hidden="true">x</span>
+                    </button>
+                  ) : null}
+                </div>
+              ) : null}
+
               <div className="explorer-summary">
-                <p>
-                  <strong>{filteredRoms.length}</strong> releases shown for{' '}
-                  <span>{getDeviceLabel(deviceFilter)}</span> with{' '}
-                  <span>{getAvailabilityLabel(availabilityFilter)}</span>.
-                </p>
-                <small>
-                  Pick a card to lock onto that ROM, then use the detail section for notes and downloads.
-                </small>
+                <div>
+                  <p>
+                    <strong>{filteredRoms.length}</strong> releases shown
+                  </p>
+                  <small>
+                    {selectedRom
+                      ? `Selected: ${selectedRom.name}`
+                      : 'Pick a ROM card to open its release details below.'}
+                  </small>
+                </div>
+                {selectedRom ? (
+                  <div className="explorer-summary-pills" aria-label="Selected ROM summary">
+                    <span className="meta-pill">{selectedRom.version}</span>
+                    <span className="meta-pill">{selectedRomLinks.length > 0 ? `${selectedRomLinks.length} links ready` : 'No links yet'}</span>
+                    <span className="meta-pill">{formatFreshness(selectedRom.buildDate)}</span>
+                  </div>
+                ) : null}
               </div>
 
               <m.div className="rom-directory-grid" layout>
@@ -934,7 +977,7 @@ function App() {
 
                         <div className="directory-topline">
                           <span className="chip chip-tonal">{rom.status}</span>
-                          <span className="ghost-pill">{links.length > 0 ? 'Openable' : 'Tracking only'}</span>
+                          <span className="ghost-pill">{links.length > 0 ? 'Links ready' : 'No links yet'}</span>
                         </div>
 
                         <div className="directory-heading">
@@ -951,7 +994,9 @@ function App() {
 
                         <div className="directory-footer">
                           <small title={rom.devices.join(' / ')}>{rom.devices.join(' / ')}</small>
-                          <span className="directory-jump">{isActiveRom ? 'Selected' : 'Open release'}</span>
+                          <span className="directory-jump">
+                            {isActiveRom ? 'Selected' : links.length > 0 ? `${links.length} links` : 'Select ROM'}
+                          </span>
                         </div>
                       </ReactivePanel>
                     </m.div>
@@ -993,7 +1038,7 @@ function App() {
                             <span className="chip chip-tonal">{selectedRom.status}</span>
                             <span className="chip">{selectedRom.branch}</span>
                             <span className="chip">
-                              {getReleaseLinks(selectedRom).length > 0 ? 'Release linked' : 'Release tracking'}
+                              {getReleaseLinks(selectedRom).length > 0 ? 'Links ready' : 'No links yet'}
                             </span>
                           </div>
 
