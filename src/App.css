@@ -779,8 +779,17 @@ strong {
   gap: 1rem;
 }
 
+.rom-directory-motion,
+.rom-section-motion {
+  min-width: 0;
+}
+
 .rom-directory-item {
   min-height: 100%;
+  display: grid;
+  align-content: start;
+  grid-template-rows: auto auto minmax(2.9rem, auto) auto auto;
+  gap: 0.82rem;
 }
 
 .rom-directory-item p {
@@ -790,17 +799,75 @@ strong {
   overflow: hidden;
 }
 
+.rom-directory-item > * {
+  position: relative;
+  z-index: 1;
+}
+
+.rom-directory-item[data-active='true'] {
+  border-color: color-mix(in srgb, var(--accent, var(--accent-hot)) 45%, var(--outline-strong));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent, var(--accent-hot)) 24%, transparent),
+    0 18px 36px rgba(7, 8, 14, 0.2);
+}
+
+.directory-active-frame {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--accent, var(--accent-hot)) 62%, white 8%);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--accent, var(--accent-hot)) 12%, transparent), transparent 44%),
+    radial-gradient(circle at top right, color-mix(in srgb, var(--accent, var(--accent-hot)) 18%, transparent), transparent 42%);
+  pointer-events: none;
+}
+
 .directory-heading {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
-  align-items: baseline;
+  align-items: start;
+}
+
+.directory-heading h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  min-height: 2.1rem;
+}
+
+.directory-heading strong {
+  flex-shrink: 0;
 }
 
 .rom-directory-item p,
 .rom-directory-item small {
   margin: 0;
   color: var(--muted);
+}
+
+.directory-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-top: auto;
+}
+
+.directory-footer small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.directory-jump {
+  flex-shrink: 0;
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent, var(--accent-hot));
 }
 
 .empty-state {
@@ -816,6 +883,13 @@ strong {
 .rom-sections {
   display: grid;
   gap: 0.95rem;
+}
+
+.rom-section[data-active='true'] {
+  border-color: color-mix(in srgb, var(--accent, var(--accent-hot)) 45%, var(--outline-strong));
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent, var(--accent-hot)) 18%, transparent),
+    var(--shadow-large);
 }
 
 .rom-section-header {
@@ -1250,22 +1324,7 @@ strong {
 }
 
 .reveal {
-  opacity: 0;
-  transform: translateY(26px);
-  animation: reveal-up 720ms var(--spring) forwards;
-  animation-delay: var(--delay, 0ms);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: none;
-}
-
-@keyframes reveal-up {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  min-width: 0;
 }
 
 .loading-overlay {
@@ -1390,6 +1449,11 @@ strong {
 
   .mobile-dock {
     display: grid;
+  }
+
+  .directory-footer {
+    align-items: start;
+    flex-direction: column;
   }
 }
 

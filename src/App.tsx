@@ -7,7 +7,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from 'react'
-import { AnimatePresence, LazyMotion, domAnimation, m } from 'motion/react'
+import { AnimatePresence, LayoutGroup, LazyMotion, domAnimation, m } from 'motion/react'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { LoadingScreen } from './components/LoadingScreen'
@@ -69,6 +69,12 @@ function resolveSectionTarget(hash: string) {
   }
 
   return null
+}
+
+function resolveRomTarget(hash: string) {
+  const normalizedHash = hash.replace(/^#/, '').trim().toLowerCase()
+
+  return normalizedHash.startsWith('rom-') ? normalizedHash : null
 }
 
 function SunIcon() {
@@ -248,6 +254,7 @@ function App() {
   const [sortMode, setSortMode] = useState<SortMode>('latest')
   const [communityLinkCopied, setCommunityLinkCopied] = useState(false)
   const [expandedReleaseNotes, setExpandedReleaseNotes] = useState<Record<string, boolean>>({})
+  const [activeRomId, setActiveRomId] = useState<string | null>(null)
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
@@ -320,7 +327,10 @@ function App() {
 
   useEffect(() => {
     const syncActiveSectionFromHash = () => {
+      const nextRomId = resolveRomTarget(window.location.hash)
       const nextSection = resolveSectionTarget(window.location.hash)
+
+      setActiveRomId(nextRomId)
 
       if (nextSection) {
         setActiveSection(nextSection)
@@ -373,6 +383,8 @@ function App() {
     if (!href?.startsWith('#')) {
       return
     }
+
+    setActiveRomId(resolveRomTarget(href))
 
     const nextSection = resolveSectionTarget(href)
 
@@ -692,6 +704,7 @@ function App() {
             </section>
           </Reveal>
 
+          <LayoutGroup id="rom-browser">
           <Reveal delay={90}>
             <section className="explorer panel" data-hub-accent="true" id="rom-directory" style={featuredStyle}>
               <div className="section-heading">
@@ -803,14 +816,16 @@ function App() {
                   <span>{getAvailabilityLabel(availabilityFilter)}</span>.
                 </p>
                 <small>
-                  Use the cards below for quick scanning, then jump into the detailed release view for
-                  release notes and build context.
+                  Pick a card to lock onto that ROM, then use the detail section for notes and downloads.
                 </small>
               </div>
 
-              <div className="rom-directory-grid">
-                {filteredRoms.map((rom) => {
+              <m.div className="rom-directory-grid" layout>
+                <AnimatePresence initial={false} mode="popLayout">
+                {filteredRoms.map((rom, index) => {
                   const links = getReleaseLinks(rom)
+                  const romId = toSectionId(rom.name)
+                  const isActiveRom = activeRomId === romId
                   const accentStyle: AccentStyle = {
                     '--accent': rom.accent,
                     '--accent-soft': rom.accentSoft,
@@ -818,37 +833,59 @@ function App() {
                   }
 
                   return (
-                    <ReactivePanel
-                      as="a"
-                      className="rom-directory-item"
-                      href={`#${toSectionId(rom.name)}`}
-                      intensity={0.6}
+                    <m.div
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      className="rom-directory-motion"
+                      exit={{ opacity: 0, y: 18, scale: 0.98 }}
+                      initial={{ opacity: 0, y: 18, scale: 0.98 }}
                       key={rom.name}
-                      onClick={handleSectionAnchorClick}
-                      style={accentStyle}
+                      layout
+                      transition={{
+                        delay: index * 0.025,
+                        duration: 0.34,
+                        ease: [0.22, 1, 0.36, 1],
+                        layout: { duration: 0.38, ease: [0.22, 1, 0.36, 1] },
+                      }}
                     >
-                      <div className="directory-topline">
-                        <span className="chip chip-tonal">{rom.status}</span>
-                        <span className="ghost-pill">{links.length > 0 ? 'Openable' : 'Tracking only'}</span>
-                      </div>
+                      <ReactivePanel
+                        as="a"
+                        aria-current={isActiveRom ? 'true' : undefined}
+                        className={`rom-directory-item ${isActiveRom ? 'is-active' : ''}`.trim()}
+                        data-active={isActiveRom ? 'true' : 'false'}
+                        href={`#${romId}`}
+                        intensity={0.6}
+                        onClick={handleSectionAnchorClick}
+                        style={accentStyle}
+                      >
+                        {isActiveRom ? <m.span className="directory-active-frame" layoutId="active-rom-card" /> : null}
 
-                      <div className="directory-heading">
-                        <h3>{rom.name}</h3>
-                        <strong>{rom.version}</strong>
-                      </div>
+                        <div className="directory-topline">
+                          <span className="chip chip-tonal">{rom.status}</span>
+                          <span className="ghost-pill">{links.length > 0 ? 'Openable' : 'Tracking only'}</span>
+                        </div>
 
-                      <p>{rom.tagline}</p>
+                        <div className="directory-heading">
+                          <h3>{rom.name}</h3>
+                          <strong>{rom.version}</strong>
+                        </div>
 
-                      <div className="meta-pill-group">
-                        <span className="meta-pill">{rom.branch}</span>
-                        <span className="meta-pill">{rom.buildDate}</span>
-                      </div>
+                        <p title={rom.tagline}>{rom.tagline}</p>
 
-                      <small>{rom.devices.join(' / ')}</small>
-                    </ReactivePanel>
+                        <div className="meta-pill-group">
+                          <span className="meta-pill">{rom.branch}</span>
+                          <span className="meta-pill">{rom.buildDate}</span>
+                        </div>
+
+                        <div className="directory-footer">
+                          <small title={rom.devices.join(' / ')}>{rom.devices.join(' / ')}</small>
+                          <span className="directory-jump">{isActiveRom ? 'Selected' : 'Open release'}</span>
+                        </div>
+                      </ReactivePanel>
+                    </m.div>
                   )
                 })}
-              </div>
+                </AnimatePresence>
+              </m.div>
 
               {filteredRoms.length === 0 ? (
                 <div className="empty-state">
@@ -861,12 +898,16 @@ function App() {
               ) : null}
             </section>
           </Reveal>
+          </LayoutGroup>
 
           <section className="rom-sections">
+            <AnimatePresence initial={false} mode="popLayout">
             {filteredRoms.map((rom, index) => {
               const links = getReleaseLinks(rom)
               const isReleaseNotesOpen = expandedReleaseNotes[rom.name] ?? false
-              const releaseDisclosureId = `${toSectionId(rom.name)}-release-notes`
+              const romId = toSectionId(rom.name)
+              const releaseDisclosureId = `${romId}-release-notes`
+              const isActiveRom = activeRomId === romId
               const accentStyle: AccentStyle = {
                 '--accent': rom.accent,
                 '--accent-soft': rom.accentSoft,
@@ -874,149 +915,166 @@ function App() {
               }
 
               return (
-                <Reveal delay={index * 40} key={rom.name}>
-                  <ReactivePanel
-                    as="section"
-                    className="rom-section panel"
-                    data-hub-accent="true"
-                    id={toSectionId(rom.name)}
-                    intensity={0.75}
-                    style={accentStyle}
-                  >
-                    <div className="rom-section-header">
-                      <div className="rom-heading">
-                        <div className="chip-row">
-                          <span className="chip chip-tonal">{rom.status}</span>
-                          <span className="chip">{rom.branch}</span>
-                          <span className="chip">{links.length > 0 ? 'Release linked' : 'Release tracking'}</span>
+                <m.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="rom-section-motion"
+                  exit={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  key={rom.name}
+                  layout
+                  transition={{
+                    delay: index * 0.03,
+                    duration: 0.38,
+                    ease: [0.22, 1, 0.36, 1],
+                    layout: { duration: 0.4, ease: [0.22, 1, 0.36, 1] },
+                  }}
+                >
+                  <Reveal delay={index * 35}>
+                    <ReactivePanel
+                      as="section"
+                      className={`rom-section panel ${isActiveRom ? 'is-active' : ''}`.trim()}
+                      data-active={isActiveRom ? 'true' : 'false'}
+                      data-hub-accent="true"
+                      id={romId}
+                      intensity={0.75}
+                      style={accentStyle}
+                    >
+                      <div className="rom-section-header">
+                        <div className="rom-heading">
+                          <div className="chip-row">
+                            <span className="chip chip-tonal">{rom.status}</span>
+                            <span className="chip">{rom.branch}</span>
+                            <span className="chip">{links.length > 0 ? 'Release linked' : 'Release tracking'}</span>
+                          </div>
+
+                          <h2>{rom.name}</h2>
+                          <p>{rom.tagline}</p>
                         </div>
 
-                        <h2>{rom.name}</h2>
-                        <p>{rom.tagline}</p>
+                        <div className="rom-header-meta">
+                          <span className="version-pill">{rom.version}</span>
+                          <small>{formatFreshness(rom.buildDate)}</small>
+                        </div>
                       </div>
 
-                      <div className="rom-header-meta">
-                        <span className="version-pill">{rom.version}</span>
-                        <small>{formatFreshness(rom.buildDate)}</small>
-                      </div>
-                    </div>
-
-                    <div className="rom-section-body">
-                      <div className="rom-section-main">
-                        <m.div
-                          animate={isReleaseNotesOpen ? 'open' : 'closed'}
-                          className="release-disclosure"
-                          data-open={isReleaseNotesOpen ? 'true' : 'false'}
-                          layout
-                          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                        >
-                          <button
-                            aria-controls={releaseDisclosureId}
-                            aria-expanded={isReleaseNotesOpen}
-                            className="release-disclosure-trigger"
-                            onClick={() => toggleReleaseNotes(rom.name)}
-                            type="button"
+                      <div className="rom-section-body">
+                        <div className="rom-section-main">
+                          <m.div
+                            animate={isReleaseNotesOpen ? 'open' : 'closed'}
+                            className="release-disclosure"
+                            data-open={isReleaseNotesOpen ? 'true' : 'false'}
+                            layout
+                            transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                           >
-                            <div className="release-disclosure-copy">
-                              <span className="section-label">Release notes</span>
-                              <strong>{isReleaseNotesOpen ? 'Hide detailed notes' : 'Open detailed notes'}</strong>
-                              <small>
-                                {rom.highlights.length} highlights and {rom.changelog.length} changelog entries.
-                              </small>
-                            </div>
-                            <span className="release-disclosure-pill">
-                              {isReleaseNotesOpen ? 'Close' : 'Open'}
-                              <m.span
-                                animate={{ rotate: isReleaseNotesOpen ? 45 : 0 }}
-                                className="release-disclosure-icon"
-                                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
-                              >
-                                +
-                              </m.span>
-                            </span>
-                          </button>
-
-                          <AnimatePresence initial={false}>
-                            {isReleaseNotesOpen ? (
-                              <m.div
-                                animate={{ height: 'auto', opacity: 1 }}
-                                className="release-disclosure-motion"
-                                exit={{ height: 0, opacity: 0 }}
-                                id={releaseDisclosureId}
-                                initial={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                              >
-                                <m.div
-                                  animate={{ y: 0, opacity: 1 }}
-                                  className="release-disclosure-content"
-                                  initial={{ y: -10, opacity: 0 }}
-                                  transition={{ duration: 0.22, delay: 0.03, ease: [0.22, 1, 0.36, 1] }}
+                            <button
+                              aria-controls={releaseDisclosureId}
+                              aria-expanded={isReleaseNotesOpen}
+                              className="release-disclosure-trigger"
+                              onClick={() => toggleReleaseNotes(rom.name)}
+                              type="button"
+                            >
+                              <div className="release-disclosure-copy">
+                                <span className="section-label">Release notes</span>
+                                <strong>{isReleaseNotesOpen ? 'Hide detailed notes' : 'Open detailed notes'}</strong>
+                                <small>
+                                  {rom.highlights.length} highlights and {rom.changelog.length} changelog entries.
+                                </small>
+                              </div>
+                              <span className="release-disclosure-pill">
+                                {isReleaseNotesOpen ? 'Close' : 'Open'}
+                                <m.span
+                                  animate={{ rotate: isReleaseNotesOpen ? 45 : 0 }}
+                                  className="release-disclosure-icon"
+                                  transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
                                 >
-                                  <div className="content-cluster">
-                                    <h3>Why this release stands out</h3>
-                                    <ul className="bullet-list">
-                                      {rom.highlights.map((item) => (
-                                        <li key={item}>{item}</li>
-                                      ))}
-                                    </ul>
-                                  </div>
+                                  +
+                                </m.span>
+                              </span>
+                            </button>
 
-                                  <div className="content-cluster">
-                                    <div className="cluster-head">
-                                      <h3>Build changelog</h3>
-                                      <span>{rom.changelog.length} notes</span>
+                            <AnimatePresence initial={false}>
+                              {isReleaseNotesOpen ? (
+                                <m.div
+                                  animate={{ height: 'auto', opacity: 1 }}
+                                  className="release-disclosure-motion"
+                                  exit={{ height: 0, opacity: 0 }}
+                                  id={releaseDisclosureId}
+                                  initial={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                  <m.div
+                                    animate={{ y: 0, opacity: 1 }}
+                                    className="release-disclosure-content"
+                                    initial={{ y: -10, opacity: 0 }}
+                                    transition={{ duration: 0.22, delay: 0.03, ease: [0.22, 1, 0.36, 1] }}
+                                  >
+                                    <div className="content-cluster">
+                                      <h3>Why this release stands out</h3>
+                                      <ul className="bullet-list">
+                                        {rom.highlights.map((item) => (
+                                          <li key={item}>{item}</li>
+                                        ))}
+                                      </ul>
                                     </div>
 
-                                    <ul className="timeline-list">
-                                      {rom.changelog.map((item) => (
-                                        <li key={item}>{item}</li>
-                                      ))}
-                                    </ul>
-                                  </div>
+                                    <div className="content-cluster">
+                                      <div className="cluster-head">
+                                        <h3>Build changelog</h3>
+                                        <span>{rom.changelog.length} notes</span>
+                                      </div>
+
+                                      <ul className="timeline-list">
+                                        {rom.changelog.map((item) => (
+                                          <li key={item}>{item}</li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  </m.div>
                                 </m.div>
-                              </m.div>
-                            ) : null}
-                          </AnimatePresence>
-                        </m.div>
+                              ) : null}
+                            </AnimatePresence>
+                          </m.div>
+                        </div>
+
+                        <aside className="rom-section-side">
+                          <div className="rom-facts-card">
+                            <div className="rom-fact-row">
+                              <span>Build date</span>
+                              <strong>{rom.buildDate}</strong>
+                            </div>
+                            <div className="rom-fact-row">
+                              <span>Supported devices</span>
+                              <strong>{rom.devices.join(' / ')}</strong>
+                            </div>
+                            <div className="rom-fact-row">
+                              <span>Current focus</span>
+                              <strong>{formatMaintenanceNote(rom.maintenanceNote)}</strong>
+                            </div>
+                            <div className="rom-fact-row">
+                              <span>Channel label</span>
+                              <strong>{rom.channelLabel}</strong>
+                            </div>
+                          </div>
+
+                          <div className="card-actions card-actions-stack">
+                            {links.length > 0 ? (
+                              links.map((link) => (
+                                <a href={link.url} key={link.url} rel="noreferrer" target="_blank">
+                                  {links.length > 1 ? link.label : 'Open Telegram release'}
+                                </a>
+                              ))
+                            ) : (
+                              <span className="button-disabled">Release link pending</span>
+                            )}
+                          </div>
+                        </aside>
                       </div>
-
-                      <aside className="rom-section-side">
-                        <div className="rom-facts-card">
-                          <div className="rom-fact-row">
-                            <span>Build date</span>
-                            <strong>{rom.buildDate}</strong>
-                          </div>
-                          <div className="rom-fact-row">
-                            <span>Supported devices</span>
-                            <strong>{rom.devices.join(' / ')}</strong>
-                          </div>
-                          <div className="rom-fact-row">
-                            <span>Current focus</span>
-                            <strong>{formatMaintenanceNote(rom.maintenanceNote)}</strong>
-                          </div>
-                          <div className="rom-fact-row">
-                            <span>Channel label</span>
-                            <strong>{rom.channelLabel}</strong>
-                          </div>
-                        </div>
-
-                        <div className="card-actions card-actions-stack">
-                          {links.length > 0 ? (
-                            links.map((link) => (
-                              <a href={link.url} key={link.url} rel="noreferrer" target="_blank">
-                                {links.length > 1 ? link.label : 'Open Telegram release'}
-                              </a>
-                            ))
-                          ) : (
-                            <span className="button-disabled">Release link pending</span>
-                          )}
-                        </div>
-                      </aside>
-                    </div>
-                  </ReactivePanel>
-                </Reveal>
+                    </ReactivePanel>
+                  </Reveal>
+                </m.div>
               )
             })}
+            </AnimatePresence>
           </section>
 
           <Reveal delay={110}>
