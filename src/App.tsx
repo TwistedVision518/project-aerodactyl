@@ -259,42 +259,44 @@ function App() {
         </div>
 
         <header className="topbar">
-          <a className="brand" href="#top">
-            <span className="brand-mark" aria-hidden="true">
-              <img alt="" className="brand-mark-image" src="/favicon.svg" />
-            </span>
-            <span className="brand-copy">
-              <strong>Project Aerodactyl</strong>
-              <small>Nothing Phone 2a Series Hub</small>
-            </span>
-          </a>
+          <div className="topbar-content">
+            <a className="brand" href="#top">
+              <span className="brand-mark" aria-hidden="true">
+                <img alt="" className="brand-mark-image" src="/favicon.svg" />
+              </span>
+              <span className="brand-copy">
+                <strong>Project Aerodactyl</strong>
+                <small>Nothing Phone 2a Series Hub</small>
+              </span>
+            </a>
 
-          <nav className="nav-links" aria-label="Primary">
-            <a data-section="rom-directory" href="#rom-directory">03 / ROMs</a>
-            <a data-section="gcams" href="#gcams">04 / GCams</a>
-            <a data-section="source-pulse" href="#source-pulse">05 / Pulse</a>
-            <a data-section="builder-notes" href="#builder-notes">06 / Notes</a>
-            <a data-section="devices" href="#devices">07 / Devices</a>
-          </nav>
+            <nav className="nav-links" aria-label="Primary">
+              <a data-section="rom-directory" href="#rom-directory">03 / ROMs</a>
+              <a data-section="gcams" href="#gcams">04 / GCams</a>
+              <a data-section="source-pulse" href="#source-pulse">05 / Pulse</a>
+              <a data-section="builder-notes" href="#builder-notes">06 / Notes</a>
+              <a data-section="devices" href="#devices">07 / Devices</a>
+            </nav>
 
-          <div className="topbar-actions">
-            <div className="topbar-controls" aria-label="Display controls">
-              <button
-                aria-label={themeMode === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
-                aria-pressed={themeMode === 'light'}
-                className={`control-toggle ${themeMode === 'light' ? 'is-active' : ''}`.trim()}
-                onClick={toggleTheme}
-                type="button"
-              >
-                {themeMode === 'light' ? <SunIcon /> : <MoonIcon />}
-              </button>
+            <div className="topbar-actions">
+              <div className="topbar-controls" aria-label="Display controls">
+                <button
+                  aria-label={themeMode === 'light' ? 'Switch to dark theme' : 'Switch to light theme'}
+                  aria-pressed={themeMode === 'light'}
+                  className={`control-toggle ${themeMode === 'light' ? 'is-active' : ''}`.trim()}
+                  onClick={toggleTheme}
+                  type="button"
+                >
+                  {themeMode === 'light' ? <SunIcon /> : <MoonIcon />}
+                </button>
+              </div>
+              <a className="status-badge topbar-button topbar-button-secondary" href="#top">
+                Latest Drops
+              </a>
+              <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
+                Browse ROMs
+              </a>
             </div>
-            <a className="status-badge topbar-button topbar-button-secondary" href="#top">
-              Latest Drops
-            </a>
-            <a className="pill-link topbar-button topbar-button-primary" href="#rom-directory">
-              Browse ROMs
-            </a>
           </div>
         </header>
 
