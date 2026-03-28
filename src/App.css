@@ -493,7 +493,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 .feature-list li::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: 0.5rem;
   top: 0.55rem;
   width: 0.4rem;
   height: 0.4rem;
@@ -624,7 +624,8 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
   height: 0.4rem;
   background: var(--accent-red);
   border-radius: 50%;
-  margin-right: 0.8rem;
+  margin-left: 0.5rem;
+  margin-right: 1.2rem;
   flex-shrink: 0;
 }
 
@@ -868,7 +869,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 
 .bullet-list li {
   position: relative;
-  padding-left: 1.25rem;
+  padding-left: 1.75rem;
   margin-bottom: 0.5rem;
   color: var(--muted);
 }
@@ -876,7 +877,7 @@ h3 { font-size: 1.4rem; font-weight: 800; margin: 0; }
 .bullet-list li::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: 0.5rem;
   top: 0.6rem;
   width: 0.4rem;
   height: 0.4rem;
