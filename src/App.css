@@ -941,25 +941,107 @@ strong {
   padding: 0.45rem;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 0.35rem;
+  overflow: hidden;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .mobile-dock-link {
+  position: relative;
+  isolation: isolate;
   display: grid;
   justify-items: center;
   gap: 0.35rem;
   padding: 0.65rem 0.2rem;
   border-radius: 0.9rem;
   color: var(--muted);
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transform: translateY(0) scale(1);
+  transition:
+    color 220ms var(--spring),
+    transform 220ms var(--spring),
+    background-color 220ms var(--spring),
+    box-shadow 220ms var(--spring);
+}
+
+.mobile-dock-link::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14), transparent 68%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition:
+    opacity 220ms var(--spring),
+    transform 220ms var(--spring);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.mobile-dock-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 0.34rem;
+  width: 1.75rem;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), rgba(255, 255, 255, 0.92));
+  opacity: 0;
+  transform: translateX(-50%) scaleX(0.2);
+  transform-origin: center;
+  transition:
+    opacity 220ms var(--spring),
+    transform 240ms var(--spring);
+  pointer-events: none;
+  box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 45%, transparent);
 }
 
 .mobile-dock-link[aria-current='page'] {
   color: var(--text);
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 14px 30px rgba(8, 10, 16, 0.3);
+  transform: translateY(-2px) scale(1.01);
+}
+
+.mobile-dock-link[aria-current='page']::before,
+.mobile-dock-link:focus-visible::before {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.mobile-dock-link[aria-current='page']::after,
+.mobile-dock-link:focus-visible::after {
+  opacity: 1;
+  transform: translateX(-50%) scaleX(1);
+}
+
+.mobile-dock-link:active {
+  transform: translateY(1px) scale(0.97);
+}
+
+.mobile-dock-link:focus-visible {
+  outline: none;
+  color: var(--text);
 }
 
 .mobile-dock-icon {
   width: 1rem;
   height: 1rem;
+  transition:
+    transform 220ms var(--spring),
+    color 220ms var(--spring),
+    filter 220ms var(--spring);
 }
 
 .mobile-dock-icon svg {
@@ -970,6 +1052,25 @@ strong {
 .mobile-dock-text {
   font-size: 0.58rem;
   font-weight: 700;
+  transition:
+    transform 220ms var(--spring),
+    opacity 220ms var(--spring),
+    letter-spacing 220ms var(--spring);
+}
+
+.mobile-dock-link[aria-current='page'] .mobile-dock-icon {
+  transform: translateY(-1px) scale(1.08);
+  filter: drop-shadow(0 8px 16px color-mix(in srgb, var(--accent) 35%, transparent));
+}
+
+.mobile-dock-link[aria-current='page'] .mobile-dock-text {
+  transform: translateY(-1px);
+  letter-spacing: 0.14em;
+}
+
+.mobile-dock-link:active .mobile-dock-icon,
+.mobile-dock-link:active .mobile-dock-text {
+  transform: scale(0.96);
 }
 
 .reactive-panel {
@@ -1154,6 +1255,11 @@ strong {
   .gcam-empty-state a,
   .reset-button,
   .empty-state button,
+  .mobile-dock-link,
+  .mobile-dock-link::before,
+  .mobile-dock-link::after,
+  .mobile-dock-icon,
+  .mobile-dock-text,
   .reveal {
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;

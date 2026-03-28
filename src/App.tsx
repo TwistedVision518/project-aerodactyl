@@ -55,6 +55,30 @@ const sectionLinks: SectionLink[] = [
   { id: 'devices', label: 'Devices', shortLabel: 'Devices' },
 ]
 
+const sectionIdSet = new Set<SectionId>(sectionLinks.map((item) => item.id))
+
+function resolveSectionTarget(hash: string) {
+  const normalizedHash = hash.replace(/^#/, '').trim().toLowerCase()
+
+  if (!normalizedHash) {
+    return 'top'
+  }
+
+  if (sectionIdSet.has(normalizedHash as SectionId)) {
+    return normalizedHash as SectionId
+  }
+
+  if (normalizedHash.startsWith('rom-')) {
+    return 'rom-directory'
+  }
+
+  if (normalizedHash === 'builder-notes') {
+    return 'source-pulse'
+  }
+
+  return null
+}
+
 function SunIcon() {
   return (
     <svg aria-hidden="true" viewBox="0 0 24 24">
@@ -317,6 +341,21 @@ function App() {
   }, [themeMode])
 
   useEffect(() => {
+    const syncActiveSectionFromHash = () => {
+      const nextSection = resolveSectionTarget(window.location.hash)
+
+      if (nextSection) {
+        setActiveSection(nextSection)
+      }
+    }
+
+    syncActiveSectionFromHash()
+    window.addEventListener('hashchange', syncActiveSectionFromHash)
+
+    return () => window.removeEventListener('hashchange', syncActiveSectionFromHash)
+  }, [])
+
+  useEffect(() => {
     const sections = sectionLinks
       .map((item) => document.getElementById(item.id))
       .filter((element): element is HTMLElement => Boolean(element))
@@ -332,7 +371,11 @@ function App() {
           .sort((left, right) => right.intersectionRatio - left.intersectionRatio)[0]
 
         if (activeEntry?.target.id) {
-          setActiveSection(activeEntry.target.id as SectionId)
+          const nextSection = resolveSectionTarget(`#${activeEntry.target.id}`)
+
+          if (nextSection) {
+            setActiveSection(nextSection)
+          }
         }
       },
       {
@@ -345,6 +388,20 @@ function App() {
 
     return () => observer.disconnect()
   }, [])
+
+  const handleSectionAnchorClick = (event: MouseEvent<HTMLAnchorElement>) => {
+    const href = event.currentTarget.getAttribute('href')
+
+    if (!href?.startsWith('#')) {
+      return
+    }
+
+    const nextSection = resolveSectionTarget(href)
+
+    if (nextSection) {
+      setActiveSection(nextSection)
+    }
+  }
 
   const toggleTheme = (event: MouseEvent<HTMLButtonElement>) => {
     const isToDark = themeMode === 'light'
@@ -416,7 +473,7 @@ function App() {
 
         <header className="topbar">
           <div className="topbar-content">
-            <a className="brand" href="#top">
+            <a className="brand" href="#top" onClick={handleSectionAnchorClick}>
               <span className="brand-mark" aria-hidden="true">
                 <img alt="" className="brand-mark-image" src="/favicon.svg" />
               </span>
@@ -432,6 +489,7 @@ function App() {
                   aria-current={activeSection === item.id ? 'page' : undefined}
                   href={`#${item.id}`}
                   key={item.id}
+                  onClick={handleSectionAnchorClick}
                 >
                   {item.label}
                 </a>
@@ -452,7 +510,7 @@ function App() {
                   Community
                 </a>
               ) : null}
-              <a className="topbar-button topbar-button-primary" href="#rom-directory">
+              <a className="topbar-button topbar-button-primary" href="#rom-directory" onClick={handleSectionAnchorClick}>
                 Explore ROMs
               </a>
             </div>
@@ -476,10 +534,10 @@ function App() {
                 </p>
 
                 <div className="hero-actions">
-                  <a className="action-primary" href="#pinned-builds">
+                  <a className="action-primary" href="#pinned-builds" onClick={handleSectionAnchorClick}>
                     Open Command Center
                   </a>
-                  <a className="action-secondary" href="#rom-directory">
+                  <a className="action-secondary" href="#rom-directory" onClick={handleSectionAnchorClick}>
                     Browse Release Lanes
                   </a>
                   {communityHubHasLink ? (
@@ -540,7 +598,7 @@ function App() {
                       ) : (
                         <span className="button-disabled">Release link pending</span>
                       )}
-                      <a className="ghost-action" href={`#${toSectionId(featuredRom.name)}`}>
+                      <a className="ghost-action" href={`#${toSectionId(featuredRom.name)}`} onClick={handleSectionAnchorClick}>
                         Read release details
                       </a>
                     </div>
@@ -864,6 +922,7 @@ function App() {
                       href={`#${toSectionId(rom.name)}`}
                       intensity={0.6}
                       key={rom.name}
+                      onClick={handleSectionAnchorClick}
                       style={accentStyle}
                     >
                       <div className="directory-topline">
@@ -1189,6 +1248,7 @@ function App() {
               className="mobile-dock-link"
               href={`#${item.id}`}
               key={item.id}
+              onClick={handleSectionAnchorClick}
             >
               <span className="mobile-dock-icon">
                 <DockGlyph section={item.id} />
