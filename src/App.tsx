@@ -365,6 +365,10 @@ function App() {
   const sceneRightY = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [-38, 38])
   const sceneRightRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [-18, -6])
   const sceneRightScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [1.08, 0.98])
+  const sceneTopX = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [-72, 72])
+  const sceneTopY = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [-30, 30])
+  const sceneTopRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [-6, 6])
+  const sceneTopScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [1.05, 0.97])
   const motionEase = [0.22, 1, 0.36, 1] as const
 
   const heroContainerVariants = prefersReducedMotion
@@ -709,6 +713,14 @@ function App() {
               prefersReducedMotion
                 ? undefined
                 : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
+            }
+          />
+          <m.div
+            className="scene-gradient scene-gradient-top"
+            style={
+              prefersReducedMotion
+                ? undefined
+                : { x: sceneTopX, y: sceneTopY, rotate: sceneTopRotate, scale: sceneTopScale }
             }
           />
           <div className="scene-grid" />
