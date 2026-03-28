@@ -2,7 +2,7 @@
   "order": 3,
   "name": "Infinity X",
   "version": "v3.8",
-  "status": "Active lane",
+  "status": "Active release",
   "branch": "Feature track",
   "tagline": "Feature-heavy updates presented without turning release notes into a mess.",
   "buildDate": "March 20, 2026",
@@ -19,7 +19,7 @@
     "Side metadata gives testers a quick read on date, devices, and release source."
   ],
   "changelog": [
-    "Grouped the current feature-track work into one clearer release lane.",
+    "Grouped the current feature-track work into one clearer release track.",
     "Kept tester-facing changes readable despite the broader change set.",
     "Aligned release metadata and targeting across pacman and pacmanpro."
   ]

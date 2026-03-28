@@ -2,7 +2,7 @@
   "order": 6,
   "name": "AxionOS",
   "version": "v2.5",
-  "status": "Bring-up lane",
+  "status": "Bring-up build",
   "branch": "Fast-moving track",
   "tagline": "A faster-moving build stream for testers following active bring-up work.",
   "buildDate": "March 18, 2026",
@@ -19,8 +19,8 @@
     "Keeps early-stage progress visible without mixing it into the stable builds."
   ],
   "changelog": [
-    "Kept AxionOS visible as an active bring-up lane for both tracked devices.",
+    "Kept AxionOS visible as an active bring-up build for both tracked devices.",
     "Focused this cycle on iteration speed and tester-facing clarity.",
-    "Left the release lane ready for faster follow-up drops as development continues."
+    "Left the release flow ready for faster follow-up drops as development continues."
   ]
 }

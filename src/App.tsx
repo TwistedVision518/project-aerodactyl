@@ -195,7 +195,7 @@ function getAvailabilityLabel(filter: AvailabilityFilter) {
     case 'available':
       return 'Release links ready'
     case 'tracking':
-      return 'Tracked lanes only'
+      return 'Tracked releases only'
     default:
       return 'All release states'
   }
@@ -304,7 +304,7 @@ function App() {
   }
 
   const heroStats = [
-    { label: 'Tracked ROMs', value: `${roms.length}`, detail: 'active lanes across the hub' },
+    { label: 'Tracked ROMs', value: `${roms.length}`, detail: 'active releases across the hub' },
     { label: 'Release links live', value: `${releaseReadyRoms.length}`, detail: 'ready to open now' },
     { label: 'Dual-device coverage', value: `${dualTargetCount}`, detail: 'support both 2a targets' },
     { label: 'Last major update', value: siteLastUpdated, detail: formatFreshness(siteLastUpdated) },
@@ -541,7 +541,7 @@ function App() {
                         <span className="button-disabled">Release link pending</span>
                       )}
                       <a className="ghost-action" href={`#${toSectionId(featuredRom.name)}`}>
-                        Read lane details
+                        Read release details
                       </a>
                     </div>
                   </div>
@@ -560,7 +560,7 @@ function App() {
 
                     <div className="mini-metrics">
                       <div>
-                        <span>Linked lanes</span>
+                        <span>Linked releases</span>
                         <strong>{releaseReadyRoms.length}</strong>
                       </div>
                       <div>
@@ -570,7 +570,7 @@ function App() {
                     </div>
 
                     <p className="utility-copy">
-                      {latestLinkedRom.name} is the freshest lane with a public release link, and the
+                      {latestLinkedRom.name} is the freshest release with a public release link, and the
                       rest of the grid stays visible even when links are still being prepared.
                     </p>
 
@@ -581,7 +581,7 @@ function App() {
 
                   <ReactivePanel as="article" className="utility-card utility-card-community" intensity={0.55}>
                     <div className="feature-topline">
-                      <span className="feature-badge">Community lane</span>
+                      <span className="feature-badge">Community hub</span>
                       <span className="ghost-pill">Telegram</span>
                     </div>
 
@@ -623,7 +623,7 @@ function App() {
                   <div className="command-card-head">
                     <div>
                       <span className="section-label">Fresh drops</span>
-                      <h3>Current top lanes</h3>
+                      <h3>Current top releases</h3>
                     </div>
                     <span className="section-caption">Sorted by newest public build date</span>
                   </div>
@@ -659,7 +659,7 @@ function App() {
                           </div>
 
                           <div className="card-actions">
-                            <a href={`#${toSectionId(rom.name)}`}>Inspect lane</a>
+                            <a href={`#${toSectionId(rom.name)}`}>Inspect release</a>
                             {links[0] ? (
                               <a href={links[0].url} rel="noreferrer" target="_blank">
                                 Open release
@@ -744,7 +744,7 @@ function App() {
 
               <div className="explorer-toolbar" aria-label="ROM filters">
                 <label className="search-field">
-                  <span>Search lanes</span>
+                  <span>Search releases</span>
                   <input
                     onChange={(event) => {
                       const nextValue = event.target.value
@@ -838,12 +838,12 @@ function App() {
 
               <div className="explorer-summary">
                 <p>
-                  <strong>{filteredRoms.length}</strong> lanes shown for{' '}
+                  <strong>{filteredRoms.length}</strong> releases shown for{' '}
                   <span>{getDeviceLabel(deviceFilter)}</span> with{' '}
                   <span>{getAvailabilityLabel(availabilityFilter)}</span>.
                 </p>
                 <small>
-                  Use the cards below for quick scanning, then jump into the detailed lane view for
+                  Use the cards below for quick scanning, then jump into the detailed release view for
                   release notes and build context.
                 </small>
               </div>
@@ -891,7 +891,7 @@ function App() {
 
               {filteredRoms.length === 0 ? (
                 <div className="empty-state">
-                  <strong>No release lanes matched the current filters.</strong>
+                  <strong>No releases matched the current filters.</strong>
                   <span>Broaden the search or reset the filters to bring the full lineup back.</span>
                   <button onClick={resetFilters} type="button">
                     Clear filters
@@ -941,7 +941,7 @@ function App() {
                     <div className="rom-section-body">
                       <div className="rom-section-main">
                         <div className="content-cluster">
-                          <h3>Why this lane stands out</h3>
+                          <h3>Why this release stands out</h3>
                           <ul className="bullet-list">
                             {rom.highlights.map((item) => (
                               <li key={item}>{item}</li>

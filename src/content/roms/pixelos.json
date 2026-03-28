@@ -2,7 +2,7 @@
   "order": 5,
   "name": "PixelOS",
   "version": "v16.2",
-  "status": "Stable lane",
+  "status": "Stable release",
   "branch": "Pixel track",
   "tagline": "Clean, minimal release notes for users who just want the essentials fast.",
   "buildDate": "March 19, 2026",
@@ -19,7 +19,7 @@
     "Device targeting stays clear even on narrower mobile screens."
   ],
   "changelog": [
-    "Kept the stable PixelOS lane concise and easy to scan.",
+    "Kept the stable PixelOS release concise and easy to scan.",
     "Rolled smaller incremental updates into one cleaner public-facing drop.",
     "Preserved quick readability for both Nothing Phone 2a variants."
   ]
