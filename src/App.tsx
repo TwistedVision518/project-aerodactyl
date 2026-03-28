@@ -8,7 +8,16 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from 'react'
-import { AnimatePresence, LayoutGroup, LazyMotion, domAnimation, m } from 'motion/react'
+import {
+  AnimatePresence,
+  LayoutGroup,
+  LazyMotion,
+  domAnimation,
+  m,
+  useReducedMotion,
+  useTime,
+  useTransform,
+} from 'motion/react'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { LoadingScreen } from './components/LoadingScreen'
@@ -259,6 +268,8 @@ function App() {
   const [selectedResourceByRom, setSelectedResourceByRom] = useState<Record<string, string>>({})
   const [resourceMenuOpen, setResourceMenuOpen] = useState(false)
   const resourceMenuRef = useRef<HTMLDivElement | null>(null)
+  const prefersReducedMotion = useReducedMotion()
+  const time = useTime()
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
@@ -334,6 +345,12 @@ function App() {
     availabilityFilter !== 'all' ||
     deviceFilter !== 'all' ||
     sortMode !== 'latest'
+  const heroAuraY = useTransform(time, [0, 3200, 6400], [0, -16, 0])
+  const heroAuraScale = useTransform(time, [0, 2800, 5600], [1, 1.08, 1])
+  const heroAuraRotate = useTransform(time, [0, 18000], [0, 360])
+  const spotlightOrbY = useTransform(time, [0, 4200, 8400], [0, 14, 0])
+  const spotlightOrbX = useTransform(time, [0, 5000, 10000], [0, -10, 0])
+  const spotlightRingRotate = useTransform(time, [0, 20000], [0, -360])
 
   const featuredStyle: AccentStyle = {
     '--accent': featuredRom.accent,
@@ -587,14 +604,17 @@ function App() {
 
             <nav className="nav-links" aria-label="Primary">
               {sectionLinks.map((item) => (
-                <a
+                <m.a
                   aria-current={activeSection === item.id ? 'page' : undefined}
                   href={`#${item.id}`}
                   key={item.id}
                   onClick={handleSectionAnchorClick}
+                  whileHover={prefersReducedMotion ? undefined : { y: -1.5 }}
+                  whileTap={prefersReducedMotion ? undefined : { scale: 0.98 }}
                 >
-                  {item.label}
-                </a>
+                  {activeSection === item.id ? <m.span className="nav-active-pill" layoutId="nav-active-pill" /> : null}
+                  <span className="nav-link-label">{item.label}</span>
+                </m.a>
               ))}
             </nav>
 
@@ -623,12 +643,23 @@ function App() {
           <Reveal>
             <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
               <div className="hero-copy">
+                <div className="hero-copy-atmosphere" aria-hidden="true">
+                  <m.div
+                    className="hero-copy-orb hero-copy-orb-primary"
+                    style={prefersReducedMotion ? undefined : { y: heroAuraY, scale: heroAuraScale }}
+                  />
+                  <m.div
+                    className="hero-copy-orb hero-copy-orb-secondary"
+                    style={prefersReducedMotion ? undefined : { rotate: heroAuraRotate }}
+                  />
+                </div>
+
                 <div className="hero-kicker-row">
                   <span className="tonal-chip">Nothing Phone 2a / 2a Plus</span>
                   <span className="ghost-pill">Updated {siteLastUpdated}</span>
                 </div>
 
-                <p className="eyebrow">Release Dashboard</p>
+                <p className="eyebrow">Curated Release Board</p>
                 <h1>Current ROM releases, clearly surfaced.</h1>
                 <p className="lede">Everything important for the Nothing Phone 2a lineup, without the chat noise.</p>
 
@@ -649,18 +680,36 @@ function App() {
                 </div>
 
                 <div className="hero-stats-grid" aria-label="Project highlights">
-                  {heroStats.map((stat) => (
-                    <article className="metric-card" key={stat.label}>
+                  {heroStats.map((stat, index) => (
+                    <m.article
+                      animate={{ opacity: 1, y: 0 }}
+                      className="metric-card"
+                      initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+                      key={stat.label}
+                      transition={{ delay: 0.14 + index * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                      whileHover={prefersReducedMotion ? undefined : { y: -5 }}
+                    >
                       <span>{stat.label}</span>
                       <strong>{stat.value}</strong>
                       <small>{stat.detail}</small>
-                    </article>
+                    </m.article>
                   ))}
                 </div>
               </div>
 
               <div className="hero-stage">
                 <ReactivePanel as="article" className="hero-spotlight" intensity={0.75} style={featuredStyle}>
+                  <div className="hero-spotlight-atmosphere" aria-hidden="true">
+                    <m.div
+                      className="hero-spotlight-orb"
+                      style={prefersReducedMotion ? undefined : { x: spotlightOrbX, y: spotlightOrbY }}
+                    />
+                    <m.div
+                      className="hero-spotlight-ring"
+                      style={prefersReducedMotion ? undefined : { rotate: spotlightRingRotate }}
+                    />
+                  </div>
+
                   <div className="feature-topline">
                     <span className="feature-badge">Spotlight build</span>
                     <span className="feature-version">{featuredRom.version}</span>
@@ -675,8 +724,15 @@ function App() {
                   </div>
 
                   <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
-                    {featuredRom.highlights.slice(0, 2).map((item) => (
-                      <li key={item}>{item}</li>
+                    {featuredRom.highlights.slice(0, 2).map((item, index) => (
+                      <m.li
+                        animate={{ opacity: 1, x: 0 }}
+                        initial={prefersReducedMotion ? false : { opacity: 0, x: -16 }}
+                        key={item}
+                        transition={{ delay: 0.18 + index * 0.06, duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
+                      >
+                        {item}
+                      </m.li>
                     ))}
                   </ul>
 

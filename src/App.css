@@ -252,6 +252,9 @@ strong {
   width: min(1380px, calc(100vw - 48px));
   margin: 1rem auto 0;
   border-radius: var(--radius-xl);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    color-mix(in srgb, var(--surface) 92%, black 8%);
 }
 
 .topbar-content {
@@ -308,18 +311,41 @@ strong {
 }
 
 .nav-links a {
+  position: relative;
+  isolation: isolate;
   padding: 0.72rem 0.88rem;
   border-radius: 999px;
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
   transition: color 180ms ease, background-color 180ms ease;
+  overflow: hidden;
 }
 
 .nav-links a[aria-current='page'],
 .nav-links a:hover {
   color: var(--text);
   background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-link-label,
+.nav-active-pill {
+  position: relative;
+  z-index: 1;
+}
+
+.nav-active-pill {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--accent-hot) 22%, var(--outline));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 100%),
+    color-mix(in srgb, var(--surface-raised) 78%, var(--accent-hot) 10%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 22px rgba(7, 8, 14, 0.18);
 }
 
 .topbar-actions {
@@ -392,9 +418,51 @@ strong {
 }
 
 .hero-copy {
+  position: relative;
   display: grid;
   align-content: start;
   gap: 0.95rem;
+  overflow: hidden;
+}
+
+.hero-copy > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-copy-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-copy-orb {
+  position: absolute;
+  border-radius: 999px;
+  filter: blur(0);
+  opacity: 0.9;
+}
+
+.hero-copy-orb-primary {
+  top: 7%;
+  right: -3rem;
+  width: 12rem;
+  height: 12rem;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(255, 187, 122, 0.34), transparent 60%),
+    radial-gradient(circle at 70% 65%, rgba(255, 117, 87, 0.22), transparent 62%);
+}
+
+.hero-copy-orb-secondary {
+  bottom: -3.8rem;
+  left: 12%;
+  width: 8.5rem;
+  height: 8.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background:
+    radial-gradient(circle at center, rgba(92, 122, 255, 0.18), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), transparent 100%);
 }
 
 .hero-kicker-row,
@@ -484,6 +552,9 @@ strong {
   padding: 0.85rem;
   display: grid;
   gap: 0.25rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 100%),
+    color-mix(in srgb, var(--surface-raised) 84%, black 7%);
 }
 
 .metric-card strong {
@@ -521,9 +592,50 @@ strong {
 }
 
 .hero-spotlight {
+  position: relative;
   display: grid;
   gap: 0.8rem;
   min-height: 100%;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 100%),
+    color-mix(in srgb, var(--surface) 82%, var(--accent-soft) 18%);
+}
+
+.hero-spotlight > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-spotlight-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-spotlight-orb {
+  position: absolute;
+  top: -2.25rem;
+  right: -1.5rem;
+  width: 11rem;
+  height: 11rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--accent, var(--accent-hot)) 28%, white 6%), transparent 55%),
+    radial-gradient(circle at 72% 70%, color-mix(in srgb, var(--accent, var(--accent-hot)) 22%, transparent), transparent 62%);
+  opacity: 0.9;
+}
+
+.hero-spotlight-ring {
+  position: absolute;
+  right: 1.35rem;
+  bottom: 1.1rem;
+  width: 7.5rem;
+  height: 7.5rem;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--accent, var(--outline)) 26%, var(--outline));
+  opacity: 0.5;
 }
 
 .spotlight-header {
