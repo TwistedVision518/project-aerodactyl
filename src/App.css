@@ -2,6 +2,11 @@
   position: relative;
   min-height: 100vh;
   overflow-x: clip;
+}
+
+.experience-shell {
+  position: relative;
+  z-index: 1;
   opacity: 0;
   filter: blur(18px) saturate(0.88);
   transform: translateY(22px) scale(0.985);
@@ -12,7 +17,7 @@
   will-change: opacity, transform, filter;
 }
 
-.app-shell[data-loaded='true'] {
+.experience-shell[data-loaded='true'] {
   opacity: 1;
   filter: blur(0) saturate(1);
   transform: translateY(0) scale(1);
@@ -108,6 +113,22 @@
     radial-gradient(circle at 66% 52%, color-mix(in srgb, var(--scene-wave-c) 58%, transparent), transparent 46%);
   opacity: 0.54;
   filter: blur(68px) saturate(120%);
+  will-change: transform, opacity;
+  z-index: 2;
+}
+
+.scene-gradient-middle {
+  inset: 28vh 50% auto;
+  width: 74vw;
+  height: 24vw;
+  border-radius: 999px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--scene-wave-a) 38%, transparent), transparent 34%),
+    radial-gradient(circle at 34% 52%, color-mix(in srgb, var(--scene-wave-b) 26%, transparent), transparent 38%),
+    radial-gradient(circle at 68% 50%, color-mix(in srgb, var(--scene-wave-c) 28%, transparent), transparent 40%);
+  opacity: 0.42;
+  filter: blur(54px) saturate(116%);
   will-change: transform, opacity;
   z-index: 2;
 }
@@ -2148,6 +2169,33 @@ strong {
     display: none;
   }
 
+  .scene-gradient-top {
+    inset: -8vw 50% auto;
+    width: 96vw;
+    height: 42vw;
+    opacity: 0.58;
+    filter: blur(52px) saturate(114%);
+  }
+
+  .scene-gradient-middle {
+    inset: 24vh 50% auto;
+    width: 94vw;
+    height: 34vw;
+    opacity: 0.4;
+    filter: blur(44px) saturate(108%);
+  }
+
+  .scene-gradient-left,
+  .scene-gradient-right {
+    width: 78vw;
+    height: 36vw;
+    filter: blur(42px) saturate(112%);
+  }
+
+  .scene-grid {
+    opacity: 0.28;
+  }
+
   .page {
     width: calc(100vw - 24px);
     padding-bottom: calc(5.9rem + env(safe-area-inset-bottom, 0px));
@@ -2231,6 +2279,77 @@ strong {
   }
 }
 
+@media (hover: none), (pointer: coarse) {
+  .scene-cursor-glow {
+    display: none;
+  }
+
+  .scene-gradient-left,
+  .scene-gradient-right,
+  .scene-gradient-top,
+  .scene-gradient-middle {
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+  }
+
+  .scene-gradient-left {
+    animation-duration: 18s;
+    animation-name: scene-mobile-left;
+  }
+
+  .scene-gradient-right {
+    animation-duration: 20s;
+    animation-name: scene-mobile-right;
+  }
+
+  .scene-gradient-top {
+    animation-duration: 22s;
+    animation-name: scene-mobile-top;
+  }
+
+  .scene-gradient-middle {
+    animation-duration: 16s;
+    animation-name: scene-mobile-middle;
+  }
+}
+
+@keyframes scene-mobile-left {
+  from {
+    transform: translate3d(0, 0, 0) rotate(10deg) scale(0.98);
+  }
+  to {
+    transform: translate3d(5vw, -3vh, 0) rotate(16deg) scale(1.04);
+  }
+}
+
+@keyframes scene-mobile-right {
+  from {
+    transform: translate3d(0, 0, 0) rotate(-10deg) scale(1.02);
+  }
+  to {
+    transform: translate3d(-5vw, -3vh, 0) rotate(-16deg) scale(0.98);
+  }
+}
+
+@keyframes scene-mobile-top {
+  from {
+    transform: translate3d(-50%, 0, 0) rotate(-2deg) scale(0.98);
+  }
+  to {
+    transform: translate3d(-50%, 3vh, 0) rotate(4deg) scale(1.03);
+  }
+}
+
+@keyframes scene-mobile-middle {
+  from {
+    transform: translate3d(-50%, 0, 0) rotate(0deg) scale(0.97);
+  }
+  to {
+    transform: translate3d(-50%, -2.5vh, 0) rotate(-3deg) scale(1.03);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reactive-panel,
   .control-toggle,
@@ -2251,6 +2370,7 @@ strong {
   .scene-gradient-left,
   .scene-gradient-right,
   .scene-gradient-top,
+  .scene-gradient-middle,
   .scene-grid,
   .reveal {
     transition-duration: 0.01ms !important;
@@ -2258,7 +2378,7 @@ strong {
     transform: none !important;
   }
 
-  .app-shell {
+  .experience-shell {
     filter: none !important;
   }
 }

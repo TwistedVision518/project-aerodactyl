@@ -268,6 +268,7 @@ function App() {
   const [activeRomId, setActiveRomId] = useState<string | null>(null)
   const [selectedResourceByRom, setSelectedResourceByRom] = useState<Record<string, string>>({})
   const [resourceMenuOpen, setResourceMenuOpen] = useState(false)
+  const [pointerSceneEnabled, setPointerSceneEnabled] = useState(false)
   const resourceMenuRef = useRef<HTMLDivElement | null>(null)
   const prefersReducedMotion = useReducedMotion()
   const sceneCursorX = useMotionValue(0)
@@ -369,6 +370,10 @@ function App() {
   const sceneTopY = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [-30, 30])
   const sceneTopRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [-6, 6])
   const sceneTopScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [1.05, 0.97])
+  const sceneMiddleX = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [42, -42])
+  const sceneMiddleY = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [-18, 18])
+  const sceneMiddleRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [4, -4])
+  const sceneMiddleScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [0.98, 1.04])
   const motionEase = [0.22, 1, 0.36, 1] as const
 
   const heroContainerVariants = prefersReducedMotion
@@ -432,9 +437,31 @@ function App() {
   }, [themeMode])
 
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      return
+    }
+
+    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const syncPointerScene = () => setPointerSceneEnabled(mediaQuery.matches)
+
+    syncPointerScene()
+
+    mediaQuery.addEventListener('change', syncPointerScene)
+
+    return () => mediaQuery.removeEventListener('change', syncPointerScene)
+  }, [])
+
+  useEffect(() => {
     if (typeof window === 'undefined' || prefersReducedMotion) {
       sceneCursorX.set(0)
       sceneCursorY.set(0)
+      scenePointerOffsetX.set(0)
+      scenePointerOffsetY.set(0)
+      scenePointerActive.set(0)
+      return
+    }
+
+    if (!pointerSceneEnabled) {
       scenePointerOffsetX.set(0)
       scenePointerOffsetY.set(0)
       scenePointerActive.set(0)
@@ -478,6 +505,7 @@ function App() {
       window.removeEventListener('blur', resetPointer)
     }
   }, [
+    pointerSceneEnabled,
     prefersReducedMotion,
     sceneCursorX,
     sceneCursorY,
@@ -688,46 +716,55 @@ function App() {
       {loading ? <LoadingScreen onComplete={() => setLoading(false)} /> : null}
 
       <LazyMotion features={domAnimation}>
-        <div className="app-shell scene-root" data-loaded={!loading}>
-        <div className="interactive-scene" aria-hidden="true">
-          <div className="scene-vignette" />
-          <m.div
-            className="scene-cursor-glow"
-            style={
-              prefersReducedMotion
-                ? undefined
-                : { x: sceneCursorXSpring, y: sceneCursorYSpring, opacity: sceneCursorGlowOpacity }
-            }
-          />
-          <m.div
-            className="scene-gradient scene-gradient-left"
-            style={
-              prefersReducedMotion
-                ? undefined
-                : { x: sceneLeftX, y: sceneLeftY, rotate: sceneLeftRotate, scale: sceneLeftScale }
-            }
-          />
-          <m.div
-            className="scene-gradient scene-gradient-right"
-            style={
-              prefersReducedMotion
-                ? undefined
-                : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
-            }
-          />
-          <m.div
-            className="scene-gradient scene-gradient-top"
-            style={
-              prefersReducedMotion
-                ? undefined
-                : { x: sceneTopX, y: sceneTopY, rotate: sceneTopRotate, scale: sceneTopScale }
-            }
-          />
-          <div className="scene-grid" />
-          <div className="scene-noise" />
-        </div>
+        <div className="app-shell scene-root">
+          <div className="interactive-scene" aria-hidden="true">
+            <div className="scene-vignette" />
+            <m.div
+              className="scene-cursor-glow"
+              style={
+                prefersReducedMotion || !pointerSceneEnabled
+                  ? undefined
+                  : { x: sceneCursorXSpring, y: sceneCursorYSpring, opacity: sceneCursorGlowOpacity }
+              }
+            />
+            <m.div
+              className="scene-gradient scene-gradient-left"
+              style={
+                prefersReducedMotion || !pointerSceneEnabled
+                  ? undefined
+                  : { x: sceneLeftX, y: sceneLeftY, rotate: sceneLeftRotate, scale: sceneLeftScale }
+              }
+            />
+            <m.div
+              className="scene-gradient scene-gradient-right"
+              style={
+                prefersReducedMotion || !pointerSceneEnabled
+                  ? undefined
+                  : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
+              }
+            />
+            <m.div
+              className="scene-gradient scene-gradient-top"
+              style={
+                prefersReducedMotion || !pointerSceneEnabled
+                  ? undefined
+                  : { x: sceneTopX, y: sceneTopY, rotate: sceneTopRotate, scale: sceneTopScale }
+              }
+            />
+            <m.div
+              className="scene-gradient scene-gradient-middle"
+              style={
+                prefersReducedMotion || !pointerSceneEnabled
+                  ? undefined
+                  : { x: sceneMiddleX, y: sceneMiddleY, rotate: sceneMiddleRotate, scale: sceneMiddleScale }
+              }
+            />
+            <div className="scene-grid" />
+            <div className="scene-noise" />
+          </div>
 
-        <header className="topbar">
+          <div className="experience-shell" data-loaded={!loading}>
+            <header className="topbar">
           <div className="topbar-content">
             <a className="brand" href="#top" onClick={handleSectionAnchorClick}>
               <span className="brand-mark" aria-hidden="true">
@@ -774,9 +811,9 @@ function App() {
               </a>
             </div>
           </div>
-        </header>
+            </header>
 
-        <main className="page" id="top">
+            <main className="page" id="top">
           <Reveal>
             <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
               <m.div
@@ -1660,9 +1697,10 @@ function App() {
               </div>
             </section>
           </Reveal>
-        </main>
+            </main>
+          </div>
 
-        <nav className="mobile-dock" aria-label="Mobile section navigation">
+          <nav className="mobile-dock" aria-label="Mobile section navigation">
           {sectionLinks.map((item) => (
             <a
               aria-current={activeSection === item.id ? 'page' : undefined}
@@ -1678,7 +1716,7 @@ function App() {
               <span className="mobile-dock-text">{item.shortLabel}</span>
             </a>
           ))}
-        </nav>
+          </nav>
         </div>
       </LazyMotion>
     </>
