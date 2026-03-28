@@ -7,6 +7,7 @@ import {
   type CSSProperties,
   type MouseEvent,
 } from 'react'
+import { AnimatePresence, LazyMotion, domAnimation, m } from 'motion/react'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { LoadingScreen } from './components/LoadingScreen'
@@ -246,6 +247,7 @@ function App() {
   const [deviceFilter, setDeviceFilter] = useState<DeviceFilter>('all')
   const [sortMode, setSortMode] = useState<SortMode>('latest')
   const [communityLinkCopied, setCommunityLinkCopied] = useState(false)
+  const [expandedReleaseNotes, setExpandedReleaseNotes] = useState<Record<string, boolean>>({})
 
   const deferredQuery = useDeferredValue(romQuery)
   const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
@@ -435,11 +437,19 @@ function App() {
     })
   }
 
+  const toggleReleaseNotes = (romName: string) => {
+    setExpandedReleaseNotes((current) => ({
+      ...current,
+      [romName]: !current[romName],
+    }))
+  }
+
   return (
     <>
       {loading ? <LoadingScreen onComplete={() => setLoading(false)} /> : null}
 
-      <div className="app-shell scene-root" data-loaded={!loading}>
+      <LazyMotion features={domAnimation}>
+        <div className="app-shell scene-root" data-loaded={!loading}>
         <div className="interactive-scene" aria-hidden="true">
           <div className="scene-gradient scene-gradient-left" />
           <div className="scene-gradient scene-gradient-right" />
@@ -578,7 +588,7 @@ function App() {
                       <span className="ghost-pill">Telegram</span>
                     </div>
 
-                    <h3>Keep support, screenshots, and release chatter in one public place.</h3>
+                    <h3>Keep support and release chatter in one public place.</h3>
                     <p className="utility-copy">{communityHub.summary}</p>
 
                     <div className="hero-inline-actions">
@@ -603,12 +613,9 @@ function App() {
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">Command Center</p>
-                  <h2>The part of the homepage that actually helps you decide what to open next.</h2>
+                  <h2>See the newest builds first and jump straight to the right release.</h2>
                 </div>
-                <p>
-                  Fresh builds, release availability, and direct jump points in one tighter
-                  command view.
-                </p>
+                <p>Fresh builds and direct jump points in one tighter command view.</p>
               </div>
 
               <div className="command-layout">
@@ -690,12 +697,9 @@ function App() {
               <div className="section-heading">
                 <div>
                   <p className="eyebrow">ROM Explorer</p>
-                  <h2>Search the lineup by device, availability, or build intent without losing context.</h2>
+                  <h2>Filter the lineup by device or release state without losing context.</h2>
                 </div>
-                <p>
-                  The explorer stays quick for first-time visitors but still works as a maintainer-facing
-                  release board.
-                </p>
+                <p>The explorer stays quick for first-time visitors and useful for regular testers.</p>
               </div>
 
               <div className="explorer-toolbar" aria-label="ROM filters">
@@ -861,6 +865,8 @@ function App() {
           <section className="rom-sections">
             {filteredRoms.map((rom, index) => {
               const links = getReleaseLinks(rom)
+              const isReleaseNotesOpen = expandedReleaseNotes[rom.name] ?? false
+              const releaseDisclosureId = `${toSectionId(rom.name)}-release-notes`
               const releaseNoteCount = rom.highlights.length + rom.changelog.length
               const accentStyle: AccentStyle = {
                 '--accent': rom.accent,
@@ -898,44 +904,81 @@ function App() {
 
                     <div className="rom-section-body">
                       <div className="rom-section-main">
-                        <details className="release-disclosure">
-                          <summary className="release-disclosure-summary">
+                        <m.div
+                          animate={isReleaseNotesOpen ? 'open' : 'closed'}
+                          className="release-disclosure"
+                          data-open={isReleaseNotesOpen ? 'true' : 'false'}
+                          layout
+                          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                        >
+                          <button
+                            aria-controls={releaseDisclosureId}
+                            aria-expanded={isReleaseNotesOpen}
+                            className="release-disclosure-trigger"
+                            onClick={() => toggleReleaseNotes(rom.name)}
+                            type="button"
+                          >
                             <div className="release-disclosure-copy">
                               <span className="section-label">Release notes</span>
-                              <strong>Open the full changelog and highlights</strong>
+                              <strong>Highlights and changelog</strong>
                               <small>
-                                {releaseNoteCount} notes covering standout changes, fixes, and build context.
+                                {releaseNoteCount} notes covering the key fixes, changes, and build context.
                               </small>
                             </div>
                             <span className="release-disclosure-pill">
                               {rom.changelog.length} changelog / {rom.highlights.length} highlights
+                              <m.span
+                                animate={{ rotate: isReleaseNotesOpen ? 45 : 0 }}
+                                className="release-disclosure-icon"
+                                transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+                              >
+                                +
+                              </m.span>
                             </span>
-                          </summary>
+                          </button>
 
-                          <div className="release-disclosure-content">
-                            <div className="content-cluster">
-                              <h3>Why this release stands out</h3>
-                              <ul className="bullet-list">
-                                {rom.highlights.map((item) => (
-                                  <li key={item}>{item}</li>
-                                ))}
-                              </ul>
-                            </div>
+                          <AnimatePresence initial={false}>
+                            {isReleaseNotesOpen ? (
+                              <m.div
+                                animate={{ height: 'auto', opacity: 1 }}
+                                className="release-disclosure-motion"
+                                exit={{ height: 0, opacity: 0 }}
+                                id={releaseDisclosureId}
+                                initial={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                              >
+                                <m.div
+                                  animate={{ y: 0, opacity: 1 }}
+                                  className="release-disclosure-content"
+                                  initial={{ y: -10, opacity: 0 }}
+                                  transition={{ duration: 0.22, delay: 0.03, ease: [0.22, 1, 0.36, 1] }}
+                                >
+                                  <div className="content-cluster">
+                                    <h3>Why this release stands out</h3>
+                                    <ul className="bullet-list">
+                                      {rom.highlights.map((item) => (
+                                        <li key={item}>{item}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
 
-                            <div className="content-cluster">
-                              <div className="cluster-head">
-                                <h3>Build changelog</h3>
-                                <span>{rom.changelog.length} notes</span>
-                              </div>
+                                  <div className="content-cluster">
+                                    <div className="cluster-head">
+                                      <h3>Build changelog</h3>
+                                      <span>{rom.changelog.length} notes</span>
+                                    </div>
 
-                              <ul className="timeline-list">
-                                {rom.changelog.map((item) => (
-                                  <li key={item}>{item}</li>
-                                ))}
-                              </ul>
-                            </div>
-                          </div>
-                        </details>
+                                    <ul className="timeline-list">
+                                      {rom.changelog.map((item) => (
+                                        <li key={item}>{item}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                </m.div>
+                              </m.div>
+                            ) : null}
+                          </AnimatePresence>
+                        </m.div>
                       </div>
 
                       <aside className="rom-section-side">
@@ -982,10 +1025,7 @@ function App() {
                   <p className="eyebrow">Camera Picks</p>
                   <h2>Keep camera recommendations as intentional as the release board.</h2>
                 </div>
-                <p>
-                  When GCam entries are ready, this section turns into a cleaner reference than asking
-                  users to scroll through chat logs.
-                </p>
+                <p>When GCam entries are ready, this becomes a cleaner reference than chat logs.</p>
               </div>
 
               {gcamEntries.length > 0 ? (
@@ -1025,10 +1065,7 @@ function App() {
                     <span className="section-label">Camera catalog</span>
                     <h3>Ready for curated APK and config recommendations.</h3>
                   </div>
-                  <p>
-                    The layout is prepared, but it stays honest: until there are real GCam picks, it
-                    communicates that clearly instead of pretending there is content.
-                  </p>
+                  <p>The layout is ready, but it stays honest until there are real GCam picks.</p>
                   {communityHubHasLink ? (
                     <a href={communityHub.telegramUrl} rel="noreferrer" target="_blank">
                       Ask in community
@@ -1047,10 +1084,7 @@ function App() {
                   <p className="eyebrow">Device Coverage</p>
                   <h2>Two devices, one clearer support map.</h2>
                 </div>
-                <p>
-                  The device section is now positioned as a support overview, not filler at the bottom
-                  of the page.
-                </p>
+                <p>The device section works as a quick support overview, not filler.</p>
               </div>
 
               <div className="support-grid">
@@ -1094,7 +1128,8 @@ function App() {
             </a>
           ))}
         </nav>
-      </div>
+        </div>
+      </LazyMotion>
     </>
   )
 }

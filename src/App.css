@@ -840,6 +840,7 @@ strong {
 .rom-section-body {
   grid-template-columns: minmax(0, 1fr) minmax(260px, 320px);
   padding-top: 1.25rem;
+  align-items: start;
 }
 
 .release-disclosure {
@@ -847,30 +848,56 @@ strong {
   border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.022);
   overflow: hidden;
+  align-self: start;
+  transition:
+    background-color 240ms var(--spring),
+    border-color 240ms var(--spring),
+    box-shadow 240ms var(--spring),
+    transform 240ms var(--spring);
 }
 
-.release-disclosure[open] {
+.release-disclosure[data-open='true'] {
   background: rgba(255, 255, 255, 0.03);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 16px 32px rgba(7, 8, 14, 0.22);
+  transform: translateY(-2px);
 }
 
-.release-disclosure-summary {
-  list-style: none;
+.release-disclosure-trigger {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding: 1.05rem 1.1rem;
+  padding: 0.95rem 1.05rem;
   cursor: pointer;
+  transition:
+    background-color 220ms var(--spring),
+    padding 220ms var(--spring);
 }
 
-.release-disclosure-summary::-webkit-details-marker {
-  display: none;
+.release-disclosure-trigger:hover {
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.release-disclosure-trigger:focus-visible {
+  outline: none;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .release-disclosure-copy {
   display: grid;
   gap: 0.3rem;
+  min-width: 0;
+}
+
+.release-disclosure-copy .section-label {
+  justify-self: start;
 }
 
 .release-disclosure-copy strong {
@@ -897,10 +924,10 @@ strong {
   text-transform: uppercase;
 }
 
-.release-disclosure-pill::after {
-  content: '+';
-  display: inline-grid;
-  place-items: center;
+.release-disclosure-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 1.1rem;
   height: 1.1rem;
   border-radius: 999px;
@@ -908,11 +935,10 @@ strong {
   color: var(--accent, var(--accent-hot));
   font-size: 0.95rem;
   line-height: 1;
-  transition: transform 220ms var(--spring);
 }
 
-.release-disclosure[open] .release-disclosure-pill::after {
-  transform: rotate(45deg);
+.release-disclosure-motion {
+  overflow: hidden;
 }
 
 .release-disclosure-content {
