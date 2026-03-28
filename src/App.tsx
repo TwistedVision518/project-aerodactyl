@@ -14,7 +14,6 @@ import {
   gcamEntries,
   quickStats,
   latestBuilds,
-  latestUpdates,
   roms,
   sourceChanges,
   supportMatrix,
@@ -272,12 +271,11 @@ function App() {
 
             <nav className="nav-links" aria-label="Primary">
               <a data-section="pinned-builds" href="#pinned-builds">01 / Pinned</a>
-              <a data-section="hub-signals" href="#hub-signals">02 / Signals</a>
-              <a data-section="rom-directory" href="#rom-directory">03 / ROMs</a>
-              <a data-section="gcams" href="#gcams">04 / GCams</a>
-              <a data-section="source-pulse" href="#source-pulse">05 / Pulse</a>
-              <a data-section="builder-notes" href="#builder-notes">06 / Notes</a>
-              <a data-section="devices" href="#devices">07 / Devices</a>
+              <a data-section="rom-directory" href="#rom-directory">02 / ROMs</a>
+              <a data-section="gcams" href="#gcams">03 / GCams</a>
+              <a data-section="source-pulse" href="#source-pulse">04 / Pulse</a>
+              <a data-section="builder-notes" href="#builder-notes">05 / Notes</a>
+              <a data-section="devices" href="#devices">06 / Devices</a>
             </nav>
 
             <div className="topbar-actions">
@@ -465,59 +463,6 @@ function App() {
           </section>
         </Reveal>
 
-        <Reveal delay={55}>
-          <section className="home-rail" id="hub-signals">
-            <div className="latest-updates panel">
-              <div className="latest-updates-head">
-                <strong>FRESH SIGNALS</strong>
-                <span>ROMs, sources, and builder notes</span>
-              </div>
-              <div className="latest-updates-list">
-                {latestUpdates.map((entry) => (
-                  <a className="latest-update-item" href={entry.href} key={`${entry.category}-${entry.title}`}>
-                    <span>{entry.category}</span>
-                    <strong>{entry.title}</strong>
-                    <small>{entry.date}</small>
-                  </a>
-                ))}
-              </div>
-            </div>
-
-            <div className="directory-preview panel" id="quick-directory">
-              <div className="latest-updates-head">
-                <strong>QUICK DIRECTORY</strong>
-                <span>Quick jump into each release section</span>
-              </div>
-              <div className="directory-preview-grid">
-                {roms.map((rom) => {
-                  const accentStyle: AccentStyle = {
-                    '--accent': rom.accent,
-                    '--accent-soft': rom.accentSoft,
-                    '--accent-strong': rom.accentStrong,
-                  }
-
-                  return (
-                    <ReactivePanel
-                      as="a"
-                      className="directory-preview-item"
-                      href={`#${toSectionId(rom.name)}`}
-                      intensity={0.42}
-                      key={rom.name}
-                      style={accentStyle}
-                    >
-                      <div className="directory-item-info">
-                        <span>{rom.name}</span>
-                        <small>{rom.branch}</small>
-                      </div>
-                      <strong>{rom.version}</strong>
-                    </ReactivePanel>
-                  )
-                })}
-              </div>
-            </div>
-          </section>
-        </Reveal>
-
         <Reveal delay={80}>
           <section
             className="section-banner panel"
@@ -526,7 +471,7 @@ function App() {
             style={featuredStyle}
           >
             <div className="section-banner-copy">
-              <p className="eyebrow">03 / ROM DIRECTORY</p>
+              <p className="eyebrow">02 / ROM DIRECTORY</p>
               <h2>Browse every tracked ROM with clear version and device context.</h2>
               <p>
                 Tracked builds with release links, supported devices, and changelogs in one view.
@@ -713,7 +658,7 @@ function App() {
           >
             <div className="support-copy">
               <div>
-                <p className="eyebrow">04 / GCAMS</p>
+                <p className="eyebrow">03 / GCAMS</p>
                 <h2>Camera picks without the usual Telegram digging.</h2>
               </div>
               <p>
@@ -777,7 +722,7 @@ function App() {
             >
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">05 / SOURCE PULSE</p>
+                  <p className="eyebrow">04 / SOURCE PULSE</p>
                   <h2>Readable source movement, not raw commit dump</h2>
                 </div>
                 <p>
@@ -817,7 +762,7 @@ function App() {
             >
               <div className="insight-head">
                 <div>
-                  <p className="eyebrow">06 / BUILDER NOTES</p>
+                  <p className="eyebrow">05 / BUILDER NOTES</p>
                   <h2>Builder notes that still feel public-facing</h2>
                 </div>
                 <p>
@@ -850,7 +795,7 @@ function App() {
           >
             <div className="support-copy">
               <div>
-                <p className="eyebrow">07 / DEVICES</p>
+                <p className="eyebrow">06 / DEVICES</p>
                 <h2>Two devices, one shared release map.</h2>
               </div>
               <p>
