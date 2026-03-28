@@ -340,6 +340,7 @@ function App() {
       : ''
   const selectedResourceLink =
     selectedRomLinks.find((link) => link.url === selectedResourceUrl) ?? selectedRomLinks[0] ?? null
+  const latestSignal = latestUpdates[0] ?? null
   const hasActiveExplorerFilters =
     romQuery.length > 0 ||
     availabilityFilter !== 'all' ||
@@ -351,6 +352,41 @@ function App() {
   const spotlightOrbY = useTransform(time, [0, 4200, 8400], [0, 14, 0])
   const spotlightOrbX = useTransform(time, [0, 5000, 10000], [0, -10, 0])
   const spotlightRingRotate = useTransform(time, [0, 20000], [0, -360])
+  const detailOrbY = useTransform(time, [0, 3600, 7200], [0, 11, 0])
+  const detailOrbRotate = useTransform(time, [0, 24000], [0, 360])
+  const motionEase = [0.22, 1, 0.36, 1] as const
+
+  const heroContainerVariants = prefersReducedMotion
+    ? undefined
+    : {
+        hidden: {},
+        show: {
+          transition: {
+            staggerChildren: 0.08,
+            delayChildren: 0.08,
+          },
+        },
+      }
+  const heroItemVariants = prefersReducedMotion
+    ? undefined
+    : {
+        hidden: { opacity: 0, y: 20 },
+        show: {
+          opacity: 1,
+          y: 0,
+          transition: { duration: 0.52, ease: motionEase },
+        },
+      }
+  const heroPanelVariants = prefersReducedMotion
+    ? undefined
+    : {
+        hidden: { opacity: 0, x: 20 },
+        show: {
+          opacity: 1,
+          x: 0,
+          transition: { duration: 0.58, ease: motionEase, delay: 0.12 },
+        },
+      }
 
   const featuredStyle: AccentStyle = {
     '--accent': featuredRom.accent,
@@ -642,7 +678,12 @@ function App() {
         <main className="page" id="top">
           <Reveal>
             <section className="hero panel" data-hub-accent="true" style={featuredStyle}>
-              <div className="hero-copy">
+              <m.div
+                animate={prefersReducedMotion ? undefined : 'show'}
+                className="hero-copy"
+                initial={prefersReducedMotion ? false : 'hidden'}
+                variants={heroContainerVariants}
+              >
                 <div className="hero-copy-atmosphere" aria-hidden="true">
                   <m.div
                     className="hero-copy-orb hero-copy-orb-primary"
@@ -654,16 +695,18 @@ function App() {
                   />
                 </div>
 
-                <div className="hero-kicker-row">
+                <m.div className="hero-kicker-row" variants={heroItemVariants}>
                   <span className="tonal-chip">Nothing Phone 2a / 2a Plus</span>
                   <span className="ghost-pill">Updated {siteLastUpdated}</span>
-                </div>
+                </m.div>
 
-                <p className="eyebrow">Curated Release Board</p>
-                <h1>Current ROM releases, clearly surfaced.</h1>
-                <p className="lede">Everything important for the Nothing Phone 2a lineup, without the chat noise.</p>
+                <m.p className="eyebrow" variants={heroItemVariants}>Curated Release Board</m.p>
+                <m.h1 variants={heroItemVariants}>Current ROM releases, clearly surfaced.</m.h1>
+                <m.p className="lede" variants={heroItemVariants}>
+                  Everything important for the Nothing Phone 2a lineup, without the chat noise.
+                </m.p>
 
-                <div className="hero-actions">
+                <m.div className="hero-actions" variants={heroItemVariants}>
                   <a className="action-primary" href="#rom-directory" onClick={handleSectionAnchorClick}>
                     Browse ROMs
                   </a>
@@ -677,9 +720,9 @@ function App() {
                       Open Community
                     </a>
                   ) : null}
-                </div>
+                </m.div>
 
-                <div className="hero-stats-grid" aria-label="Project highlights">
+                <m.div className="hero-stats-grid" aria-label="Project highlights" variants={heroItemVariants}>
                   {heroStats.map((stat, index) => (
                     <m.article
                       animate={{ opacity: 1, y: 0 }}
@@ -694,10 +737,15 @@ function App() {
                       <small>{stat.detail}</small>
                     </m.article>
                   ))}
-                </div>
-              </div>
+                </m.div>
+              </m.div>
 
-              <div className="hero-stage">
+              <m.div
+                animate={prefersReducedMotion ? undefined : 'show'}
+                className="hero-stage"
+                initial={prefersReducedMotion ? false : 'hidden'}
+                variants={heroPanelVariants}
+              >
                 <ReactivePanel as="article" className="hero-spotlight" intensity={0.75} style={featuredStyle}>
                   <div className="hero-spotlight-atmosphere" aria-hidden="true">
                     <m.div
@@ -755,14 +803,27 @@ function App() {
                 </ReactivePanel>
 
                 <div className="hero-stack">
-                  <ReactivePanel as="article" className="utility-card utility-card-community" intensity={0.55}>
-                    <div className="feature-topline">
+                  <ReactivePanel as="article" className="utility-card utility-card-community utility-card-compact" intensity={0.55}>
+                    <div className="feature-topline utility-compact-topline">
                       <span className="feature-badge">Community hub</span>
-                      <span className="ghost-pill">Telegram</span>
+                      <span className="ghost-pill">{latestSignal ? latestSignal.date : 'Telegram'}</span>
                     </div>
 
-                    <h3>Support and release posts in one place.</h3>
-                    <p className="utility-copy">Open the main community space for support, release chatter, and quick checks.</p>
+                    <div className="utility-compact-body">
+                      <div className="utility-compact-copy">
+                        <h3>Support, release posts, and quick checks in one place.</h3>
+                        <p className="utility-copy">
+                          {latestSignal
+                            ? `Latest pulse: ${latestSignal.title}`
+                            : 'Open the main community space for support and release chatter.'}
+                        </p>
+                      </div>
+
+                      <div className="utility-inline-meta" aria-label="Community context">
+                        <span className="meta-pill">Telegram hub</span>
+                        {latestSignal ? <span className="meta-pill">{latestSignal.category}</span> : null}
+                      </div>
+                    </div>
 
                     <div className="hero-inline-actions">
                       {communityHubHasLink ? (
@@ -777,7 +838,7 @@ function App() {
                     </div>
                   </ReactivePanel>
                 </div>
-              </div>
+              </m.div>
             </section>
           </Reveal>
 
@@ -1134,6 +1195,17 @@ function App() {
                         } as AccentStyle
                       }
                     >
+                      <div className="rom-section-atmosphere" aria-hidden="true">
+                        <m.div
+                          className="rom-section-orb rom-section-orb-primary"
+                          style={prefersReducedMotion ? undefined : { y: detailOrbY }}
+                        />
+                        <m.div
+                          className="rom-section-orb rom-section-orb-secondary"
+                          style={prefersReducedMotion ? undefined : { rotate: detailOrbRotate }}
+                        />
+                      </div>
+
                       <div className="rom-section-header">
                         <div className="rom-heading">
                           <div className="chip-row">
@@ -1152,6 +1224,14 @@ function App() {
                           <span className="version-pill">{selectedRom.version}</span>
                           <small>{formatFreshness(selectedRom.buildDate)}</small>
                         </div>
+                      </div>
+
+                      <div className="rom-section-hero-pills" aria-label="Selected release summary">
+                        <span className="meta-pill">{selectedRom.buildDate}</span>
+                        <span className="meta-pill">{selectedRom.devices.join(' / ')}</span>
+                        <span className="meta-pill">
+                          {selectedRomLinks.length > 0 ? `${selectedRomLinks.length} resources ready` : 'Resources pending'}
+                        </span>
                       </div>
 
                       {filteredRoms.length > 1 ? (
@@ -1264,7 +1344,12 @@ function App() {
                         </div>
 
                         <aside className="rom-section-side">
-                          <div className="rom-facts-card">
+                          <m.div
+                            animate={{ opacity: 1, y: 0 }}
+                            className="rom-facts-card"
+                            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
+                            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1], delay: 0.04 }}
+                          >
                             <div className="rom-fact-row">
                               <span>Build date</span>
                               <strong>{selectedRom.buildDate}</strong>
@@ -1281,9 +1366,14 @@ function App() {
                               <span>Channel label</span>
                               <strong>{selectedRom.channelLabel}</strong>
                             </div>
-                          </div>
+                          </m.div>
 
-                          <div className="card-actions card-actions-stack">
+                          <m.div
+                            animate={{ opacity: 1, y: 0 }}
+                            className="card-actions card-actions-stack"
+                            initial={prefersReducedMotion ? false : { opacity: 0, y: 14 }}
+                            transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
+                          >
                             {selectedRomLinks.length > 0 ? (
                               <div className="resource-panel">
                                 <div className="resource-panel-head">
@@ -1375,7 +1465,7 @@ function App() {
                             ) : (
                               <span className="button-disabled">Release link pending</span>
                             )}
-                          </div>
+                          </m.div>
                         </aside>
                       </div>
                     </ReactivePanel>
