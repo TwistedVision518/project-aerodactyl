@@ -1,0 +1,38 @@
+{
+  "order": 8,
+  "name": "EuclidOS",
+  "version": "v3.1",
+  "status": "Initial build",
+  "branch": "A16 QPR1",
+  "tagline": "Unofficial EuclidOS 3.1 Helios for pacman with included GApps, flashbang fixes, and a clean first public drop.",
+  "buildDate": "January 14, 2026",
+  "devices": ["Nothing Phone 2a"],
+  "channelLabel": "Drive release + Telegram screenshots",
+  "telegramUrl": "https://drive.google.com/file/d/1tQ1-Hckmqby93rBi0BqndpoTEkMoZ1UA/view?usp=drive_link",
+  "telegramLinks": [
+    {
+      "label": "Download build",
+      "url": "https://drive.google.com/file/d/1tQ1-Hckmqby93rBi0BqndpoTEkMoZ1UA/view?usp=drive_link"
+    },
+    {
+      "label": "View screenshots",
+      "url": "https://t.me/NothingPhone2a/306212"
+    }
+  ],
+  "maintenanceNote": "Current focus: initial public release stability, integrity behavior, and banking app edge cases",
+  "accent": "#7fd6ff",
+  "accentSoft": "rgba(127, 214, 255, 0.16)",
+  "accentStrong": "#3a92d8",
+  "highlights": [
+    "Marks the initial EuclidOS 3.1 Helios release for the Nothing Phone 2a.",
+    "Ships with GApps included while leaving Fenrir out of the package by default.",
+    "Includes the fingerprint flashbang fix and passes basic integrity out of the box."
+  ],
+  "changelog": [
+    "Initial 3.1 Helios build for pacman.",
+    "Includes the fingerprint flashbang fix, with thanks noted to FanDeMaraiste92.",
+    "Provides basic integrity out of the box.",
+    "Some banking apps may still need extra work and may not function immediately.",
+    "A clean flash is recommended for this build."
+  ]
+}
