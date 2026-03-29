@@ -974,15 +974,39 @@ strong {
   gap: 0.8rem;
 }
 
+.launchpad-topline {
+  align-items: center;
+}
+
+.launchpad-live-pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.78rem;
+  border: 1px solid color-mix(in srgb, var(--accent-soft, var(--outline)) 38%, var(--outline));
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 100%),
+    color-mix(in srgb, var(--accent-soft, transparent) 28%, var(--surface-raised) 72%);
+  color: color-mix(in srgb, var(--accent, var(--accent-hot)) 78%, white 12%);
+  font-family: var(--font-display);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+}
+
 .launchpad-header h2 {
   margin: 0;
+  max-width: 8.5ch;
+  line-height: 0.92;
 }
 
 .launchpad-header p {
   margin: 0;
-  max-width: 34ch;
+  max-width: 31ch;
   color: var(--muted);
-  line-height: 1.58;
+  line-height: 1.5;
 }
 
 .launchpad-summary {
@@ -2875,6 +2899,45 @@ strong {
 }
 
 @media (max-width: 640px) {
+  .hero-launchpad {
+    padding: 1rem;
+    gap: 0.85rem;
+  }
+
+  .launchpad-topline {
+    display: grid;
+    justify-items: start;
+    gap: 0.5rem;
+  }
+
+  .launchpad-live-pill {
+    padding-inline: 0.72rem;
+    font-size: 0.68rem;
+  }
+
+  .launchpad-header {
+    gap: 0.68rem;
+  }
+
+  .launchpad-header h2 {
+    font-size: clamp(2.35rem, 12vw, 3.5rem);
+    max-width: 7.2ch;
+  }
+
+  .launchpad-header p {
+    max-width: 24ch;
+    font-size: 0.98rem;
+    line-height: 1.44;
+  }
+
+  .launchpad-summary {
+    gap: 0.45rem;
+  }
+
+  .launchpad-list {
+    gap: 0.62rem;
+  }
+
   .hero-ledger {
     padding: 0.9rem;
   }
@@ -2941,6 +3004,14 @@ strong {
 }
 
 @media (max-width: 480px) {
+  .hero-launchpad-orb-primary {
+    top: -2.8rem;
+    right: -2.8rem;
+    width: 11rem;
+    height: 11rem;
+    opacity: 0.72;
+  }
+
   .rom-directory-grid {
     grid-template-columns: 1fr;
   }

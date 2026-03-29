@@ -1007,15 +1007,15 @@ function App() {
                     <div className="hero-launchpad-grid" />
                   </div>
 
-                  <div className="feature-topline">
+                  <div className="feature-topline launchpad-topline">
                     <span className="feature-badge">Launchpad</span>
-                    <span className="feature-version">{releaseReadyRoms.length} live releases</span>
+                    <span className="launchpad-live-pill">{releaseReadyRoms.length} live releases</span>
                   </div>
 
                   <div className="launchpad-header">
                     <div>
                       <h2>Open a build fast.</h2>
-                      <p>The homepage now points straight at live releases instead of trying to crown one ROM as the default.</p>
+                      <p>Pick a live release from the list below and jump straight to the files people actually need.</p>
                     </div>
 
                     <div className="launchpad-summary">
