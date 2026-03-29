@@ -280,6 +280,13 @@ function App() {
   const [selectedResourceByRom, setSelectedResourceByRom] = useState<Record<string, string>>({})
   const [resourceMenuOpen, setResourceMenuOpen] = useState(false)
   const [pointerSceneEnabled, setPointerSceneEnabled] = useState(false)
+  const [coarsePointerMode, setCoarsePointerMode] = useState(() => {
+    if (typeof window === 'undefined') {
+      return false
+    }
+
+    return window.matchMedia('(hover: none), (pointer: coarse)').matches
+  })
   const resourceMenuRef = useRef<HTMLDivElement | null>(null)
   const prefersReducedMotion = useReducedMotion()
   const sceneCursorX = useMotionValue(0)
@@ -390,11 +397,13 @@ function App() {
   const sceneMiddleScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [0.98, 1.04])
   const motionEase = [0.22, 1, 0.36, 1] as const
   const isNativeApp = Capacitor.isNativePlatform()
+  const lightweightUiMode = isNativeApp || prefersReducedMotion || coarsePointerMode
+  const interactiveSceneEnabled = !lightweightUiMode && pointerSceneEnabled
   const usesCoarsePointer = () =>
     typeof window !== 'undefined' &&
     window.matchMedia('(hover: none), (pointer: coarse)').matches
 
-  const heroContainerVariants = prefersReducedMotion
+  const heroContainerVariants = lightweightUiMode
     ? undefined
     : {
         hidden: {},
@@ -405,7 +414,7 @@ function App() {
           },
         },
       }
-  const heroItemVariants = prefersReducedMotion
+  const heroItemVariants = lightweightUiMode
     ? undefined
     : {
         hidden: { opacity: 0, y: 20 },
@@ -415,7 +424,7 @@ function App() {
           transition: { duration: 0.52, ease: motionEase },
         },
       }
-  const heroPanelVariants = prefersReducedMotion
+  const heroPanelVariants = lightweightUiMode
     ? undefined
     : {
         hidden: { opacity: 0, x: 20 },
@@ -449,11 +458,11 @@ function App() {
   }, [themeMode])
 
   useEffect(() => {
-    if (!isNativeApp) {
-      return
-    }
+    document.documentElement.dataset.nativeApp = isNativeApp ? 'true' : 'false'
 
-    void StatusBar.setOverlaysWebView({ overlay: false }).catch(() => undefined)
+    return () => {
+      delete document.documentElement.dataset.nativeApp
+    }
   }, [isNativeApp])
 
   useEffect(() => {
@@ -461,41 +470,58 @@ function App() {
       return
     }
 
-    const backgroundColor = themeMode === 'light' ? '#eef2ff' : '#06070d'
+    let firstFrame = 0
+    let secondFrame = 0
+
+    firstFrame = window.requestAnimationFrame(() => {
+      secondFrame = window.requestAnimationFrame(() => {
+        void SplashScreen.hide({ fadeOutDuration: 140 }).catch(() => undefined)
+      })
+    })
+
+    return () => {
+      window.cancelAnimationFrame(firstFrame)
+      window.cancelAnimationFrame(secondFrame)
+    }
+  }, [isNativeApp])
+
+  useEffect(() => {
+    if (!isNativeApp) {
+      return
+    }
+
+    const backgroundColor = '#00000000'
     const style = themeMode === 'light' ? Style.Dark : Style.Light
 
     void Promise.allSettled([
+      StatusBar.setOverlaysWebView({ overlay: true }),
       StatusBar.setBackgroundColor({ color: backgroundColor }),
       StatusBar.setStyle({ style }),
     ])
   }, [isNativeApp, themeMode])
 
   useEffect(() => {
-    if (!isNativeApp || loading) {
-      return
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      void SplashScreen.hide({ fadeOutDuration: 220 }).catch(() => undefined)
-    }, 90)
-
-    return () => window.clearTimeout(timeoutId)
-  }, [isNativeApp, loading])
-
-  useEffect(() => {
     if (typeof window === 'undefined') {
       return
     }
 
-    const mediaQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const syncPointerScene = () => setPointerSceneEnabled(mediaQuery.matches)
+    const finePointerQuery = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const coarsePointerQuery = window.matchMedia('(hover: none), (pointer: coarse)')
+    const syncPointerModes = () => {
+      setPointerSceneEnabled(!isNativeApp && finePointerQuery.matches)
+      setCoarsePointerMode(coarsePointerQuery.matches)
+    }
 
-    syncPointerScene()
+    syncPointerModes()
 
-    mediaQuery.addEventListener('change', syncPointerScene)
+    finePointerQuery.addEventListener('change', syncPointerModes)
+    coarsePointerQuery.addEventListener('change', syncPointerModes)
 
-    return () => mediaQuery.removeEventListener('change', syncPointerScene)
-  }, [])
+    return () => {
+      finePointerQuery.removeEventListener('change', syncPointerModes)
+      coarsePointerQuery.removeEventListener('change', syncPointerModes)
+    }
+  }, [isNativeApp])
 
   useEffect(() => {
     if (typeof window === 'undefined' || prefersReducedMotion) {
@@ -706,7 +732,7 @@ function App() {
 
   const scrollSelectedRomIntoView = () => {
     const scrollBehavior: ScrollBehavior =
-      prefersReducedMotion || usesCoarsePointer() ? 'auto' : 'smooth'
+      lightweightUiMode || usesCoarsePointer() ? 'auto' : 'smooth'
 
     window.requestAnimationFrame(() => {
       document
@@ -748,7 +774,7 @@ function App() {
   }
 
   const toggleTheme = () => {
-    if (prefersReducedMotion) {
+    if (lightweightUiMode) {
       setThemeMode(themeMode === 'light' ? 'dark' : 'light')
       return
     }
@@ -830,16 +856,16 @@ function App() {
 
   return (
     <>
-      {loading ? <LoadingScreen onComplete={() => setLoading(false)} /> : null}
+      {loading ? <LoadingScreen nativeMode={isNativeApp} onComplete={() => setLoading(false)} /> : null}
 
       <LazyMotion features={domAnimation}>
-        <div className="app-shell scene-root">
+        <div className={`app-shell scene-root ${isNativeApp ? 'is-native-app' : ''}`.trim()}>
           <div className="interactive-scene" aria-hidden="true">
             <div className="scene-vignette" />
             <m.div
               className="scene-cursor-glow"
               style={
-                prefersReducedMotion || !pointerSceneEnabled
+                !interactiveSceneEnabled
                   ? undefined
                   : { x: sceneCursorXSpring, y: sceneCursorYSpring, opacity: sceneCursorGlowOpacity }
               }
@@ -847,7 +873,7 @@ function App() {
             <m.div
               className="scene-gradient scene-gradient-left"
               style={
-                prefersReducedMotion || !pointerSceneEnabled
+                !interactiveSceneEnabled
                   ? undefined
                   : { x: sceneLeftX, y: sceneLeftY, rotate: sceneLeftRotate, scale: sceneLeftScale }
               }
@@ -855,7 +881,7 @@ function App() {
             <m.div
               className="scene-gradient scene-gradient-right"
               style={
-                prefersReducedMotion || !pointerSceneEnabled
+                !interactiveSceneEnabled
                   ? undefined
                   : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
               }
@@ -863,7 +889,7 @@ function App() {
             <m.div
               className="scene-gradient scene-gradient-top"
               style={
-                prefersReducedMotion || !pointerSceneEnabled
+                !interactiveSceneEnabled
                   ? undefined
                   : { x: sceneTopX, y: sceneTopY, rotate: sceneTopRotate, scale: sceneTopScale }
               }
@@ -871,7 +897,7 @@ function App() {
             <m.div
               className="scene-gradient scene-gradient-middle"
               style={
-                prefersReducedMotion || !pointerSceneEnabled
+                !interactiveSceneEnabled
                   ? undefined
                   : { x: sceneMiddleX, y: sceneMiddleY, rotate: sceneMiddleRotate, scale: sceneMiddleScale }
               }

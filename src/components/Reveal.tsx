@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useState } from 'react'
+import { Capacitor } from '@capacitor/core'
 import { m, useReducedMotion } from 'motion/react'
 
 type RevealProps = {
@@ -9,27 +10,30 @@ type RevealProps = {
 
 export function Reveal({ children, className = '', delay = 0 }: RevealProps) {
   const prefersReducedMotion = useReducedMotion()
+  const isNativeApp = Capacitor.isNativePlatform()
   const [useViewportReveal, setUseViewportReveal] = useState(() => {
     if (typeof window === 'undefined') {
-      return true
+      return !isNativeApp
+    }
+
+    if (isNativeApp) {
+      return false
     }
 
     return window.matchMedia('(hover: hover) and (pointer: fine)').matches
   })
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || isNativeApp) {
       return
     }
 
     const media = window.matchMedia('(hover: hover) and (pointer: fine)')
     const syncRevealMode = () => setUseViewportReveal(media.matches)
-
-    syncRevealMode()
     media.addEventListener('change', syncRevealMode)
 
     return () => media.removeEventListener('change', syncRevealMode)
-  }, [])
+  }, [isNativeApp])
 
   const useImmediateReveal = prefersReducedMotion || !useViewportReveal
 

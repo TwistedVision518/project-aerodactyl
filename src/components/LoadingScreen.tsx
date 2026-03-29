@@ -8,7 +8,13 @@ const LOADING_PARTS = [
 
 const FRAME_INTERVAL = 1000 / 60
 
-export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
+export function LoadingScreen({
+  nativeMode = false,
+  onComplete,
+}: {
+  nativeMode?: boolean
+  onComplete: () => void
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isVisible, setIsVisible] = useState(true)
   const [isPreloaded, setIsPreloaded] = useState(false)
@@ -25,7 +31,20 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const lastTimeRef = useRef(0)
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
+    if (!nativeMode) {
+      return
+    }
+
+    const finishTimer = window.setTimeout(() => {
+      setIsVisible(false)
+      window.setTimeout(onComplete, 280)
+    }, 900)
+
+    return () => window.clearTimeout(finishTimer)
+  }, [nativeMode, onComplete])
+
+  useEffect(() => {
+    if (nativeMode || typeof window === 'undefined') {
       return
     }
 
@@ -48,9 +67,13 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     })
 
     return () => observer.disconnect()
-  }, [])
+  }, [nativeMode])
 
   useEffect(() => {
+    if (nativeMode) {
+      return
+    }
+
     // 1. Preload all images
     let loadedCount = 0
     const totalFrames = LOADING_PARTS.reduce((acc, p) => acc + p.frames, 0)
@@ -86,10 +109,10 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
     }, 5000)
 
     return () => clearTimeout(preloadTimeout)
-  }, [])
+  }, [nativeMode])
 
   useEffect(() => {
-    if (!isPreloaded) return
+    if (nativeMode || !isPreloaded) return
 
     let animationId: number
     const canvas = canvasRef.current
@@ -165,7 +188,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       cancelAnimationFrame(animationId)
       clearTimeout(timeout)
     }
-  }, [isPreloaded, onComplete])
+  }, [isPreloaded, nativeMode, onComplete])
 
   return (
     <div className={`loading-overlay ${!isVisible ? 'is-hidden' : ''}`}>
@@ -177,20 +200,29 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
         <div className="loading-scene-aura" />
       </div>
       <div className="loading-content">
-        <span className="loading-badge">Booting release dashboard</span>
-        <div className="loading-panel">
-          <div className={`loading-logo-shell ${hasRenderedFrame ? 'is-hidden' : ''}`.trim()} aria-hidden="true">
+        <span className="loading-badge">{nativeMode ? 'Opening app shell' : 'Booting release dashboard'}</span>
+        <div className={`loading-panel ${nativeMode ? 'is-native' : ''}`.trim()}>
+          <div
+            className={`loading-logo-shell ${nativeMode ? 'is-native' : ''} ${hasRenderedFrame ? 'is-hidden' : ''}`.trim()}
+            aria-hidden="true"
+          >
             <span className="loading-logo-mark">
               <img alt="" className="loading-logo-image" src="/favicon.svg" />
             </span>
           </div>
-          <canvas 
-            ref={canvasRef}
-            className={`loading-canvas ${hasRenderedFrame ? 'is-visible' : ''}`.trim()}
-          />
+          {nativeMode ? (
+            <div className="loading-native-progress" aria-hidden="true">
+              <span className="loading-native-progress-bar" />
+            </div>
+          ) : (
+            <canvas
+              ref={canvasRef}
+              className={`loading-canvas ${hasRenderedFrame ? 'is-visible' : ''}`.trim()}
+            />
+          )}
           <div className="loading-copy">
             <strong>Project Aerodactyl</strong>
-            <span>Preparing the release hub</span>
+            <span>{nativeMode ? 'Preparing the Android app' : 'Preparing the release hub'}</span>
           </div>
         </div>
       </div>
