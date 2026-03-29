@@ -1541,8 +1541,21 @@ strong {
 
 .rom-directory-item.surface-signal {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 74%, white 4%), color-mix(in srgb, var(--surface-raised) 66%, black 8%)),
-    color-mix(in srgb, var(--accent-soft, transparent) 22%, var(--surface-raised) 78%);
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 60%, white 3%), color-mix(in srgb, var(--surface-raised) 48%, black 6%)),
+    color-mix(in srgb, var(--accent-soft, transparent) 32%, transparent);
+}
+
+.rom-directory-item.surface-signal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 22% 22%, color-mix(in srgb, var(--scene-wave-a) 34%, transparent), transparent 34%),
+    radial-gradient(circle at 78% 78%, color-mix(in srgb, var(--scene-wave-b) 28%, transparent), transparent 40%),
+    radial-gradient(circle at 76% 16%, color-mix(in srgb, var(--scene-wave-c) 18%, transparent), transparent 36%);
+  opacity: 0.92;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .rom-directory-item.surface-signal::after {
@@ -1661,8 +1674,22 @@ strong {
 
 .rom-section.surface-editorial {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 54%, white 8%), color-mix(in srgb, var(--surface-raised) 64%, black 10%)),
-    color-mix(in srgb, var(--accent-soft, transparent) 24%, var(--surface) 76%);
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 42%, white 6%), color-mix(in srgb, var(--surface-raised) 46%, black 8%)),
+    color-mix(in srgb, var(--accent-soft, transparent) 34%, transparent);
+}
+
+.rom-section.surface-editorial::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--scene-wave-a) 36%, transparent), transparent 30%),
+    radial-gradient(circle at 78% 20%, color-mix(in srgb, var(--scene-wave-c) 24%, transparent), transparent 34%),
+    radial-gradient(circle at 60% 84%, color-mix(in srgb, var(--scene-wave-b) 22%, transparent), transparent 36%);
+  opacity: 0.88;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .rom-section.surface-editorial::after {
@@ -1804,8 +1831,8 @@ strong {
   border: 1px solid var(--outline);
   border-radius: var(--radius-md);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 72%, white 4%), color-mix(in srgb, var(--surface-raised) 64%, black 8%)),
-    color-mix(in srgb, var(--accent-soft, transparent) 12%, transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 58%, white 3%), color-mix(in srgb, var(--surface-raised) 48%, black 6%)),
+    color-mix(in srgb, var(--accent-soft, transparent) 20%, transparent);
   overflow: hidden;
   align-self: start;
   transition:
@@ -1817,8 +1844,8 @@ strong {
 
 .release-disclosure[data-open='true'] {
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 68%, white 4%), color-mix(in srgb, var(--surface-raised) 60%, black 8%)),
-    color-mix(in srgb, var(--accent-soft, transparent) 16%, transparent);
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 54%, white 3%), color-mix(in srgb, var(--surface-raised) 44%, black 6%)),
+    color-mix(in srgb, var(--accent-soft, transparent) 24%, transparent);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 16px 32px rgba(7, 8, 14, 0.22);
@@ -1918,7 +1945,7 @@ strong {
   border: 1px solid var(--outline);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 100%),
-    color-mix(in srgb, var(--accent-soft, transparent) 10%, rgba(255, 255, 255, 0.02));
+    color-mix(in srgb, var(--accent-soft, transparent) 18%, rgba(255, 255, 255, 0.015));
 }
 
 .timeline-list {
@@ -1939,11 +1966,30 @@ strong {
   border-radius: var(--radius-md);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 100%),
-    color-mix(in srgb, var(--accent-soft, transparent) 18%, rgba(255, 255, 255, 0.018));
+    color-mix(in srgb, var(--accent-soft, transparent) 24%, rgba(255, 255, 255, 0.012));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 12px 26px rgba(7, 8, 14, 0.12);
   overflow: hidden;
+}
+
+.rom-facts-card::before,
+.resource-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 24% 18%, color-mix(in srgb, var(--scene-wave-a) 30%, transparent), transparent 34%),
+    radial-gradient(circle at 78% 82%, color-mix(in srgb, var(--scene-wave-b) 22%, transparent), transparent 38%);
+  opacity: 0.82;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.rom-facts-card > *,
+.resource-panel > * {
+  position: relative;
+  z-index: 1;
 }
 
 .rom-fact-row {
@@ -1987,7 +2033,7 @@ strong {
   border-radius: var(--radius-md);
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.045), transparent 100%),
-    color-mix(in srgb, var(--accent-soft, transparent) 18%, rgba(255, 255, 255, 0.018));
+    color-mix(in srgb, var(--accent-soft, transparent) 24%, rgba(255, 255, 255, 0.012));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.04),
     0 12px 24px rgba(7, 8, 14, 0.1);
