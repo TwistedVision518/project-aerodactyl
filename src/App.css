@@ -118,17 +118,17 @@
 }
 
 .scene-gradient-middle {
-  inset: 28vh 50% auto;
-  width: 74vw;
-  height: 24vw;
+  inset: 22vh 50% auto;
+  width: 92vw;
+  height: 30vw;
   border-radius: 999px;
   transform: translateX(-50%);
   background:
-    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--scene-wave-a) 38%, transparent), transparent 34%),
-    radial-gradient(circle at 34% 52%, color-mix(in srgb, var(--scene-wave-b) 26%, transparent), transparent 38%),
-    radial-gradient(circle at 68% 50%, color-mix(in srgb, var(--scene-wave-c) 28%, transparent), transparent 40%);
-  opacity: 0.34;
-  filter: blur(42px) saturate(110%);
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--scene-wave-a) 54%, transparent), transparent 32%),
+    radial-gradient(circle at 34% 52%, color-mix(in srgb, var(--scene-wave-b) 34%, transparent), transparent 38%),
+    radial-gradient(circle at 68% 50%, color-mix(in srgb, var(--scene-wave-c) 36%, transparent), transparent 40%);
+  opacity: 0.48;
+  filter: blur(54px) saturate(112%);
   will-change: transform, opacity;
   z-index: 2;
 }
@@ -177,11 +177,12 @@
 .utility-card {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
   border: 1px solid var(--outline);
   border-radius: var(--radius-lg);
   background:
-    linear-gradient(180deg, color-mix(in srgb, var(--surface) 92%, white 5%), color-mix(in srgb, var(--surface) 96%, black 4%)),
-    color-mix(in srgb, var(--surface) 96%, black 4%);
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 76%, white 8%), color-mix(in srgb, var(--surface) 82%, black 8%)),
+    color-mix(in srgb, var(--surface) 80%, transparent);
   box-shadow:
     0 18px 52px rgba(4, 5, 10, 0.28),
     inset 0 1px 0 rgba(255, 255, 255, 0.08),
@@ -212,6 +213,31 @@
     radial-gradient(circle at 18% 0%, rgba(255, 255, 255, 0.04), transparent 24%),
     radial-gradient(circle at top right, var(--accent-soft, transparent), transparent 34%);
   pointer-events: none;
+}
+
+.panel::after,
+.metric-card::after,
+.build-card::after,
+.rom-directory-item::after,
+.rom-detail-card::after,
+.device-card::after,
+.expansion-card::after,
+.gcam-card::after,
+.gcam-empty-state::after,
+.side-card::after,
+.timeline-body::after,
+.update-card::after,
+.utility-card::after {
+  content: '';
+  position: absolute;
+  inset: -32%;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--scene-wave-a) 14%, transparent), transparent 34%),
+    radial-gradient(circle at 28% 74%, color-mix(in srgb, var(--scene-wave-b) 10%, transparent), transparent 36%),
+    radial-gradient(circle at 76% 22%, color-mix(in srgb, var(--scene-wave-c) 10%, transparent), transparent 38%);
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
 }
 
 [data-hub-accent='true']::after {
