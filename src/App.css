@@ -893,6 +893,11 @@ strong {
   gap: 1rem;
 }
 
+.hero-stage {
+  align-content: start;
+  padding-top: clamp(2.2rem, 4vw, 3.35rem);
+}
+
 .hero-spotlight,
 .utility-card,
 .build-card,
@@ -2801,6 +2806,10 @@ strong {
     grid-column: 2;
     justify-items: start;
     text-align: left;
+  }
+
+  .hero-stage {
+    padding-top: 0;
   }
 }
 
