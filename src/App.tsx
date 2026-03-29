@@ -911,10 +911,10 @@ function App() {
                   <span className="ghost-pill">Updated {siteLastUpdated}</span>
                 </m.div>
 
-                <m.p className="eyebrow" variants={heroItemVariants}>Release desk</m.p>
-                <m.h1 variants={heroItemVariants}>Nothing Phone 2a releases, cleaned up for humans.</m.h1>
+                <m.p className="eyebrow" variants={heroItemVariants}>Release hub</m.p>
+                <m.h1 variants={heroItemVariants}>Nothing Phone 2a Release Hub.</m.h1>
                 <m.p className="lede" variants={heroItemVariants}>
-                  Public ROM drops, direct links, camera tools, and device coverage in one place that is actually easy to scan.
+                  ROM downloads, release links, camera tools, and device support for the Nothing Phone 2a and 2a Plus.
                 </m.p>
 
                 <m.div className="hero-actions" variants={heroItemVariants}>
@@ -934,7 +934,7 @@ function App() {
                 </m.div>
 
                 <m.p className="hero-proofline" variants={heroItemVariants}>
-                  Built for quick handoff: choose a release, verify the links, and move on.
+                  Open a release, check the links, and get what you need quickly.
                 </m.p>
 
                 <m.div className="hero-ledger surface-utility" variants={heroItemVariants}>
