@@ -1089,22 +1089,28 @@ function App() {
                         </p>
                       </div>
 
-                      <div className="utility-inline-meta" aria-label="Community context">
+                      <div className="utility-card-meta-actions" aria-label="Community context">
                         <span className="meta-pill">Telegram hub</span>
                         {latestSignal ? <span className="meta-pill">{latestSignal.category}</span> : null}
+                        {communityHubHasLink ? (
+                          <a
+                            className="utility-card-action utility-card-action-primary"
+                            href={communityHub.telegramUrl}
+                            rel="noreferrer"
+                            target="_blank"
+                          >
+                            Open Telegram
+                          </a>
+                        ) : null}
+
+                        <button
+                          className="utility-card-action utility-card-action-secondary"
+                          onClick={handleCommunityCopy}
+                          type="button"
+                        >
+                          {communityLinkCopied ? 'Copied invite' : 'Copy invite'}
+                        </button>
                       </div>
-                    </div>
-
-                    <div className="hero-inline-actions utility-card-actions">
-                      {communityHubHasLink ? (
-                        <a className="utility-card-action utility-card-action-primary" href={communityHub.telegramUrl} rel="noreferrer" target="_blank">
-                          Open Telegram
-                        </a>
-                      ) : null}
-
-                      <button className="utility-card-action utility-card-action-secondary" onClick={handleCommunityCopy} type="button">
-                        {communityLinkCopied ? 'Copied invite' : 'Copy invite'}
-                      </button>
                     </div>
                   </ReactivePanel>
                 </div>
