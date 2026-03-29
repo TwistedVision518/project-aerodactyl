@@ -174,7 +174,7 @@ function getGcamLinks(entry: GcamEntry): ReleaseLink[] {
   return [
     { label: `${entry.name} APK`, url: entry.downloadUrl },
     { label: 'XML Config', url: entry.configUrl },
-  ].filter((link) => hasReleaseLink(link.url) || link.url.startsWith('https://'))
+  ].filter((link) => hasReleaseLink(link.url))
 }
 
 function formatMaintenanceNote(value: string) {
