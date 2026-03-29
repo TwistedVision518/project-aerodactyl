@@ -9,13 +9,17 @@
     "lint": "eslint .",
     "content:check": "node scripts/validate-content.mjs",
     "preview": "vite preview",
-    "android:copy": "pnpm build && npx cap copy android",
-    "android:sync": "pnpm build && npx cap sync android",
-    "android:open": "npx cap open android"
+    "android:assets": "node scripts/generate-android-assets.mjs",
+    "android:copy": "pnpm android:assets && pnpm build && npx cap copy android",
+    "android:sync": "pnpm android:assets && pnpm build && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:apk": "powershell -ExecutionPolicy Bypass -File scripts/build-android-debug.ps1"
   },
   "dependencies": {
     "@capacitor/android": "^8.3.0",
     "@capacitor/core": "^8.3.0",
+    "@capacitor/splash-screen": "^8.0.1",
+    "@capacitor/status-bar": "^8.0.2",
     "@fontsource-variable/arimo": "^5.2.8",
     "@fontsource-variable/bricolage-grotesque": "^5.2.10",
     "@fontsource-variable/google-sans-flex": "^5.2.1",
@@ -36,6 +40,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0",
+    "sharp": "^0.34.5",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.57.0",
     "vite": "^8.0.1"

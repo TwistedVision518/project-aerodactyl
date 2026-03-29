@@ -104,6 +104,12 @@ Build the web app and sync it into the Android project:
 pnpm android:sync
 ```
 
+Regenerate the Android launcher and splash assets from the site branding:
+
+```bash
+pnpm android:assets
+```
+
 Open the Android project in Android Studio:
 
 ```bash
@@ -114,6 +120,12 @@ If you only need to refresh the bundled web assets without a full native sync:
 
 ```bash
 pnpm android:copy
+```
+
+Build a debug APK:
+
+```bash
+pnpm android:apk
 ```
 
 The native Android project lives in:

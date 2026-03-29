@@ -19,6 +19,9 @@ import {
   useSpring,
   useTransform,
 } from 'motion/react'
+import { Capacitor } from '@capacitor/core'
+import { SplashScreen } from '@capacitor/splash-screen'
+import { StatusBar, Style } from '@capacitor/status-bar'
 import { flushSync } from 'react-dom'
 import './App.css'
 import { LoadingScreen } from './components/LoadingScreen'
@@ -386,6 +389,7 @@ function App() {
   const sceneMiddleRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [4, -4])
   const sceneMiddleScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [0.98, 1.04])
   const motionEase = [0.22, 1, 0.36, 1] as const
+  const isNativeApp = Capacitor.isNativePlatform()
   const usesCoarsePointer = () =>
     typeof window !== 'undefined' &&
     window.matchMedia('(hover: none), (pointer: coarse)').matches
@@ -443,6 +447,40 @@ function App() {
     document.documentElement.style.colorScheme = themeMode
     window.localStorage.setItem('project-aerodactyl-theme', themeMode)
   }, [themeMode])
+
+  useEffect(() => {
+    if (!isNativeApp) {
+      return
+    }
+
+    void StatusBar.setOverlaysWebView({ overlay: false }).catch(() => undefined)
+  }, [isNativeApp])
+
+  useEffect(() => {
+    if (!isNativeApp) {
+      return
+    }
+
+    const backgroundColor = themeMode === 'light' ? '#eef2ff' : '#06070d'
+    const style = themeMode === 'light' ? Style.Dark : Style.Light
+
+    void Promise.allSettled([
+      StatusBar.setBackgroundColor({ color: backgroundColor }),
+      StatusBar.setStyle({ style }),
+    ])
+  }, [isNativeApp, themeMode])
+
+  useEffect(() => {
+    if (!isNativeApp || loading) {
+      return
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      void SplashScreen.hide({ fadeOutDuration: 220 }).catch(() => undefined)
+    }, 90)
+
+    return () => window.clearTimeout(timeoutId)
+  }, [isNativeApp, loading])
 
   useEffect(() => {
     if (typeof window === 'undefined') {
