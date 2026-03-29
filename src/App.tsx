@@ -172,9 +172,9 @@ function getReleaseLinks(rom: RomEntry): ReleaseLink[] {
 
 function getGcamLinks(entry: GcamEntry): ReleaseLink[] {
   return [
-    { label: 'Download APK', url: entry.downloadUrl },
-    { label: 'Download config', url: entry.configUrl },
-  ].filter((link) => hasReleaseLink(link.url))
+    { label: `${entry.name} APK`, url: entry.downloadUrl },
+    { label: 'XML Config', url: entry.configUrl },
+  ].filter((link) => hasReleaseLink(link.url) || link.url.startsWith('https://'))
 }
 
 function formatMaintenanceNote(value: string) {

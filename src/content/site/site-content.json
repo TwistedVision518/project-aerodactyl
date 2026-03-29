@@ -10,7 +10,20 @@
     "ctaLabel": "Explore Device Community",
     "telegramUrl": "https://t.me/NothingPhone2aUpdates"
   },
-  "gcamEntries": [],
+  "gcamEntries": [
+    {
+      "name": "SGCam",
+      "build": "APK + XML",
+      "updatedAt": "March 29, 2026",
+      "devices": [
+        "Nothing Phone 2a",
+        "Nothing Phone 2a Plus"
+      ],
+      "summary": "Recommended SGCam setup for both pacman and pacmanpro, with the APK and matching XML config linked together so users can get the intended result quickly.",
+      "downloadUrl": "https://t.me/NothingPhone2aPhotography/29223",
+      "configUrl": "https://t.me/NothingPhone2aPhotography/29460"
+    }
+  ],
   "sourceChanges": [
     {
       "title": "Framework and SystemUI",
