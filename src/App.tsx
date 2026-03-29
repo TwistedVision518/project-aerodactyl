@@ -228,6 +228,14 @@ function getAvailabilityLabel(filter: AvailabilityFilter) {
   }
 }
 
+function getDeviceSummary(devices: string[]) {
+  return devices.length > 1 ? '2a + 2a Plus' : devices[0]?.replace(/^Nothing Phone\s+/i, '') ?? 'Single device'
+}
+
+function getLinkSummary(links: ReleaseLink[]) {
+  return links.length === 1 ? '1 live link' : `${links.length} live links`
+}
+
 function matchesDeviceFilter(rom: RomEntry, filter: DeviceFilter) {
   if (filter === 'all') {
     return true
@@ -283,7 +291,6 @@ function App() {
   const scenePointerActiveSpring = useSpring(scenePointerActive, { stiffness: 90, damping: 22, mass: 0.4 })
 
   const deferredQuery = useDeferredValue(romQuery)
-  const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
   const communityHubHasLink = hasReleaseLink(communityHub.telegramUrl)
   const releaseReadyRoms = useMemo(
     () =>
@@ -292,6 +299,9 @@ function App() {
         .sort((left, right) => toTimestamp(right.buildDate) - toTimestamp(left.buildDate)),
     [],
   )
+  const featuredRom = roms.find((rom) => rom.name === 'Evolution X') ?? latestBuilds[0] ?? roms[0]
+  const homeLaunchRoms = (releaseReadyRoms.length > 0 ? releaseReadyRoms : latestBuilds).slice(0, 3)
+  const trackedOnlyCount = roms.length - releaseReadyRoms.length
   const dualTargetCount = roms.filter((rom) => rom.devices.length > 1).length
   const filteredRoms = useMemo(() => {
     const query = deferredQuery.trim().toLowerCase()
@@ -352,6 +362,7 @@ function App() {
   const selectedResourceLink =
     selectedRomLinks.find((link) => link.url === selectedResourceUrl) ?? selectedRomLinks[0] ?? null
   const latestSignal = latestUpdates[0] ?? null
+  const releaseRadarRoms = (releaseReadyRoms.length > 0 ? releaseReadyRoms : latestBuilds).slice(0, 4)
   const hasActiveExplorerFilters =
     romQuery.length > 0 ||
     availabilityFilter !== 'all' ||
@@ -423,12 +434,6 @@ function App() {
     '--accent-soft': 'rgba(127, 215, 188, 0.18)',
     '--accent-strong': '#d6fff2',
   }
-
-  const heroStats = [
-    { label: 'Tracked ROMs', value: `${roms.length}`, detail: 'active now' },
-    { label: 'Links Live', value: `${releaseReadyRoms.length}`, detail: 'ready to open' },
-    { label: 'Dual-Device', value: `${dualTargetCount}`, detail: '2a + 2a Plus' },
-  ]
 
   useEffect(() => {
     document.documentElement.dataset.theme = themeMode
@@ -880,15 +885,15 @@ function App() {
                   <span className="ghost-pill">Updated {siteLastUpdated}</span>
                 </m.div>
 
-                <m.p className="eyebrow" variants={heroItemVariants}>Curated Release Board</m.p>
-                <m.h1 variants={heroItemVariants}>Current ROM releases, clearly surfaced.</m.h1>
+                <m.p className="eyebrow" variants={heroItemVariants}>Release desk</m.p>
+                <m.h1 variants={heroItemVariants}>Nothing Phone 2a releases, cleaned up for humans.</m.h1>
                 <m.p className="lede" variants={heroItemVariants}>
-                  Everything important for the Nothing Phone 2a lineup, without the chat noise.
+                  Public ROM drops, direct links, camera tools, and device coverage in one place that is actually easy to scan.
                 </m.p>
 
                 <m.div className="hero-actions" variants={heroItemVariants}>
                   <a className="action-primary" href="#rom-directory" onClick={handleSectionAnchorClick}>
-                    Browse ROMs
+                    Open ROM library
                   </a>
                   {communityHubHasLink ? (
                     <a
@@ -897,26 +902,69 @@ function App() {
                       rel="noreferrer"
                       target="_blank"
                     >
-                      Open Community
+                      Open Telegram
                     </a>
                   ) : null}
                 </m.div>
 
-                <m.div className="hero-stats-grid" aria-label="Project highlights" variants={heroItemVariants}>
-                  {heroStats.map((stat, index) => (
-                    <m.article
-                      animate={{ opacity: 1, y: 0 }}
-                      className="metric-card"
-                      initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-                      key={stat.label}
-                      transition={{ delay: 0.14 + index * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                      whileHover={prefersReducedMotion ? undefined : { y: -5 }}
-                    >
-                      <span>{stat.label}</span>
-                      <strong>{stat.value}</strong>
-                      <small>{stat.detail}</small>
-                    </m.article>
-                  ))}
+                <m.p className="hero-proofline" variants={heroItemVariants}>
+                  Built for quick handoff: choose a release, verify the links, and move on.
+                </m.p>
+
+                <m.div className="hero-ledger surface-utility" variants={heroItemVariants}>
+                  <div className="hero-ledger-head">
+                    <div>
+                      <span className="section-label">Desk notes</span>
+                      <strong>Live releases first, tracked builds second.</strong>
+                    </div>
+                    <span className="ghost-pill">{releaseRadarRoms.length} live now</span>
+                  </div>
+
+                  <div className="hero-ledger-rows" aria-label="Current live release ledger">
+                    {releaseRadarRoms.map((rom, index) => {
+                      const links = getReleaseLinks(rom)
+                      const romId = toSectionId(rom.name)
+                      const isActiveLedgerRom = resolvedActiveRomId === romId
+
+                      return (
+                        <m.a
+                          className={`hero-ledger-row ${isActiveLedgerRom ? 'is-active' : ''}`.trim()}
+                          href={`#${romId}`}
+                          key={rom.name}
+                          onClick={(event) => handleRomAnchorClick(event, romId)}
+                          transition={{ duration: 0.3, ease: motionEase }}
+                          whileHover={prefersReducedMotion ? undefined : { x: 4 }}
+                          whileTap={prefersReducedMotion ? undefined : { scale: 0.99 }}
+                        >
+                          {isActiveLedgerRom ? <m.span className="hero-ledger-row-highlight" layoutId="hero-ledger-row-highlight" /> : null}
+
+                          <div className="hero-ledger-row-index">
+                            <span>{String(index + 1).padStart(2, '0')}</span>
+                            <small>{formatFreshness(rom.buildDate)}</small>
+                          </div>
+
+                          <div className="hero-ledger-row-copy">
+                            <div className="hero-ledger-row-topline">
+                              <strong>{rom.name}</strong>
+                              <span>{rom.version}</span>
+                            </div>
+                            <p>{rom.tagline}</p>
+                          </div>
+
+                          <div className="hero-ledger-row-meta">
+                            <span>{getDeviceSummary(rom.devices)}</span>
+                            <span>{getLinkSummary(links)}</span>
+                          </div>
+                        </m.a>
+                      )
+                    })}
+                  </div>
+
+                  <div className="hero-ledger-footer" aria-label="Desk summary">
+                    <span><strong>{roms.length}</strong> tracked ROMs</span>
+                    <span><strong>{releaseReadyRoms.length}</strong> direct links live</span>
+                    <span><strong>{dualTargetCount}</strong> dual-device releases</span>
+                  </div>
                 </m.div>
               </m.div>
 
@@ -926,70 +974,92 @@ function App() {
                 initial={prefersReducedMotion ? false : 'hidden'}
                 variants={heroPanelVariants}
               >
-                <ReactivePanel as="article" className="hero-spotlight" intensity={0.75} style={featuredStyle}>
-                  <div className="hero-spotlight-atmosphere" aria-hidden="true">
-                    <div className="hero-spotlight-orb" />
-                    <div className="hero-spotlight-ring" />
+                <ReactivePanel as="article" className="hero-launchpad surface-editorial" intensity={0.78} style={featuredStyle}>
+                  <div className="hero-launchpad-atmosphere" aria-hidden="true">
+                    <div className="hero-launchpad-orb hero-launchpad-orb-primary" />
+                    <div className="hero-launchpad-orb hero-launchpad-orb-secondary" />
+                    <div className="hero-launchpad-grid" />
                   </div>
 
                   <div className="feature-topline">
-                    <span className="feature-badge">Spotlight build</span>
-                    <span className="feature-version">{featuredRom.version}</span>
+                    <span className="feature-badge">Launchpad</span>
+                    <span className="feature-version">{releaseReadyRoms.length} live releases</span>
                   </div>
 
-                  <div className="spotlight-header">
+                  <div className="launchpad-header">
                     <div>
-                      <h2>{featuredRom.name}</h2>
-                      <p>Current spotlight release for quick scanning and fast handoff.</p>
+                      <h2>Open a build fast.</h2>
+                      <p>The homepage now points straight at live releases instead of trying to crown one ROM as the default.</p>
                     </div>
-                    <span className="version-pill">{featuredRom.status}</span>
+
+                    <div className="launchpad-summary">
+                      <span className="meta-pill">{homeLaunchRoms.length} ready now</span>
+                      <span className="meta-pill">{trackedOnlyCount} tracked only</span>
+                    </div>
                   </div>
 
-                  <ul className="feature-list" aria-label={`${featuredRom.name} summary`}>
-                    {featuredRom.highlights.slice(0, 2).map((item, index) => (
-                      <m.li
-                        animate={{ opacity: 1, x: 0 }}
-                        initial={prefersReducedMotion ? false : { opacity: 0, x: -16 }}
-                        key={item}
-                        transition={{ delay: 0.18 + index * 0.06, duration: 0.34, ease: [0.22, 1, 0.36, 1] }}
-                      >
-                        {item}
-                      </m.li>
-                    ))}
-                  </ul>
+                  <div className="launchpad-list" aria-label="Latest live releases">
+                    {homeLaunchRoms.map((rom, index) => {
+                      const romId = toSectionId(rom.name)
+                      const links = getReleaseLinks(rom)
+                      const isActiveLaunchRom = resolvedActiveRomId === romId
 
-                  <div className="spotlight-footer">
-                    <div className="meta-pill-group">
-                      <span className="meta-pill">{featuredRom.buildDate}</span>
-                      <span className="meta-pill">{featuredRom.devices.join(' / ')}</span>
-                    </div>
+                      return (
+                        <m.a
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`launchpad-row ${isActiveLaunchRom ? 'is-active' : ''}`.trim()}
+                          href={`#${romId}`}
+                          initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
+                          key={rom.name}
+                          onClick={(event) => handleRomAnchorClick(event, romId)}
+                          transition={{ delay: 0.14 + index * 0.06, duration: 0.36, ease: motionEase }}
+                          whileHover={prefersReducedMotion ? undefined : { y: -2 }}
+                          whileTap={prefersReducedMotion ? undefined : { scale: 0.995 }}
+                        >
+                          {isActiveLaunchRom ? <m.span className="launchpad-row-highlight" layoutId="launchpad-row-highlight" /> : null}
 
-                    <div className="spotlight-actions">
-                      <a
-                        className="ghost-action"
-                        href={`#${toSectionId(featuredRom.name)}`}
-                        onClick={(event) => handleRomAnchorClick(event, toSectionId(featuredRom.name))}
-                      >
-                        Read release details
-                      </a>
-                    </div>
+                          <div className="launchpad-rank">{String(index + 1).padStart(2, '0')}</div>
+
+                          <div className="launchpad-row-copy">
+                            <div className="launchpad-row-topline">
+                              <strong>{rom.name}</strong>
+                              <span>{rom.version}</span>
+                            </div>
+                            <p>{rom.tagline}</p>
+                          </div>
+
+                          <div className="launchpad-row-meta">
+                            <span>{getDeviceSummary(rom.devices)}</span>
+                            <span>{getLinkSummary(links)}</span>
+                            <small>{rom.buildDate}</small>
+                          </div>
+                        </m.a>
+                      )
+                    })}
+                  </div>
+
+                  <div className="launchpad-footer">
+                    <span className="launchpad-note">Tip: choose any row to sync the ROM library below.</span>
+                    <a className="ghost-action" href="#rom-directory" onClick={handleSectionAnchorClick}>
+                      Browse full library
+                    </a>
                   </div>
                 </ReactivePanel>
 
                 <div className="hero-stack">
-                  <ReactivePanel as="article" className="utility-card utility-card-community utility-card-compact" intensity={0.55}>
+                  <ReactivePanel as="article" className="utility-card utility-card-community utility-card-compact surface-utility" intensity={0.55}>
                     <div className="feature-topline utility-compact-topline">
-                      <span className="feature-badge">Community hub</span>
+                      <span className="feature-badge">Telegram desk</span>
                       <span className="ghost-pill">{latestSignal ? latestSignal.date : 'Telegram'}</span>
                     </div>
 
                     <div className="utility-compact-body">
                       <div className="utility-compact-copy">
-                        <h3>Support, release posts, and quick checks in one place.</h3>
+                        <h3>The fastest place for support, release posts, and install questions.</h3>
                         <p className="utility-copy">
                           {latestSignal
-                            ? `Latest pulse: ${latestSignal.title}`
-                            : 'Open the main community space for support and release chatter.'}
+                            ? `Latest signal: ${latestSignal.title}`
+                            : 'Open the main community space for support and fresh release chatter.'}
                         </p>
                       </div>
 
@@ -1002,12 +1072,12 @@ function App() {
                     <div className="hero-inline-actions">
                       {communityHubHasLink ? (
                         <a href={communityHub.telegramUrl} rel="noreferrer" target="_blank">
-                          Open community
+                          Open Telegram
                         </a>
                       ) : null}
 
                       <button onClick={handleCommunityCopy} type="button">
-                        {communityLinkCopied ? 'Copied link' : 'Copy invite link'}
+                        {communityLinkCopied ? 'Copied invite' : 'Copy invite'}
                       </button>
                     </div>
                   </ReactivePanel>
@@ -1020,20 +1090,20 @@ function App() {
             <section className="command-center panel" id="pinned-builds">
               <div className="section-heading">
                 <div>
-                  <p className="eyebrow">Command Center</p>
-                  <h2>See the newest builds first and jump straight to the right release.</h2>
+                  <p className="eyebrow">Release pulse</p>
+                  <h2>What actually moved most recently.</h2>
                 </div>
-                <p>Fresh builds and direct jump points in one tighter command view.</p>
+                <p>Newest public drops and Telegram activity, kept separate from the full ROM library.</p>
               </div>
 
               <div className="command-layout">
                 <div className="command-primary">
                   <div className="command-card-head">
                     <div>
-                      <span className="section-label">Fresh drops</span>
-                      <h3>Current top releases</h3>
+                      <span className="section-label">Newest public drops</span>
+                      <h3>Open these first</h3>
                     </div>
-                    <span className="section-caption">Sorted by newest public build date</span>
+                    <span className="section-caption">Ranked by public build date</span>
                   </div>
 
                   <div className="build-grid">
@@ -1047,7 +1117,7 @@ function App() {
                       return (
                         <ReactivePanel
                           as="article"
-                          className="build-card"
+                          className="build-card surface-signal"
                           intensity={0.6}
                           key={rom.name}
                           style={accentStyle}
@@ -1067,7 +1137,7 @@ function App() {
 
                           <div className="card-actions">
                             <a href={`#${toSectionId(rom.name)}`} onClick={(event) => handleRomAnchorClick(event, toSectionId(rom.name))}>
-                              Inspect release
+                              Open release
                             </a>
                           </div>
                         </ReactivePanel>
@@ -1077,11 +1147,11 @@ function App() {
                 </div>
 
                 <div className="command-sidebar">
-                  <article className="side-card">
+                  <article className="side-card surface-utility">
                     <div className="command-card-head">
                       <div>
-                        <span className="section-label">Live feed</span>
-                        <h3>Latest movement</h3>
+                        <span className="section-label">Telegram pulse</span>
+                        <h3>Recent posts that matter</h3>
                       </div>
                     </div>
 
@@ -1112,10 +1182,10 @@ function App() {
             <section className="explorer panel" data-hub-accent="true" id="rom-directory" style={featuredStyle}>
               <div className="section-heading">
                 <div>
-                  <p className="eyebrow">ROM Explorer</p>
-                  <h2>Find the right release quickly.</h2>
+                  <p className="eyebrow">ROM library</p>
+                  <h2>Choose one ROM and get the essentials.</h2>
                 </div>
-                <p>Search, filter, and open one selected ROM without digging through long release lists.</p>
+                <p>Search the lineup, compare availability, then open one focused release sheet instead of scrolling through duplicates.</p>
               </div>
 
               <div className="explorer-toolbar" aria-label="ROM filters">
@@ -1303,7 +1373,7 @@ function App() {
                       <ReactivePanel
                         as="a"
                         aria-current={isActiveRom ? 'true' : undefined}
-                        className={`rom-directory-item ${isActiveRom ? 'is-active' : ''}`.trim()}
+                        className={`rom-directory-item surface-signal ${isActiveRom ? 'is-active' : ''}`.trim()}
                         data-active={isActiveRom ? 'true' : 'false'}
                         href={`#${romId}`}
                         intensity={0.6}
@@ -1356,7 +1426,7 @@ function App() {
                   >
                     <ReactivePanel
                       as="section"
-                      className="rom-section panel is-active"
+                      className="rom-section panel is-active surface-editorial"
                       data-active="true"
                       data-hub-accent="true"
                       id={toSectionId(selectedRom.name)}
@@ -1543,7 +1613,7 @@ function App() {
                             transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1], delay: 0.08 }}
                           >
                             {selectedRomLinks.length > 0 ? (
-                              <div className="resource-panel">
+                              <div className="resource-panel surface-utility">
                                 <div className="resource-panel-head">
                                   <span className="section-label">Resources</span>
                                   <small>{selectedRomLinks.length} links available</small>
@@ -1658,10 +1728,10 @@ function App() {
             <section className="panel support-panel support-panel-gcam" data-hub-accent="true" id="gcams" style={gcamStyle}>
               <div className="section-heading">
                 <div>
-                  <p className="eyebrow">Camera Picks</p>
-                  <h2>Keep camera recommendations as intentional as the release board.</h2>
+                  <p className="eyebrow">Camera tools</p>
+                  <h2>Camera files, separated from ROM browsing.</h2>
                 </div>
-                <p>When GCam entries are ready, this becomes a cleaner reference than chat logs.</p>
+                <p>Grab the APK or the XML you need without digging back through Telegram history.</p>
               </div>
 
               {gcamEntries.length > 0 ? (
@@ -1670,7 +1740,7 @@ function App() {
                     const links = getGcamLinks(entry)
 
                     return (
-                      <article className="gcam-card" key={`${entry.name}-${entry.build}`}>
+                      <article className="gcam-card surface-utility" key={`${entry.name}-${entry.build}`}>
                         <div className="feature-topline">
                           <span className="feature-badge">GCam build</span>
                           <span className="feature-version">{entry.build}</span>

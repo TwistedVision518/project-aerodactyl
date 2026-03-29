@@ -189,6 +189,63 @@
     inset 0 -1px 0 rgba(255, 255, 255, 0.03);
 }
 
+.surface-editorial {
+  border-color: color-mix(in srgb, var(--accent-soft, var(--outline-strong)) 42%, var(--outline));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 60%, white 10%), color-mix(in srgb, var(--surface-raised) 76%, black 14%)),
+    color-mix(in srgb, var(--accent-soft, transparent) 14%, var(--surface) 86%);
+  box-shadow:
+    0 26px 72px rgba(3, 5, 11, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.surface-editorial::after {
+  opacity: 1;
+}
+
+.surface-signal {
+  border-color: color-mix(in srgb, var(--accent-soft, var(--outline)) 28%, var(--outline));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-raised) 88%, white 5%), color-mix(in srgb, var(--surface-raised) 84%, black 10%)),
+    color-mix(in srgb, var(--accent-soft, transparent) 8%, var(--surface-raised) 92%);
+  box-shadow:
+    0 18px 46px rgba(4, 5, 10, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.surface-signal::after {
+  opacity: 0.82;
+}
+
+.surface-utility {
+  border-color: color-mix(in srgb, var(--outline) 82%, white 6%);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface) 72%, white 7%), color-mix(in srgb, var(--surface-raised) 86%, black 10%)),
+    color-mix(in srgb, var(--surface-raised) 94%, transparent);
+  box-shadow:
+    0 16px 38px rgba(4, 5, 10, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.surface-utility::after {
+  opacity: 0.7;
+}
+
+.surface-utility-quiet {
+  border-color: color-mix(in srgb, var(--outline) 90%, white 4%);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 100%),
+    color-mix(in srgb, var(--surface-raised) 90%, black 8%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.surface-utility-quiet::after {
+  opacity: 0.48;
+}
+
 .topbar,
 .mobile-dock,
 .explorer-toolbar,
@@ -611,6 +668,14 @@ strong {
   max-width: 34ch;
 }
 
+.hero-proofline {
+  margin: 0;
+  max-width: 48ch;
+  color: var(--text-soft);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
 .hero-actions a,
 .spotlight-actions a,
 .card-actions a,
@@ -675,31 +740,147 @@ strong {
   gap: 1rem;
 }
 
-.hero-stats-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-}
-
-.metric-card {
-  padding: 0.85rem;
+.hero-ledger {
   display: grid;
-  gap: 0.25rem;
+  gap: 0.8rem;
+  padding: 0.95rem 1rem 1rem;
+}
+
+.hero-ledger-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.hero-ledger-head > div {
+  display: grid;
+  gap: 0.24rem;
+}
+
+.hero-ledger-head strong {
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.hero-ledger-rows {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.hero-ledger-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.82rem 0.25rem 0.82rem 0.1rem;
+  border-top: 1px solid color-mix(in srgb, var(--outline) 86%, transparent);
+  color: inherit;
+  text-decoration: none;
+}
+
+.hero-ledger-row:first-child {
+  border-top: 0;
+  padding-top: 0.2rem;
+}
+
+.hero-ledger-row > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-ledger-row-highlight {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.9rem;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 100%),
-    color-mix(in srgb, var(--surface-raised) 84%, black 7%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.03);
-  background-clip: padding-box;
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-soft, transparent) 28%, transparent), transparent 48%),
+    color-mix(in srgb, var(--surface) 40%, transparent);
+  pointer-events: none;
 }
 
-.metric-card strong {
-  font-size: clamp(1.25rem, 2.2vw, 1.8rem);
-  letter-spacing: -0.04em;
-}
-
-.metric-card small {
+.hero-ledger-row-index {
+  display: grid;
+  gap: 0.12rem;
+  min-width: 3rem;
   color: var(--muted);
-  font-size: 0.78rem;
+  font-family: var(--font-display);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.68rem;
+}
+
+.hero-ledger-row-index span {
+  font-size: 0.82rem;
+  color: var(--text-soft);
+}
+
+.hero-ledger-row-index small {
+  font-size: 0.62rem;
+}
+
+.hero-ledger-row-copy {
+  display: grid;
+  gap: 0.18rem;
+  min-width: 0;
+}
+
+.hero-ledger-row-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+  align-items: baseline;
+}
+
+.hero-ledger-row-topline strong {
+  font-size: 0.98rem;
+  letter-spacing: -0.03em;
+}
+
+.hero-ledger-row-topline span {
+  color: var(--accent, var(--accent-hot));
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+}
+
+.hero-ledger-row-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.48;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.hero-ledger-row-meta {
+  display: grid;
+  justify-items: end;
+  gap: 0.18rem;
+  text-align: right;
+  color: var(--text-soft);
+  font-size: 0.74rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.hero-ledger-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  padding-top: 0.4rem;
+  border-top: 1px solid color-mix(in srgb, var(--outline) 86%, transparent);
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.hero-ledger-footer strong {
+  color: var(--text);
+  letter-spacing: -0.03em;
+  font-size: 0.92rem;
 }
 
 .hero-stage,
@@ -724,6 +905,210 @@ strong {
 .gcam-empty-state,
 .update-card {
   padding: 1.05rem;
+}
+
+.hero-launchpad {
+  position: relative;
+  display: grid;
+  gap: 0.95rem;
+  min-height: 100%;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.055), transparent 100%),
+    color-mix(in srgb, var(--surface) 80%, var(--accent-soft) 20%);
+}
+
+.hero-launchpad > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-launchpad-atmosphere {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hero-launchpad-orb {
+  position: absolute;
+  border-radius: 999px;
+}
+
+.hero-launchpad-orb-primary {
+  top: -3.5rem;
+  right: -2rem;
+  width: 14rem;
+  height: 14rem;
+  background:
+    radial-gradient(circle at 35% 35%, color-mix(in srgb, var(--accent, var(--accent-hot)) 30%, white 8%), transparent 56%),
+    radial-gradient(circle at 70% 72%, color-mix(in srgb, var(--accent, var(--accent-hot)) 20%, transparent), transparent 66%);
+  opacity: 0.9;
+}
+
+.hero-launchpad-orb-secondary {
+  left: -3rem;
+  bottom: -4rem;
+  width: 11rem;
+  height: 11rem;
+  border: 1px solid color-mix(in srgb, var(--accent, var(--outline)) 18%, var(--outline));
+  background:
+    radial-gradient(circle at center, color-mix(in srgb, var(--scene-wave-b) 18%, transparent), transparent 62%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 100%);
+  opacity: 0.7;
+}
+
+.hero-launchpad-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--outline) 65%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--outline) 65%, transparent) 1px, transparent 1px);
+  background-size: 2.8rem 2.8rem;
+  opacity: 0.12;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 88%);
+}
+
+.launchpad-header {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.launchpad-header h2 {
+  margin: 0;
+}
+
+.launchpad-header p {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--muted);
+  line-height: 1.58;
+}
+
+.launchpad-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+}
+
+.launchpad-list {
+  display: grid;
+  gap: 0.72rem;
+}
+
+.launchpad-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.9rem;
+  align-items: center;
+  padding: 0.92rem 0.95rem;
+  border-radius: 1.05rem;
+  border: 1px solid color-mix(in srgb, var(--accent-soft, var(--outline)) 22%, var(--outline));
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.05), transparent 100%),
+    color-mix(in srgb, var(--surface-raised) 88%, black 8%);
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 24px rgba(4, 5, 10, 0.12);
+}
+
+.launchpad-row > * {
+  position: relative;
+  z-index: 1;
+}
+
+.launchpad-row-highlight {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  border: 1px solid color-mix(in srgb, var(--accent, var(--accent-hot)) 36%, var(--outline));
+  background:
+    linear-gradient(90deg, color-mix(in srgb, var(--accent-soft, transparent) 24%, transparent), transparent 42%),
+    color-mix(in srgb, var(--surface) 80%, transparent);
+  pointer-events: none;
+}
+
+.launchpad-rank {
+  width: 2.25rem;
+  height: 2.25rem;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--outline) 84%, white 6%);
+  background: color-mix(in srgb, var(--surface-raised) 92%, black 8%);
+  color: var(--text-soft);
+  font-family: var(--font-display);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+}
+
+.launchpad-row-copy {
+  display: grid;
+  gap: 0.22rem;
+  min-width: 0;
+}
+
+.launchpad-row-topline {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.7rem;
+  align-items: baseline;
+}
+
+.launchpad-row-topline strong {
+  font-size: 1rem;
+  letter-spacing: -0.03em;
+}
+
+.launchpad-row-topline span {
+  color: var(--accent, var(--accent-hot));
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+}
+
+.launchpad-row-copy p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.52;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
+.launchpad-row-meta {
+  display: grid;
+  justify-items: end;
+  gap: 0.2rem;
+  text-align: right;
+  color: var(--text-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.launchpad-row-meta small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.launchpad-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding-top: 0.2rem;
+}
+
+.launchpad-note {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.5;
 }
 
 .hero-spotlight {
@@ -2283,6 +2668,26 @@ strong {
   .rom-header-meta {
     justify-items: start;
   }
+
+  .launchpad-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .launchpad-row-meta {
+    grid-column: 2;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .hero-ledger-row {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .hero-ledger-row-meta {
+    grid-column: 2;
+    justify-items: start;
+    text-align: left;
+  }
 }
 
 @media (max-width: 860px) {
@@ -2335,7 +2740,8 @@ strong {
   .explorer-summary,
   .gcam-empty-state,
   .spotlight-header,
-  .rom-section-header {
+  .rom-section-header,
+  .hero-ledger-head {
     grid-template-columns: 1fr;
     display: grid;
   }
@@ -2367,9 +2773,67 @@ strong {
     align-items: start;
     flex-direction: column;
   }
+
+  .hero-proofline {
+    max-width: 42ch;
+  }
+
+  .launchpad-footer {
+    align-items: start;
+    flex-direction: column;
+  }
 }
 
 @media (max-width: 640px) {
+  .hero-ledger {
+    padding: 0.9rem;
+  }
+
+  .hero-proofline {
+    font-size: 0.9rem;
+  }
+
+  .hero-ledger-row {
+    grid-template-columns: 1fr;
+    gap: 0.46rem;
+  }
+
+  .hero-ledger-row-index {
+    min-width: 0;
+  }
+
+  .hero-ledger-row-topline {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .hero-ledger-row-meta {
+    grid-column: auto;
+    justify-items: start;
+    text-align: left;
+  }
+
+  .launchpad-row {
+    grid-template-columns: 1fr;
+    gap: 0.72rem;
+  }
+
+  .launchpad-rank {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .launchpad-row-topline {
+    align-items: start;
+    flex-direction: column;
+  }
+
+  .launchpad-row-meta {
+    grid-column: auto;
+    justify-items: start;
+    text-align: left;
+  }
+
   .loading-content {
     width: min(440px, calc(100vw - 24px));
     gap: 0.95rem;
