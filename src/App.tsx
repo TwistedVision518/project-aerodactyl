@@ -1095,14 +1095,14 @@ function App() {
                       </div>
                     </div>
 
-                    <div className="hero-inline-actions">
+                    <div className="hero-inline-actions utility-card-actions">
                       {communityHubHasLink ? (
-                        <a href={communityHub.telegramUrl} rel="noreferrer" target="_blank">
+                        <a className="utility-card-action utility-card-action-primary" href={communityHub.telegramUrl} rel="noreferrer" target="_blank">
                           Open Telegram
                         </a>
                       ) : null}
 
-                      <button onClick={handleCommunityCopy} type="button">
+                      <button className="utility-card-action utility-card-action-secondary" onClick={handleCommunityCopy} type="button">
                         {communityLinkCopied ? 'Copied invite' : 'Copy invite'}
                       </button>
                     </div>

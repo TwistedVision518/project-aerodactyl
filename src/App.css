@@ -1268,6 +1268,44 @@ strong {
   gap: 0.55rem;
 }
 
+.utility-card-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, max-content));
+  gap: 0.7rem;
+  align-items: center;
+}
+
+.utility-card-action {
+  min-height: 2.75rem;
+  padding: 0.72rem 1.05rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  border-radius: 1.05rem;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 10px 22px rgba(8, 10, 16, 0.14);
+}
+
+.utility-card-action.utility-card-action-primary {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--scene-wave-b) 18%, rgba(255, 255, 255, 0.08)), rgba(255, 255, 255, 0.05)),
+    color-mix(in srgb, var(--surface-raised) 88%, var(--scene-wave-b) 12%);
+  border-color: color-mix(in srgb, var(--scene-wave-b) 20%, var(--outline));
+}
+
+.utility-card-action.utility-card-action-secondary {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02)),
+    rgba(255, 255, 255, 0.02);
+  border-color: color-mix(in srgb, var(--outline-strong) 72%, transparent);
+  color: var(--text-soft);
+}
+
+.utility-card-action.utility-card-action-secondary:hover {
+  color: var(--text);
+}
+
 .mini-metrics,
 .status-list {
   display: grid;
@@ -2897,6 +2935,10 @@ strong {
   .resource-panel-head {
     align-items: start;
     flex-direction: column;
+  }
+
+  .utility-card-actions {
+    grid-template-columns: 1fr;
   }
 
   .hero-proofline {
