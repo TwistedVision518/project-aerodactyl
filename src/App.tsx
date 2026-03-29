@@ -386,6 +386,9 @@ function App() {
   const sceneMiddleRotate = useTransform(scenePointerOffsetXSpring, [-0.5, 0.5], [4, -4])
   const sceneMiddleScale = useTransform(scenePointerOffsetYSpring, [-0.5, 0.5], [0.98, 1.04])
   const motionEase = [0.22, 1, 0.36, 1] as const
+  const usesCoarsePointer = () =>
+    typeof window !== 'undefined' &&
+    window.matchMedia('(hover: none), (pointer: coarse)').matches
 
   const heroContainerVariants = prefersReducedMotion
     ? undefined
@@ -580,11 +583,11 @@ function App() {
 
     if (coarsePointerQuery.matches) {
       const syncActiveSectionFromScroll = () => {
-        const activationLine = window.innerHeight * 0.38
+        const activationLine = window.scrollY + window.innerHeight * 0.38
         let nextSection: SectionId = 'top'
 
         for (const section of sections) {
-          if (section.getBoundingClientRect().top <= activationLine) {
+          if (section.offsetTop <= activationLine) {
             const resolvedSection = resolveSectionTarget(`#${section.id}`)
 
             if (resolvedSection) {
@@ -596,13 +599,29 @@ function App() {
         setActiveSection((current) => (current === nextSection ? current : nextSection))
       }
 
+      let syncFrame = 0
+      const scheduleSectionSync = () => {
+        if (syncFrame) {
+          return
+        }
+
+        syncFrame = window.requestAnimationFrame(() => {
+          syncFrame = 0
+          syncActiveSectionFromScroll()
+        })
+      }
+
       syncActiveSectionFromScroll()
-      window.addEventListener('scroll', syncActiveSectionFromScroll, { passive: true })
-      window.addEventListener('resize', syncActiveSectionFromScroll)
+      window.addEventListener('scroll', scheduleSectionSync, { passive: true })
+      window.addEventListener('resize', scheduleSectionSync)
 
       return () => {
-        window.removeEventListener('scroll', syncActiveSectionFromScroll)
-        window.removeEventListener('resize', syncActiveSectionFromScroll)
+        if (syncFrame) {
+          window.cancelAnimationFrame(syncFrame)
+        }
+
+        window.removeEventListener('scroll', scheduleSectionSync)
+        window.removeEventListener('resize', scheduleSectionSync)
       }
     }
 
@@ -647,15 +666,24 @@ function App() {
     }
   }
 
+  const scrollSelectedRomIntoView = () => {
+    const scrollBehavior: ScrollBehavior =
+      prefersReducedMotion || usesCoarsePointer() ? 'auto' : 'smooth'
+
+    window.requestAnimationFrame(() => {
+      document
+        .getElementById('rom-detail-panel')
+        ?.scrollIntoView({ behavior: scrollBehavior, block: 'start' })
+    })
+  }
+
   const handleRomAnchorClick = (event: ReactMouseEvent<HTMLAnchorElement>, romId: string) => {
     event.preventDefault()
     setResourceMenuOpen(false)
     setActiveRomId(romId)
     setActiveSection('rom-directory')
     window.history.pushState(null, '', `#${romId}`)
-    window.requestAnimationFrame(() => {
-      document.getElementById('rom-detail-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
+    scrollSelectedRomIntoView()
   }
 
   const selectRomByIndex = (nextIndex: number) => {
@@ -670,9 +698,7 @@ function App() {
     setActiveRomId(nextRomId)
     setActiveSection('rom-directory')
     window.history.pushState(null, '', `#${nextRomId}`)
-    window.requestAnimationFrame(() => {
-      document.getElementById('rom-detail-panel')?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    })
+    scrollSelectedRomIntoView()
   }
 
   const handleLatestUpdateClick = (event: ReactMouseEvent<HTMLAnchorElement>, href: string) => {
