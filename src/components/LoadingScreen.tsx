@@ -12,6 +12,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isVisible, setIsVisible] = useState(true)
   const [isPreloaded, setIsPreloaded] = useState(false)
+  const [hasRenderedFrame, setHasRenderedFrame] = useState(false)
   const tintRef = useRef({
     start: '#a76fff',
     middle: '#785eff',
@@ -141,6 +142,7 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
               ctx.fillStyle = gradient
               ctx.fillRect(0, 0, canvas.width, canvas.height)
               ctx.globalCompositeOperation = 'source-over'
+              setHasRenderedFrame(true)
             }
           }
         }
@@ -177,9 +179,14 @@ export function LoadingScreen({ onComplete }: { onComplete: () => void }) {
       <div className="loading-content">
         <span className="loading-badge">Booting release dashboard</span>
         <div className="loading-panel">
+          <div className={`loading-logo-shell ${hasRenderedFrame ? 'is-hidden' : ''}`.trim()} aria-hidden="true">
+            <span className="loading-logo-mark">
+              <img alt="" className="loading-logo-image" src="/favicon.svg" />
+            </span>
+          </div>
           <canvas 
             ref={canvasRef}
-            className="loading-canvas"
+            className={`loading-canvas ${hasRenderedFrame ? 'is-visible' : ''}`.trim()}
           />
           <div className="loading-copy">
             <strong>Project Aerodactyl</strong>
