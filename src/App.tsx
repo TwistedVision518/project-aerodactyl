@@ -862,48 +862,57 @@ function App() {
         <div className={`app-shell scene-root ${isNativeApp ? 'is-native-app' : ''}`.trim()}>
           <div className="interactive-scene" aria-hidden="true">
             <div className="scene-vignette" />
-            <m.div
-              className="scene-cursor-glow"
-              style={
-                !interactiveSceneEnabled
-                  ? undefined
-                  : { x: sceneCursorXSpring, y: sceneCursorYSpring, opacity: sceneCursorGlowOpacity }
-              }
-            />
-            <m.div
-              className="scene-gradient scene-gradient-left"
-              style={
-                !interactiveSceneEnabled
-                  ? undefined
-                  : { x: sceneLeftX, y: sceneLeftY, rotate: sceneLeftRotate, scale: sceneLeftScale }
-              }
-            />
-            <m.div
-              className="scene-gradient scene-gradient-right"
-              style={
-                !interactiveSceneEnabled
-                  ? undefined
-                  : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
-              }
-            />
-            <m.div
-              className="scene-gradient scene-gradient-top"
-              style={
-                !interactiveSceneEnabled
-                  ? undefined
-                  : { x: sceneTopX, y: sceneTopY, rotate: sceneTopRotate, scale: sceneTopScale }
-              }
-            />
-            <m.div
-              className="scene-gradient scene-gradient-middle"
-              style={
-                !interactiveSceneEnabled
-                  ? undefined
-                  : { x: sceneMiddleX, y: sceneMiddleY, rotate: sceneMiddleRotate, scale: sceneMiddleScale }
-              }
-            />
-            <div className="scene-grid" />
-            <div className="scene-noise" />
+            {isNativeApp ? (
+              <>
+                <div className="scene-gradient scene-gradient-left scene-gradient-native" />
+                <div className="scene-gradient scene-gradient-right scene-gradient-native" />
+              </>
+            ) : (
+              <>
+                <m.div
+                  className="scene-cursor-glow"
+                  style={
+                    !interactiveSceneEnabled
+                      ? undefined
+                      : { x: sceneCursorXSpring, y: sceneCursorYSpring, opacity: sceneCursorGlowOpacity }
+                  }
+                />
+                <m.div
+                  className="scene-gradient scene-gradient-left"
+                  style={
+                    !interactiveSceneEnabled
+                      ? undefined
+                      : { x: sceneLeftX, y: sceneLeftY, rotate: sceneLeftRotate, scale: sceneLeftScale }
+                  }
+                />
+                <m.div
+                  className="scene-gradient scene-gradient-right"
+                  style={
+                    !interactiveSceneEnabled
+                      ? undefined
+                      : { x: sceneRightX, y: sceneRightY, rotate: sceneRightRotate, scale: sceneRightScale }
+                  }
+                />
+                <m.div
+                  className="scene-gradient scene-gradient-top"
+                  style={
+                    !interactiveSceneEnabled
+                      ? undefined
+                      : { x: sceneTopX, y: sceneTopY, rotate: sceneTopRotate, scale: sceneTopScale }
+                  }
+                />
+                <m.div
+                  className="scene-gradient scene-gradient-middle"
+                  style={
+                    !interactiveSceneEnabled
+                      ? undefined
+                      : { x: sceneMiddleX, y: sceneMiddleY, rotate: sceneMiddleRotate, scale: sceneMiddleScale }
+                  }
+                />
+                <div className="scene-grid" />
+                <div className="scene-noise" />
+              </>
+            )}
           </div>
 
           <div className="experience-shell" data-loaded={!loading}>

@@ -37,8 +37,8 @@ export function LoadingScreen({
 
     const finishTimer = window.setTimeout(() => {
       setIsVisible(false)
-      window.setTimeout(onComplete, 280)
-    }, 900)
+      window.setTimeout(onComplete, 180)
+    }, 620)
 
     return () => window.clearTimeout(finishTimer)
   }, [nativeMode, onComplete])

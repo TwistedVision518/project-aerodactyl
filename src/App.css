@@ -38,19 +38,55 @@ html[data-native-app='true'] .experience-shell {
 }
 
 html[data-native-app='true'] .page {
-  width: min(1380px, calc(100vw - 20px));
-  padding-top: calc(0.7rem + env(safe-area-inset-top, 0px));
-  padding-bottom: calc(6.4rem + env(safe-area-inset-bottom, 0px));
+  width: 100%;
+  box-sizing: border-box;
+  max-width: none;
+  margin: 0;
+  padding-inline: 0.45rem;
+  padding-top: calc(0.42rem + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
 }
 
 html[data-native-app='true'] .topbar {
-  top: max(10px, calc(env(safe-area-inset-top, 0px) + 10px));
-  width: min(1380px, calc(100vw - 20px));
-  margin-top: 0.45rem;
+  top: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: max(6px, env(safe-area-inset-top, 0px)) 0.3rem 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 html[data-native-app='true'] .topbar-content {
-  padding: 0.82rem 0.95rem;
+  padding: 0.82rem 0.88rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 1.15rem;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.045), rgba(255, 255, 255, 0.015)),
+    rgba(10, 12, 20, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.035),
+    0 8px 18px rgba(0, 0, 0, 0.14);
+}
+
+html[data-native-app='true'] .interactive-scene {
+  background:
+    radial-gradient(circle at 50% -10%, rgba(124, 71, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 50% 24%, rgba(71, 191, 255, 0.08), transparent 24%),
+    linear-gradient(180deg, rgba(8, 10, 18, 0.98), rgba(4, 5, 10, 1));
+}
+
+html[data-native-app='true'] .app-shell {
+  background: linear-gradient(180deg, rgba(8, 10, 18, 1), rgba(4, 5, 10, 1));
+}
+
+html[data-native-app='true'] .page > .reveal {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 820px;
 }
 
 .scene-root {
@@ -297,8 +333,75 @@ html[data-native-app='true'] .expansion-card,
 html[data-native-app='true'] .explorer-toolbar,
 html[data-native-app='true'] .resource-menu,
 html[data-native-app='true'] .loading-panel {
-  backdrop-filter: blur(6px) saturate(102%);
-  -webkit-backdrop-filter: blur(6px) saturate(102%);
+  background: rgba(11, 14, 22, 0.94);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.03),
+    0 8px 18px rgba(0, 0, 0, 0.16);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html[data-native-app='true'] .panel::before,
+html[data-native-app='true'] .topbar::before,
+html[data-native-app='true'] .mobile-dock::before {
+  opacity: 0.08;
+}
+
+html[data-native-app='true'] .panel::after,
+html[data-native-app='true'] .metric-card::after,
+html[data-native-app='true'] .build-card::after,
+html[data-native-app='true'] .rom-directory-item::after,
+html[data-native-app='true'] .rom-detail-card::after,
+html[data-native-app='true'] .device-card::after,
+html[data-native-app='true'] .expansion-card::after,
+html[data-native-app='true'] .gcam-card::after,
+html[data-native-app='true'] .gcam-empty-state::after,
+html[data-native-app='true'] .side-card::after,
+html[data-native-app='true'] .timeline-body::after,
+html[data-native-app='true'] .update-card::after,
+html[data-native-app='true'] .utility-card::after,
+html[data-native-app='true'] .rom-facts-card::after,
+html[data-native-app='true'] .resource-panel::after {
+  display: none;
+}
+
+html[data-native-app='true'] .panel {
+  padding: 1rem;
+}
+
+html[data-native-app='true'] .hero,
+html[data-native-app='true'] .command-center {
+  gap: 0.95rem;
+}
+
+html[data-native-app='true'] .hero-stage {
+  padding-top: 0;
+}
+
+html[data-native-app='true'] .hero-copy-atmosphere,
+html[data-native-app='true'] .hero-launchpad-atmosphere,
+html[data-native-app='true'] .loading-scene-grid {
+  display: none;
+}
+
+html[data-native-app='true'] .hero-ledger,
+html[data-native-app='true'] .hero-launchpad,
+html[data-native-app='true'] .utility-card,
+html[data-native-app='true'] .build-card,
+html[data-native-app='true'] .rom-directory-item,
+html[data-native-app='true'] .rom-detail-card,
+html[data-native-app='true'] .device-card,
+html[data-native-app='true'] .side-card,
+html[data-native-app='true'] .resource-panel,
+html[data-native-app='true'] .rom-facts-card {
+  border-radius: 1.15rem;
+}
+
+html[data-native-app='true'] .hero-launchpad,
+html[data-native-app='true'] .hero-ledger {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0.012)),
+    rgba(11, 14, 22, 0.94);
 }
 
 .panel {
@@ -2948,9 +3051,11 @@ strong {
   }
 
   html[data-native-app='true'] .page {
-    width: calc(100vw - 18px);
-    padding-top: calc(0.4rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(6rem + env(safe-area-inset-bottom, 0px));
+    width: 100%;
+    max-width: none;
+    padding-inline: 0.4rem;
+    padding-top: calc(0.25rem + env(safe-area-inset-top, 0px));
+    padding-bottom: calc(5.8rem + env(safe-area-inset-bottom, 0px));
   }
 
   .hero-stats-grid,
@@ -2974,6 +3079,10 @@ strong {
 
   .mobile-dock {
     display: grid;
+  }
+
+  html[data-native-app='true'] .topbar {
+    padding-inline: 0.2rem;
   }
 
   .explorer-toolbar,
@@ -3240,6 +3349,14 @@ strong {
       0 12px 28px rgba(6, 8, 14, 0.14);
   }
 
+  html[data-native-app='true'] .mobile-dock,
+  html[data-native-app='true'] .explorer-toolbar,
+  html[data-native-app='true'] .resource-menu,
+  html[data-native-app='true'] .loading-panel {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
   .scene-gradient-left,
   .scene-gradient-right,
   .scene-gradient-top,
@@ -3293,33 +3410,45 @@ html[data-native-app='true'] .scene-gradient-left,
 html[data-native-app='true'] .scene-gradient-right,
 html[data-native-app='true'] .scene-gradient-top,
 html[data-native-app='true'] .scene-gradient-middle {
-  filter: blur(26px) saturate(102%);
+  filter: blur(18px) saturate(98%);
+  animation: none;
 }
 
 html[data-native-app='true'] .scene-gradient-left {
-  animation-duration: 24s;
+  top: 10%;
+  left: -28%;
+  width: 72vw;
+  height: 58vh;
+  opacity: 0.42;
 }
 
 html[data-native-app='true'] .scene-gradient-right {
-  animation-duration: 26s;
+  right: -28%;
+  bottom: 12%;
+  width: 70vw;
+  height: 54vh;
+  opacity: 0.34;
 }
 
 html[data-native-app='true'] .scene-gradient-top,
 html[data-native-app='true'] .scene-gradient-middle {
-  animation-duration: 28s;
+  display: none;
 }
 
 html[data-native-app='true'] .scene-grid {
-  opacity: 0.08;
+  display: none;
 }
 
 html[data-native-app='true'] .scene-noise {
-  opacity: 0.06;
+  display: none;
 }
 
 html[data-native-app='true'] .mobile-dock {
   bottom: max(10px, calc(env(safe-area-inset-bottom, 0px) + 10px));
-  width: calc(100vw - 12px);
+  width: calc(100vw - 8px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 10px 18px rgba(0, 0, 0, 0.16);
 }
 
 @keyframes scene-mobile-left {
