@@ -8,9 +8,14 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "content:check": "node scripts/validate-content.mjs",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "android:copy": "pnpm build && npx cap copy android",
+    "android:sync": "pnpm build && npx cap sync android",
+    "android:open": "npx cap open android"
   },
   "dependencies": {
+    "@capacitor/android": "^8.3.0",
+    "@capacitor/core": "^8.3.0",
     "@fontsource-variable/arimo": "^5.2.8",
     "@fontsource-variable/bricolage-grotesque": "^5.2.10",
     "@fontsource-variable/google-sans-flex": "^5.2.1",
@@ -21,6 +26,7 @@
     "react-dom": "^19.2.4"
   },
   "devDependencies": {
+    "@capacitor/cli": "^8.3.0",
     "@eslint/js": "^9.39.4",
     "@types/node": "^24.12.0",
     "@types/react": "^19.2.14",

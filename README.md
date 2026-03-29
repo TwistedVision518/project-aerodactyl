@@ -94,6 +94,32 @@ Netlify project:
 
 `https://app.netlify.com/projects/project-aerodactyl`
 
+## Android App
+
+The project can also be shipped as an Android app through Capacitor while keeping the website as the primary codebase.
+
+Build the web app and sync it into the Android project:
+
+```bash
+pnpm android:sync
+```
+
+Open the Android project in Android Studio:
+
+```bash
+pnpm android:open
+```
+
+If you only need to refresh the bundled web assets without a full native sync:
+
+```bash
+pnpm android:copy
+```
+
+The native Android project lives in:
+
+`android/`
+
 ## Notes
 
 - The layout is organized per ROM to avoid mixing release context across different builds.
