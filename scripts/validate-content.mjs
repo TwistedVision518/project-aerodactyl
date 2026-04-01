@@ -78,6 +78,15 @@ function validateRom(rom, fileName, seenOrders, seenNames) {
     `${fileName}: each highlight must be a non-empty string`,
   )
 
+  assert(
+    Array.isArray(rom.changelog) && rom.changelog.length > 0,
+    `${fileName}: changelog must be a non-empty array`,
+  )
+  assert(
+    rom.changelog.every(isNonEmptyString),
+    `${fileName}: each changelog entry must be a non-empty string`,
+  )
+
   validateTelegramUrl(rom.telegramUrl, `${fileName}: telegramUrl`)
 
   if (rom.telegramLinks !== undefined) {

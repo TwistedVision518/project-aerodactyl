@@ -4,18 +4,23 @@
   "version": "v12.7",
   "status": "Current build",
   "branch": "Android 16",
-  "tagline": "A familiar power-user lane with room for steady device-side refinement.",
+  "tagline": "A familiar power-user build with room for steady device-side refinement.",
   "buildDate": "March 25, 2026",
   "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
   "channelLabel": "Telegram release feed",
   "telegramUrl": "",
-  "maintenanceNote": "Current lane: active public release track",
+  "maintenanceNote": "Current focus: active public releases",
   "accent": "#ff5d55",
   "accentSoft": "rgba(255, 93, 85, 0.14)",
   "accentStrong": "#db3f38",
   "highlights": [
-    "crDroid v12.7 is now tracked alongside the rest of the active ROM lineup.",
-    "The release lane is ready for per-build notes, device targets, and Telegram handoff.",
-    "Works cleanly with the same per-ROM update flow used across the rest of the site."
+    "crDroid v12.7 is tracked alongside the rest of the active ROM lineup.",
+    "The section is ready for per-build notes, device targets, and Telegram links.",
+    "It follows the same per-ROM structure used across the rest of the site."
+  ],
+  "changelog": [
+    "Added crDroid to the active public ROM lineup for this hub.",
+    "Prepared the release section for future per-build notes and device-targeted links.",
+    "Kept the structure aligned with the same update flow used across the rest of the site."
   ]
 }

@@ -38,24 +38,42 @@ export function ReactivePanel<T extends ElementType = 'div'>({
     }
 
     const media = window.matchMedia('(hover: hover) and (pointer: fine)')
-    const updateMode = () => {
-      interactiveRef.current = media.matches
-    }
-
-    updateMode()
-    media.addEventListener('change', updateMode)
+    let listening = false
 
     const resetRect = () => {
       rectRef.current = null
     }
 
-    window.addEventListener('resize', resetRect, { passive: true })
-    window.addEventListener('scroll', resetRect, { passive: true })
+    const syncListeners = () => {
+      if (media.matches && !listening) {
+        window.addEventListener('resize', resetRect, { passive: true })
+        listening = true
+      } else if (!media.matches && listening) {
+        window.removeEventListener('resize', resetRect)
+        listening = false
+      }
+    }
+
+    const updateMode = () => {
+      interactiveRef.current = media.matches
+      if (!media.matches) {
+        rectRef.current = null
+      }
+      syncListeners()
+    }
+
+    updateMode()
+    media.addEventListener('change', updateMode)
 
     return () => {
+      if (frameRef.current !== null) {
+        window.cancelAnimationFrame(frameRef.current)
+      }
+
       media.removeEventListener('change', updateMode)
-      window.removeEventListener('resize', resetRect)
-      window.removeEventListener('scroll', resetRect)
+      if (listening) {
+        window.removeEventListener('resize', resetRect)
+      }
     }
   }, [])
 
@@ -85,19 +103,12 @@ export function ReactivePanel<T extends ElementType = 'div'>({
     current.y += (target.y - current.y) * 0.22
     current.active += (target.active - current.active) * 0.24
 
-    const rotateY = (current.x - 0.5) * 6 * intensity
-    const rotateX = (0.5 - current.y) * 6 * intensity
-    const lift = current.active * 6 * intensity
-
     if (current.active > 0.02) {
-      node.style.willChange = 'transform, box-shadow'
+      node.style.willChange = 'box-shadow, opacity'
     }
 
-    setStyleValue('--panel-rotate-x', `${rotateX.toFixed(2)}deg`)
-    setStyleValue('--panel-rotate-y', `${rotateY.toFixed(2)}deg`)
     setStyleValue('--panel-glow-x', `${(current.x * 100).toFixed(2)}%`)
     setStyleValue('--panel-glow-y', `${(current.y * 100).toFixed(2)}%`)
-    setStyleValue('--panel-lift', `${lift.toFixed(2)}px`)
     setStyleValue('--panel-active', current.active.toFixed(3))
 
     const settled =
@@ -179,6 +190,12 @@ export function ReactivePanel<T extends ElementType = 'div'>({
       onPointerLeave={handlePointerLeave}
       onPointerMove={handlePointerMove}
       ref={ref}
+      style={
+        {
+          '--panel-intensity': intensity.toString(),
+          ...(rest.style as Record<string, string> | undefined),
+        } as ComponentPropsWithoutRef<T>['style']
+      }
     >
       {children}
     </Component>

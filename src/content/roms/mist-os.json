@@ -3,19 +3,54 @@
   "name": "Mist OS",
   "version": "v4.5",
   "status": "Current build",
-  "branch": "Android 16",
-  "tagline": "Balanced daily-driver tuning with a clean base and stable pacing.",
-  "buildDate": "March 22, 2026",
-  "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
-  "channelLabel": "Telegram release feed",
-  "telegramUrl": "https://t.me/NothingPhone2aUpdates/183",
-  "maintenanceNote": "Current lane: stability-first release cycle",
+  "branch": "A16 QPR2",
+  "tagline": "Unofficial MistOS 4.5 Velour for pacman with flashbang fix, Nothing Gallery, and separate GMS or Vanilla package choices.",
+  "buildDate": "March 14, 2026",
+  "devices": ["Nothing Phone 2a"],
+  "channelLabel": "Gofile + SourceForge downloads",
+  "telegramUrl": "https://gofile.io/d/b97f155c-7f4a-4890-b423-d1ddc4b1295e",
+  "telegramLinks": [
+    {
+      "label": "GMS build on Gofile",
+      "url": "https://gofile.io/d/b97f155c-7f4a-4890-b423-d1ddc4b1295e"
+    },
+    {
+      "label": "GMS build on SourceForge",
+      "url": "https://sourceforge.net/projects/mistos-pacman/files/MISTOS-4.5-A16-QPR2-GMS/"
+    },
+    {
+      "label": "Vanilla build on Gofile",
+      "url": "https://gofile.io/d/f4e3fd7d-a814-410b-af20-4baff79b0036"
+    },
+    {
+      "label": "Vanilla build on SourceForge",
+      "url": "https://sourceforge.net/projects/mistos-pacman/files/MISTOS-4.5-A16-QPR2-VANILLA/"
+    },
+    {
+      "label": "View screenshots",
+      "url": "https://t.me/NothingPhone2a/320486"
+    },
+    {
+      "label": "Full changelog",
+      "url": "https://raw.githubusercontent.com/praveenxsharma/mist-changelogs/refs/heads/main/mist-4.5-changelogs"
+    }
+  ],
+  "maintenanceNote": "Current focus: install reliability, flashbang fix, and banking app compatibility notes",
   "accent": "#ff7a62",
   "accentSoft": "rgba(255, 122, 98, 0.14)",
   "accentStrong": "#d94f37",
   "highlights": [
-    "Android 16 base aligned for Nothing Phone 2a and 2a Plus.",
-    "Thermal, camera, and day-to-day polish grouped into the current drop.",
-    "Release notes stay short enough to scan quickly before downloading."
+    "Includes the flashbang fix and Nothing Gallery out of the box.",
+    "Offers both GMS and Vanilla packages for the pacman release.",
+    "Keeps Fenrir out by default and drops Blur by default as well."
+  ],
+  "changelog": [
+    "Includes the flashbang fix.",
+    "Includes Nothing Gallery.",
+    "Drops Blur by default.",
+    "Fenrir is not included by default, although the required patches are applied.",
+    "Some banking apps still need a keybox to work properly.",
+    "If adb sideload fails during installation, cancel it, reconnect the cable, and try again.",
+    "During sideload it can pause around 47 percent with a root prompt; choose no if you do not want root and then reboot to system."
   ]
 }

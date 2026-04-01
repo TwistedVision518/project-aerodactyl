@@ -42,6 +42,7 @@ export type RomEntry = {
   accentSoft: string
   accentStrong: string
   highlights: string[]
+  changelog: string[]
 }
 
 export type SourceChange = {

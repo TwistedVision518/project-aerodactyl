@@ -2,30 +2,39 @@
   "order": 2,
   "name": "Lunaris OS",
   "version": "v3.8",
-  "status": "Current build",
-  "branch": "QPR refresh",
-  "tagline": "Smooth, polished, and tuned around a cleaner visual cadence.",
-  "buildDate": "March 21, 2026",
+  "status": "Latest build",
+  "branch": "A16 QPR2",
+  "tagline": "Unofficial Android 16 QPR2 with better feel, faster motion, and a much cleaner pacmanpro flashing flow.",
+  "buildDate": "March 27, 2026",
   "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
-  "channelLabel": "Telegram release feed",
-  "telegramUrl": "https://t.me/NothingPhone2aUpdates/174",
+  "channelLabel": "Drive download + Telegram screenshots",
+  "telegramUrl": "https://drive.google.com/drive/folders/1DORT9Fj1t8UvKvbuQNHsaZS5C5-jyaAL?usp=sharing",
   "telegramLinks": [
     {
-      "label": "Release for pacman",
-      "url": "https://t.me/NothingPhone2aUpdates/174"
+      "label": "Download build",
+      "url": "https://drive.google.com/drive/folders/1DORT9Fj1t8UvKvbuQNHsaZS5C5-jyaAL?usp=sharing"
     },
     {
-      "label": "Release for pacmanpro",
-      "url": "https://t.me/NothingPhone2aUpdates/181"
+      "label": "View screenshots",
+      "url": "https://t.me/NothingPhone2a/322969"
     }
   ],
-  "maintenanceNote": "Current lane: visual polish and consistency",
+  "maintenanceNote": "Current focus: haptics, speed, and easier flashing on pacmanpro",
   "accent": "#17b68e",
   "accentSoft": "rgba(23, 182, 142, 0.14)",
   "accentStrong": "#0f8c6c",
   "highlights": [
-    "Focused on a refined day-to-day feel without overloading the UI.",
-    "Animation and surface tuning keep the build feeling quick and light.",
-    "Clear version framing makes it easy to compare against other active ROMs."
+    "Improved haptics make the whole build feel crisper in daily use.",
+    "App opening and closing animations are faster, smoother, and more responsive overall.",
+    "The pacmanpro flashing process is no longer as complicated as before."
+  ],
+  "changelog": [
+    "Improved haptics for a sharper and more tactile feel.",
+    "Improved app opening and closing animations along with overall speed.",
+    "Marginally improved gaming performance.",
+    "Included ViperFX for better audio quality.",
+    "GApps are included by default, while Fenrir still needs to be added separately.",
+    "Play Integrity is strong with Fenrir as of March 28, 2026.",
+    "A clean flash is mandatory for this build."
   ]
 }

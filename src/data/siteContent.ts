@@ -5,18 +5,14 @@ import type { GcamEntry, SiteContentData } from './types'
 export { roms }
 
 export const quickStats = [
-  { label: 'ROMs tracked', value: `${roms.length} ROMs` },
-  { label: 'Supported devices', value: '2 devices' },
-  { label: 'Release flow', value: 'Per-ROM tracking' },
+  { label: 'Active ROMs', value: `${roms.length} tracked` },
+  { label: 'Devices covered', value: '2 shared targets' },
+  { label: 'Release model', value: 'Per-ROM tracking' },
 ]
 
 const siteContent = siteContentData as SiteContentData
 
 export const communityHub = siteContent.communityHub
-
-export const sourceChanges = siteContent.sourceChanges
-
-export const builderUpdates = siteContent.builderUpdates
 
 export const supportMatrix = siteContent.supportMatrix
 
@@ -53,18 +49,6 @@ export const latestUpdates: LatestUpdate[] = [
     category: 'ROM',
     href: `#${toSectionId(rom.name)}`,
   })),
-  ...sourceChanges.map((entry) => ({
-    title: entry.title,
-    date: entry.date,
-    category: 'Source',
-    href: '#source-pulse',
-  })),
-  ...builderUpdates.map((entry) => ({
-    title: entry.title,
-    date: entry.date,
-    category: 'Builder',
-    href: '#builder-notes',
-  })),
   ...gcamEntries.map((entry) => ({
     title: `${entry.name} ${entry.build}`,
     date: entry.updatedAt,
@@ -74,3 +58,14 @@ export const latestUpdates: LatestUpdate[] = [
 ]
   .sort((left, right) => toTimestamp(right.date) - toTimestamp(left.date))
   .slice(0, 6)
+
+export const latestBuilds = [...roms]
+  .sort((left, right) => toTimestamp(right.buildDate) - toTimestamp(left.buildDate))
+  .slice(0, 3)
+
+export const siteLastUpdated =
+  latestUpdates[0]?.date ??
+  roms
+    .map((rom) => rom.buildDate)
+    .sort((left, right) => toTimestamp(right) - toTimestamp(left))[0] ??
+  ''

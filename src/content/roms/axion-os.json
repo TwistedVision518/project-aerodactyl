@@ -2,20 +2,25 @@
   "order": 6,
   "name": "AxionOS",
   "version": "v2.5",
-  "status": "Bring-up lane",
+  "status": "Bring-up build",
   "branch": "Fast-moving track",
-  "tagline": "A sharper lane for faster progress updates and iterative releases.",
+  "tagline": "A faster-moving build stream for testers following active bring-up work.",
   "buildDate": "March 18, 2026",
   "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
   "channelLabel": "Telegram release feed",
   "telegramUrl": "",
-  "maintenanceNote": "Current lane: active iteration across pacman and pacmanpro",
+  "maintenanceNote": "Current focus: active iteration",
   "accent": "#ffb64d",
   "accentSoft": "rgba(255, 182, 77, 0.14)",
   "accentStrong": "#c37d12",
   "highlights": [
-    "Useful for communicating momentum while the build is still evolving.",
+    "Useful for showing momentum while the build is still evolving.",
     "A good fit for tester-facing notes and faster release turnover.",
-    "Keeps early-stage progress visible without blending into stable lanes."
+    "Keeps early-stage progress visible without mixing it into the stable builds."
+  ],
+  "changelog": [
+    "Kept AxionOS visible as an active bring-up build for both tracked devices.",
+    "Focused this cycle on iteration speed and tester-facing clarity.",
+    "Left the release flow ready for faster follow-up drops as development continues."
   ]
 }

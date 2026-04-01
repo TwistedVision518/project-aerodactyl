@@ -4,18 +4,23 @@
   "version": "v11.6",
   "status": "Featured build",
   "branch": "Performance pass",
-  "tagline": "Strong release framing with a clear emphasis on current build state.",
+  "tagline": "The current spotlight build, surfaced for quick scanning and fast handoff.",
   "buildDate": "March 24, 2026",
   "devices": ["Nothing Phone 2a", "Nothing Phone 2a Plus"],
   "channelLabel": "Telegram release feed",
   "telegramUrl": "",
-  "maintenanceNote": "Current lane: public-facing mainline build",
+  "maintenanceNote": "Current focus: public mainline release",
   "accent": "#1f5eff",
   "accentSoft": "rgba(31, 94, 255, 0.14)",
   "accentStrong": "#1543bf",
   "highlights": [
-    "Large version framing keeps the newest release obvious at a glance.",
-    "Good fit for major drops, upstream sync notes, and wider public visibility.",
-    "Works well as the top-pinned ROM when a fresh update lands."
+    "Large version framing keeps the newest public drop obvious at a glance.",
+    "Good fit for major drops, upstream sync notes, and wider community visibility.",
+    "Works well as the pinned ROM when a fresh release lands."
+  ],
+  "changelog": [
+    "Pushed the latest mainline Evolution X release into the featured slot.",
+    "Kept the release framing strong for wider public visibility and easier scanning.",
+    "Left room in the notes flow for upstream syncs and larger release messaging."
   ]
 }
