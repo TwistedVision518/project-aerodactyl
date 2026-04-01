@@ -22,7 +22,7 @@ export const gcamEntries = siteContent.gcamEntries
 
 export const comments = siteContent.comments
 
-type LatestUpdate = {
+export type LatestUpdate = {
   title: string
   date: string
   category: string

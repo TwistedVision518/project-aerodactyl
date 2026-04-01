@@ -1,4 +1,3 @@
-import React from 'react'
 import { m } from 'motion/react'
 import type { RomEntry } from '../data/types'
 

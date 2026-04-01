@@ -1,4 +1,4 @@
-import React from 'react'
+import { memo } from 'react'
 import { m } from 'motion/react'
 import type { LatestUpdate } from '../data/siteContent'
 
@@ -7,7 +7,7 @@ type PulseTimelineProps = {
   onUpdateClick: (event: React.MouseEvent<HTMLAnchorElement>, href: string) => void
 }
 
-export const PulseTimeline = React.memo(({ updates, onUpdateClick }: PulseTimelineProps) => {
+export const PulseTimeline = memo(({ updates, onUpdateClick }: PulseTimelineProps) => {
   return (
     <div className="pulse-timeline">
       <div className="pulse-timeline-line" />

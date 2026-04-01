@@ -1,4 +1,3 @@
-import React from 'react'
 import { m, AnimatePresence } from 'motion/react'
 
 type ComparisonBarProps = {
